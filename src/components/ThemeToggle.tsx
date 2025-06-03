@@ -1,5 +1,5 @@
-import { ReactComponent as SunIcon } from "@/assets/icons/sun.svg";
-import { ReactComponent as MoonIcon } from "@/assets/icons/moon.svg";
+import SunIcon from "@/assets/icons/sun.svg?react";
+import MoonIcon from "@/assets/icons/moon.svg?react";
 import React from "react";
 
 export default function ThemeToggle() {
@@ -12,9 +12,9 @@ export default function ThemeToggle() {
   return (
     <button onClick={toggleTheme} className="w-10 h-10">
       {isDark ? (
-        <SunIcon className="w-full h-full object-contain" />
+        <SunIcon className="w-full h-full object-contain text-yellow-400 drop-shadow" />
       ) : (
-        <MoonIcon className="w-full h-full object-contain" />
+        <MoonIcon className="w-full h-full object-contain text-white drop-shadow" />
       )}
     </button>
   );
