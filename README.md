@@ -11,64 +11,63 @@ dashboard-frontend/
 │   └── index.html        # HTML template
 │
 ├── src/
-│   ├── assets/           # Static assets
-│   │   ├── images/      # Image files
-│   │   ├── icons/       # SVG icons
-│   │   └── fonts/       # Custom fonts
-│   │
-│   ├── components/       # Reusable UI components
-│   │   ├── ui/          # Basic UI components (Button, Input, etc.)
-│   │   ├── layout/      # Layout components (Header, Footer, etc.)
-│   │   ├── forms/       # Form-related components
-│   │   └── ProtectedRoute.tsx  # Authentication wrapper
-│   │
-│   ├── constants/        # Static constants
-│   │   ├── routes.ts    # Route definitions
-│   │   └── config.ts    # App configuration
-│   │
-│   ├── context/         # React context
-│   │   ├── AuthContext.tsx    # Authentication context
-│   │   └── authContext.ts     # Auth context types
-│   │
-│   ├── hooks/           # Custom React hooks
-│   │   ├── useAuth.ts   # Authentication hook
-│   │   └── useLocalStorage.ts # Local storage hook
-│   │
-│   ├── lib/             # Utility functions
-│   │   ├── api.ts       # API client setup
-│   │   └── utils.ts     # Helper functions
-│   │
-│   ├── pages/           # Page components
-│   │   ├── auth/        # Authentication pages
-│   │   │   ├── LoginPage.tsx
-│   │   │   └── RegisterPage.tsx
+│   ├── features/         # Feature-based modules
+│   │   ├── auth/        # Authentication feature
+│   │   │   ├── components/    # Auth-specific components
+│   │   │   ├── hooks/        # Auth-related hooks
+│   │   │   └── store/        # Auth state management
 │   │   │
-│   │   └── dashboard/   # Dashboard pages
-│   │       ├── DashboardLayout.tsx
-│   │       ├── DashboardPage.tsx
-│   │       ├── incidents/
-│   │       ├── responders/
-│   │       ├── analytics/
-│   │       └── settings/
+│   │   ├── agents/      # Agents management feature
+│   │   │   ├── components/    # Agent-specific components
+│   │   │   ├── hooks/        # Agent-related hooks
+│   │   │   └── store/        # Agent state management
+│   │   │
+│   │   ├── incidents/   # Incidents management feature
+│   │   │   ├── components/    # Incident-specific components
+│   │   │   ├── hooks/        # Incident-related hooks
+│   │   │   └── store/        # Incident state management
+│   │   │
+│   │   └── responders/  # Responders management feature
+│   │       ├── components/    # Responder-specific components
+│   │       ├── hooks/        # Responder-related hooks
+│   │       └── store/        # Responder state management
 │   │
-│   ├── services/        # API services
-│   │   ├── auth.ts      # Authentication service
-│   │   ├── incidents.ts # Incident management
-│   │   └── responders.ts # Responder management
+│   ├── shared/          # Shared resources
+│   │   ├── assets/      # Static assets
+│   │   │   ├── images/  # Image files
+│   │   │   ├── icons/   # SVG icons
+│   │   │   └── fonts/   # Custom fonts
+│   │   │
+│   │   ├── components/  # Reusable UI components
+│   │   │   ├── ui/      # Basic UI components (Button, Input, etc.)
+│   │   │   └── layout/  # Layout components (Header, Footer, etc.)
+│   │   │
+│   │   ├── constants/   # Static constants
+│   │   │   ├── routes.ts    # Route definitions
+│   │   │   └── config.ts    # App configuration
+│   │   │
+│   │   ├── hooks/      # Shared hooks
+│   │   │   └── useLocalStorage.ts # Local storage hook
+│   │   │
+│   │   ├── lib/        # Utility functions
+│   │   │   ├── api.ts  # API client setup
+│   │   │   └── utils.ts # Helper functions
+│   │   │
+│   │   ├── services/   # API services
+│   │   │   ├── auth.ts      # Authentication service
+│   │   │   ├── incidents.ts # Incident management
+│   │   │   └── responders.ts # Responder management
+│   │   │
+│   │   ├── styles/     # Global styles
+│   │   │   └── globals.css  # Global CSS and Tailwind config
+│   │   │
+│   │   ├── types/      # TypeScript types
+│   │   │   ├── index.ts     # Common types
+│   │   │   └── api.ts       # API response types
+│   │   │
+│   │   ├── App.tsx     # Root component
+│   │   └── main.tsx    # Entry point
 │   │
-│   ├── store/           # State management
-│   │   └── useStore.ts  # Zustand store
-│   │
-│   ├── styles/          # Global styles
-│   │   └── globals.css  # Global CSS and Tailwind config
-│   │
-│   ├── types/           # TypeScript types
-│   │   ├── index.ts     # Common types
-│   │   └── api.ts       # API response types
-│   │
-│   ├── App.tsx          # Root component
-│   └── main.tsx         # Entry point
-│
 ├── .env                 # Environment variables
 ├── .gitignore          # Git ignore rules
 ├── index.html          # HTML entry point
