@@ -82,7 +82,7 @@ dashboard-frontend/
 2. Install dependencies:
 
    ```bash
-   yarn install
+   npm install
    ```
 
 3. Create a `.env` file in the root directory with the following variables:
@@ -100,7 +100,7 @@ dashboard-frontend/
 4. Start the development server:
 
    ```bash
-   yarn dev
+   npm run dev
    ```
 
 ## Features
@@ -137,8 +137,8 @@ dashboard-frontend/
 3. Make your changes and build the project:
 
    ```bash
-   yarn install
-   yarn build
+   npm install
+   npm run build
    ```
 
 4. Commit your changes following conventional commits:
