@@ -7,11 +7,15 @@ export default function ThemeToggle() {
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <button onClick={toggleTheme} className="w-10 h-10">
+    <button
+      onClick={toggleTheme}
+      className="w-8 h-8 transition-all duration-300"
+      aria-label="Toggle Theme"
+    >
       {isDark ? (
-        <SunIcon className="w-full h-full object-contain text-yellow-400 drop-shadow" />
+        <SunIcon className="w-full h-full text-yellow-400" />
       ) : (
-        <MoonIcon className="w-full h-full object-contain  drop-shadow text-[#958C8C]" />
+        <MoonIcon className="w-full h-full text-gray-600" />
       )}
     </button>
   );
