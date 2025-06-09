@@ -1,98 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  /* Brand color palette */
+  --primary: #9B49E8;
+  --secondary: #E3CFF5;
+  --accent: #FFE681;
+  --muted: #49256B;
+  --surface: #FFFFFF;
+  --foreground-main: #000000;
+  --accent-main: #FBA100;
+  /* Custom palette from image */
+  --blush-pink: #F8BBD0;
+  --sunset-orange: #FF7043;
+  --emerald-green: #4CAF50;
+  --soft-purple: #B39DDB;
+  --sky-blue: #90CAF9;
+  --ocean-blue: #195BFF;
+  --light-gray: #F2F2F2;
+  --cool-blue-tint: #E4E8F5;
+  --steel-gray: #4A4A4A;
+  --ires-white: #FFFFFF;
+  --ires-black: #000000;
+  --ires-red: #D10F24;
+  --ires-navy-blue: #0C0E5D;
+  --ires-dark-blue: #181547;
+  /* Fonts */
+  --font-poppins: 'Poppins', sans-serif;
+  --font-baloo: 'Baloo Chettan 2', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+  --font-ubuntu: 'Ubuntu', sans-serif;
+  --input-bg-light: rgba(91, 89, 89, 0.13); /* #5B5959 at 13% opacity */
+}
+
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --ease-out: cubic-bezier(0.2, 0, 0, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Brand color palette, you can change this colors to the custom palette color when you know who is who */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-foreground-main: var(--foreground-main);
+  --color-accent-main: var(--accent-main);
+  --font-poppins: var(--font-poppins);
+  --font-baloo: var(--font-baloo);
+  --font-montserrat: var(--font-montserrat);
+  --font-roboto: var(--font-roboto);
+  --font-ubuntu: var(--font-ubuntu);
+  /* Custom palette from image */
+  --blush-pink: var(--blush-pink);
+  --sunset-orange: var(--sunset-orange);
+  --emerald-green: var(--emerald-green);
+  --soft-purple: var(--soft-purple);
+  --sky-blue: var(--sky-blue);
+  --ocean-blue: var(--ocean-blue);
+  --light-gray: var(--light-gray);
+  --cool-blue-tint: var(--cool-blue-tint);
+  --steel-gray: var(--steel-gray);
+  --ires-white: var(--ires-white);
+  --ires-black: var(--ires-black);
+  --ires-red: var(--ires-red);
+  --ires-navy-blue: var(--ires-navy-blue);
+  --ires-dark-blue: var(--ires-dark-blue);
+  --input-bg-light: var(--input-bg-light);
+  --input-bg-dark: var(--input-bg-dark);
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-  }
+.dark {
+  --background: var(--ires-dark-blue);
+  --foreground: var(--ires-white);
+  --primary: var(--ires-red);
+  --secondary: var(--ires-white);
+  --accent: var(--ires-red);
+  --muted: var(--ires-white);
+  --surface: var(--ires-navy-blue);
+  --foreground-main: var(--ires-white);
+  --accent-main: var(--ires-red);
+  --input-bg-dark: rgba(243, 215, 218, 0.43); /* #F3D7DA at 43% opacity */
+  /* You can override other variables for dark mode here if needed */
 }
 
-@layer base {
-  * {
-    border-color: var(--border);
-  }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  h1 {
-    font-size: var(--text-4xl);
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-  h2 {
-    font-size: var(--text-3xl);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-  h3 {
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-  h4 {
-    font-size: var(--text-xl);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-  p {
-    line-height: 1.75;
-  }
-  p:not(:first-child) {
-    margin-top: 1.5rem;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground-main);
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  border-color: var(--border);
+  box-sizing: border-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
 }
 
 @layer components {
