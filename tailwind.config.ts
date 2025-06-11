@@ -1,11 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   darkMode: "class",
   theme: {
     extend: {
@@ -76,6 +72,7 @@ const config: Config = {
           950: "#451a03",
         },
         blushPink: "#F8BBD0",
+        customPink: "#f3d7da",
         sunsetOrange: "#FF7043",
         emeraldGreen: "#4CAF50",
         softPurple: "#B39DDB",
