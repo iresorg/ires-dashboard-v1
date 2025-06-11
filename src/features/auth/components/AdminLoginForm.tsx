@@ -29,7 +29,7 @@ const AdminLoginForm: React.FC = () => {
             type="email"
             autoComplete="email"
             {...register("email", { required: "Email is required" })}
-            className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-[var(--input-bg-dark)] border border-gray-300 dark:border-[var(--ires-black)] placeholder-gray-300 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+            className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink    placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
             placeholder="Email"
           />
           {errors.email && (
@@ -48,7 +48,7 @@ const AdminLoginForm: React.FC = () => {
             type="password"
             autoComplete="current-password"
             {...register("password", { required: "Password is required" })}
-            className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-[var(--input-bg-dark)] border border-gray-300 dark:border-[var(--ires-black)] placeholder-gray-300 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+            className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink  placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
             placeholder="Password"
           />
           {errors.password && (
@@ -66,10 +66,7 @@ const AdminLoginForm: React.FC = () => {
           {isSubmitting ? "Signing in..." : "LOGIN"}
         </button>
         <p className="text-sm text-center">
-          <a
-            href="#"
-            className="text-gray-300 hover:underline"
-          >
+          <a href="#" className="text-gray-300 hover:underline">
             Forgot password?
           </a>
         </p>

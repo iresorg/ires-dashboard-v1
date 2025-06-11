@@ -6,17 +6,20 @@ import { ThemeContext } from "@/shared/ThemeContext";
 export default function ThemeToggle() {
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
+  console.log("ThemeToggle isDark:", isDark);
+function calltoggleTheme(){
+toggleTheme();
+console.log(isDark)
+}
   return (
     <button
-      onClick={toggleTheme}
+      key={isDark ? "dark" : "light"}
+      onClick={calltoggleTheme}
       className="w-8 h-8 transition-all duration-300"
       aria-label="Toggle Theme"
     >
-      {isDark ? (
-        <SunIcon className="w-full h-full text-yellow-400" />
-      ) : (
-        <MoonIcon className="w-full h-full text-gray-600" />
-      )}
+      <SunIcon className={isDark ? "hidden" : "w-full h-full"} />{" "}
+      <MoonIcon className={isDark ? "w-full h-full" : "hidden"} />
     </button>
   );
 }

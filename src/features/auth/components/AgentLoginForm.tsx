@@ -19,19 +19,20 @@ const AgentLoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 flex flex-col items-center"
+    >
       <div>
         <label
           htmlFor="agentId"
           className="block text-sm font-medium text-[var(--foreground-main)] dark:text-[var(--ires-white)] mb-1"
-        >
-          Agent ID
-        </label>
+        ></label>
         <input
           id="agentId"
           type="text"
           {...register("agentId", { required: "Agent ID is required" })}
-          className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-[var(--input-bg-dark)] border border-gray-300 dark:border-[var(--ires-black)] placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+          className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
           placeholder="Agent ID"
         />
         {errors.agentId && (
@@ -44,14 +45,12 @@ const AgentLoginForm: React.FC = () => {
         <label
           htmlFor="token"
           className="block text-sm font-medium text-[var(--foreground-main)] dark:text-[var(--ires-white)] mb-1"
-        >
-          Token
-        </label>
+        ></label>
         <input
           id="token"
           type="password"
           {...register("token", { required: "Token is required" })}
-          className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-[var(--input-bg-dark)] border border-gray-300 dark:border-[var(--ires-black)] placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+          className="block w-64 rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
           placeholder="Token"
         />
         {errors.token && (
@@ -63,11 +62,16 @@ const AgentLoginForm: React.FC = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-2  bg-[var(--ires-red)] text-white font-semibold text-base mt-2 hover:bg-red-700 transition-colors duration-200 rounded-tr-2xl rounded-bl-2xl
+        className="w-64 py-4  bg-[var(--ires-red)] text-white font-semibold text-base mt-2 hover:bg-red-700 transition-colors duration-200 rounded-tr-2xl rounded-bl-2xl
 "
       >
         {isSubmitting ? "Signing in..." : "LOGIN"}
       </button>
+      <p className="text-sm text-center">
+        <a href="#" className="text-gray-300 hover:underline">
+          Forgot password?
+        </a>
+      </p>
     </form>
   );
 };
