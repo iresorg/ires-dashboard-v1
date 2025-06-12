@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { useParams } from "react-router-dom";
 import { ThemeProvider } from "@shared/ThemeContext";
@@ -16,9 +15,9 @@ const LoginPage: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col">
+      <div className="h-screen flex flex-col overflow-hidden">
         {/* Top Navbar */}
-        <div className="w-full flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-4 shrink-0">
           {/* Logo */}
           <div className="flex items-center">
             <img
@@ -40,10 +39,10 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative w-full h-full mx-auto flex flex-col md:flex-row rounded-2xl overflow-hidden px-4">
+        <div className="flex-1 flex items-center justify-center overflow-hidden">
+          <div className="relative w-full h-full mx-auto flex flex-col md:flex-row rounded-2xl overflow-hidden px-4 max-h-full">
             {/* Left: Form */}
-            <div className="flex-1 flex flex-col justify-center px-8 py-12 md:py-16">
+            <div className="flex-1 flex flex-col justify-center px-8 py-8 md:py-0 overflow-auto">
               <div>
                 {loginType === "admin" && <AdminLoginForm />}
                 {loginType === "agent" && <AgentLoginForm />}
@@ -53,15 +52,15 @@ const LoginPage: React.FC = () => {
 
             {/* Vertical Divider */}
             <div className="hidden md:flex items-center">
-              <div className="h-120 w-px bg-gray-300 dark:bg-gray-700 mx-4" />
+              <div className="h-100 w-px bg-gray-300 dark:bg-gray-700 mx-4" />
             </div>
 
             {/* Right: Image */}
-            <div className="hidden md:flex flex-1 items-center justify-center bg-transparent p-8">
+            <div className="hidden md:flex flex-1 items-center justify-center bg-transparent p-8 overflow-hidden">
               <img
                 src={securityLaptop}
                 alt="Security Laptop"
-                className="max-w-full h-auto"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
           </div>
