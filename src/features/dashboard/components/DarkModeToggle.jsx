@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { ReactComponent as SunIcon } from "../../../shared/assets/icons/sun.svg";
+import { ReactComponent as MoonIcon } from "../../../shared/assets/icons/moon.svg";
 
 const DarkModeToggle = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -21,7 +23,7 @@ const DarkModeToggle = () => {
           : "bg-iresNavyBlue text-iresWhite"}
         border-iresRed`}
     >
-      Switch to {theme === "light" ? "Dark" : "Light"} Mode
+         {theme === "light" ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
     </button>
   );
 };
