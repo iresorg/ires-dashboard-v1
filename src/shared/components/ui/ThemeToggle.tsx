@@ -1,21 +1,25 @@
 import SunIcon from "@/shared/assets/icons/sun.svg?react";
 import MoonIcon from "@/shared/assets/icons/moon.svg?react";
-import React from "react";
+import { useContext } from "react";
+import { ThemeContext } from "@/shared/ThemeContext";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = React.useState(false);
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
-
+  console.log("ThemeToggle isDark:", isDark);
+function calltoggleTheme(){
+toggleTheme();
+console.log(isDark)
+}
   return (
-    <button onClick={toggleTheme} className="w-10 h-10">
-      {isDark ? (
-        <SunIcon className="w-full h-full object-contain text-yellow-400 drop-shadow" />
-      ) : (
-        <MoonIcon className="w-full h-full object-contain text-white drop-shadow" />
-      )}
+    <button
+      key={isDark ? "dark" : "light"}
+      onClick={calltoggleTheme}
+      className="w-8 h-8 transition-all duration-300"
+      aria-label="Toggle Theme"
+    >
+      <SunIcon className={isDark ? "hidden" : "w-full h-full"} />{" "}
+      <MoonIcon className={isDark ? "w-full h-full" : "hidden"} />
     </button>
   );
 }
