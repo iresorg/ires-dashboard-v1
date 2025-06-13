@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import SunIcon from "../../../shared/assets/icons/sun.svg";
+import MoonIcon from "../../../shared/assets/icons/moon.svg";
 
-const DarkModeToggle = () => {
+const ThemeToggle = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
-    document.documentElement.className = theme;
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -15,7 +18,7 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className={`p-2 rounded-full border transition duration-300
+      className={`px-4 py-2 transition duration-300
         ${
           theme === "light"
             ? "bg-iresWhite text-iresNavyBlue"
@@ -24,12 +27,12 @@ const DarkModeToggle = () => {
         border-iresRed`}
     >
       <img
-        src={theme === "light" ? "" : ""}
-        alt={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-        className="w-6 h-6"
+        src={theme === "light" ? MoonIcon : SunIcon}
+        alt="Theme icon"
+        className="w-5 h-5"
       />
     </button>
   );
 };
 
-export default DarkModeToggle;
+export default ThemeToggle;

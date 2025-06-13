@@ -6,8 +6,7 @@ import AdminLoginForm from "@features/auth/components/AdminLoginForm";
 import AgentLoginForm from "@features/auth/components/AgentLoginForm";
 import ResponderLoginForm from "@features/auth/components/ResponderLoginForm";
 import securityLaptop from "@shared/assets/images/security-laptop.png";
-import logoWhite from "@shared/assets/logos/ires-logo-white.svg";
-import logoDark from "@shared/assets/logos/ires-logo-dark.svg";
+import Logo from "../components/Logo";
 
 const LoginPage: React.FC = () => {
   const { type } = useParams<{ type: string }>();
@@ -20,16 +19,7 @@ const LoginPage: React.FC = () => {
         <div className="flex items-center justify-between px-6 py-4 shrink-0">
           {/* Logo */}
           <div className="flex items-center">
-            <img
-              src={logoDark}
-              alt="iRES Logo"
-              className="block dark:hidden h-8 w-auto"
-            />
-            <img
-              src={logoWhite}
-              alt="iRES Logo"
-              className="hidden dark:block h-8 w-auto"
-            />
+            <Logo />
           </div>
 
           {/* Theme Toggle */}
@@ -52,7 +42,7 @@ const LoginPage: React.FC = () => {
 
             {/* Vertical Divider */}
             <div className="hidden md:flex items-center">
-              <div className="h-100 w-px bg-gray-300 dark:bg-gray-700 mx-4" />
+              <div className="h-100 w-px bg-customPink dark:bg-gray-700 mx-4" />
             </div>
 
             {/* Right: Image */}
