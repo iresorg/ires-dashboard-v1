@@ -102,6 +102,15 @@ const config: Config = {
       borderRadius: {
         "4xl": "2rem",
       },
+      animation: {
+        breathe: "breathe 2s ease-in-out infinite",
+      },
+      keyframes: {
+        breathe: {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.05)", opacity: "0.7" },
+        },
+      },
     },
   },
   plugins: [],
