@@ -190,4 +190,8 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-} 
+}
+
+/*.pentagon-btn {
+  clip-path: polygon()
+}
