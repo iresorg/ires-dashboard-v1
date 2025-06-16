@@ -56,7 +56,7 @@ const TabLogin = () => {
           {LOGIN_TYPES.map((type, idx) => (
             <button
               key={type.value}
-              className={`pentagon-btn bg-transparent text-[var(--ires-black)] flex flex-col items-center justify-center w-30 h-30 mb-3 mx-1 md:w-40 md:h-40 font-semibold transition-colors duration-200 hover:bg-[var(--ires-red)] text-sm ${positions[idx]}`}
+              className={`bg-transparent text-[var(--ires-black)] flex flex-col items-center justify-center w-30 h-30 mb-3 mx-1 md:w-40 md:h-40 font-semibold transition-colors duration-200 hover:bg-[var(--ires-red)] text-sm ${positions[idx]}`}
               onClick={() => handleLoginTypeClick(type.value)}
               type="button">
               <PentagonIcon className="absolute inset-0 w-full h-full hover:bg-[var(--ires-red)]" />
