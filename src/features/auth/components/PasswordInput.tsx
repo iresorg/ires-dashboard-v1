@@ -28,8 +28,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
         {...register}
-        className="block w-full rounded-md px-3 py-4 pr-10 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 text-[var(--ires-black)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+        className="block w-full rounded-md px-3 py-4 pr-10 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 text-[#727171] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)] remove-eye"
       />
+
       <button
         type="button"
         onClick={() => setShowPassword((prev) => !prev)}
