@@ -25,10 +25,7 @@ jobs:
         run: npm install -g vercel
 
       - name: Link to Vercel project
-        run: vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel link --project ${{ secrets.VERCEL_PROJECT_ID }} --org ${{ secrets.VERCEL_ORG_ID }} --token=${{ secrets.VERCEL_TOKEN }} --yes
 
       - name: Pull Environment Variables (optional)
         run: vercel env pull .env --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
