@@ -98,6 +98,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)"],
+        montserrat: ['Montserrat', 'sans-serif'],
+
       },
       spacing: {
         "18": "4.5rem",
