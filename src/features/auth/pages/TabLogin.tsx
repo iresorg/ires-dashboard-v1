@@ -1,70 +1,60 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@shared/components/ui/ThemeToggle";
+import Logo from "../components/Logo";
 import { ThemeProvider } from "@/shared/ThemeContext";
-import PentagonIcon from "@/shared/assets/icons/pentagon-icon1.svg?react";
-import AdminIcon from "@/shared/assets/icons/admin.png";
-import AgentIcon from "@/shared/assets/icons/agent.svg";
-import ResponderIcon from "@/shared/assets/icons/responder.svg";
-
-const LOGIN_TYPES = [
-  { label: "Admin", value: "admin", icon: AdminIcon },
-  { label: "Agent", value: "agent", icon: AgentIcon },
-  { label: "Responder", value: "responder", icon: ResponderIcon },
-];
-
-const positions = [
-  "md:relative top-10 right-20",       // Admin
-  "md:relative top-50 left-5",        // Agent
-  "md:relative top-10 left-20",      // Responder
-];
+import AdminIcon   from "@/shared/assets/icons/Group 14.svg?react";
+import AgentIcon from "@/shared/assets/icons/Group 7.svg?react";
+import ResponderIcon from "@/shared/assets/icons/Group 13 (1).svg?react";
 
 const TabLogin = () => {
   const navigate = useNavigate();
 
-  const handleLoginTypeClick = (type: string) => {
+  const handleAgentClick = (type: string) => {
     navigate(`/login/${type}`);
   };
 
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col">
+        {/* Header */}
         <div className="w-full flex items-center justify-between px-6 py-4">
-          <div className="flex items-center">
-            <img
-              alt="iRES Logo"
-              className="block dark:hidden h-8 w-auto"
-              src="/src/shared/assets/logos/ires-logo-dark.svg"
-            />
-            <img
-              alt="iRES Logo"
-              className="hidden dark:block h-8 w-auto"
-              src="/src/shared/assets/logos/ires-logo-white.svg"
-            />
-          </div>
-
-          {/* Theme Toggle */}
-          <div>
-            <ThemeToggle />
-          </div>
+          <Logo />
+          <ThemeToggle />
         </div>
-        <h2 className="text-5xl font-bold mb-6 text-center p-0 m-0 md:text-6xl text-[var(--ires-dark-blue)]">WELCOME!</h2>
-        <p className="text-lg font-bold mb-6 text-center">What do you want to login as?</p>
 
-        {/* Space Here -- Just to unconfuse my confused confusion */}
-        <div className="flex flex-col items-center justify-center md:flex-row">
-          {LOGIN_TYPES.map((type, idx) => (
-            <button
-              key={type.value}
-              className={`bg-transparent text-[var(--ires-black)] flex flex-col items-center justify-center w-30 h-30 mb-3 mx-1 md:w-40 md:h-40 font-semibold transition-colors duration-200 hover:bg-[var(--ires-red)] text-sm ${positions[idx]}`}
-              onClick={() => handleLoginTypeClick(type.value)}
-              type="button">
-              <PentagonIcon className="absolute inset-0 w-full h-full hover:bg-[var(--ires-red)]" />
-              <img src={type.icon} alt={type.label} className="w-7 h-7 mb-2" />
-              {type.label}
-            </button>
+        {/* Heading */}
+        <h2 className="text-2xl mb-4 text-center p-0 m-0 md:text-6xl dark:text-[#F2F2F2] text-[#0C0E5D] font-extrabold">
+          WELCOME!
+        </h2>
+        <p className="font-montserrat text-lg mb-6 text-center text-[#4A4A4A] dark:text-[#E2D1D1] -mt-3 font-extrabold">
+          What do you want to login as?
+        </p>
 
-          ))}
+        {/* Button Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 max-w-5xl mx-auto mt-6 justify-items-center items-center">
+          <button
+            className="row-start-1 col-start-1 duration-200 hover:opacity-50"
+            type="button"
+            onClick={() => handleAgentClick("agent")}
+          >
+            <AgentIcon />
+          </button>
+
+          <button
+            className="row-start-2 col-start-2 duration-200 hover:opacity-50"
+            type="button"
+            onClick={() => handleAgentClick("responder")}
+          >
+            <ResponderIcon /> 
+          </button>
+
+          <button
+            className="row-start-1 col-start-3 duration-200 hover:opacity-50"
+            type="button"
+            onClick={() => handleAgentClick("admin")}
+          >
+            <AdminIcon />
+          </button>
         </div>
       </div>
     </ThemeProvider>
