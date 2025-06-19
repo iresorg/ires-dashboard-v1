@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@shared/components/ui/ThemeToggle";
 import Logo from "../components/Logo";
