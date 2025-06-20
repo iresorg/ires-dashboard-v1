@@ -87,14 +87,7 @@ const config: Config = {
         iresNavyBlue: "#0C0E5D",
         iresDarkBlue: "#181547",
 
-        // Custom theme colors for light/dark mode usage
-        theme: {
-          light: {
-            iresLightGray: "#7E7676",
-           
-          },
-         
-        },
+      
       },
       fontFamily: {
         sans: ["var(--font-inter)"],

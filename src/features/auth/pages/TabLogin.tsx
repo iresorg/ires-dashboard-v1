@@ -15,7 +15,7 @@ const TabLogin = () => {
 
   return (
     <ThemeProvider>
-      <div className="h-screen flex flex-col overflow-hidden bg-[#FAF3F3] sm:bg-[#F2F2F2]">
+      <div className="h-screen flex flex-col overflow-hidden bg-iresWhite dark:bg-iresDarkBlue">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 shrink-0">
           {/* Logo */}
@@ -30,10 +30,10 @@ const TabLogin = () => {
         </div>
 
         {/* Heading */}
-        <h2 className="text-5xl mb-4 text-center p-0 m-0 sm:text-6xl dark:text-[#F2F2F2] text-[#0C0E5D] font-extrabold sm:mt-0 mt-16">
+        <h2 className="text-5xl mb-4 text-center p-0 m-0 sm:text-6xl dark:text-iresWhite text-[red] font-extrabold sm:mt-0 mt-16">
           WELCOME!
         </h2>
-        <p className="font-montserrat text-lg sm:text-2xl mb-6 text-center text-[#4A4A4A] dark:text-[#E2D1D1] -mt-3 font-extrabold">
+        <p className="font-montserrat text-lg sm:text-xl mb-6 text-center text-[#4A4A4A] dark:text-[#E2D1D1] -mt-3 font-extrabold">
           What do you want to login as?
         </p>
 
@@ -44,7 +44,7 @@ const TabLogin = () => {
             type="button"
             onClick={() => handleAgentClick("agent")}
           >
-            <img src={AgentIcon} className="sm:h-40 h-30"/> 
+            <img src={AgentIcon} className="sm:h-40 h-30" />
           </button>
 
           <button
@@ -52,7 +52,7 @@ const TabLogin = () => {
             type="button"
             onClick={() => handleAgentClick("responder")}
           >
-            <img src={ResponderIcon} className="sm:h-40 h-30"/> 
+            <img src={ResponderIcon} className="sm:h-40 h-30" />
           </button>
 
           <button
@@ -60,7 +60,7 @@ const TabLogin = () => {
             type="button"
             onClick={() => handleAgentClick("admin")}
           >
-            <img src={AdminIcon} className="sm:h-40 h-30"/> 
+            <img src={AdminIcon} className="sm:h-40 h-30" />
           </button>
         </div>
       </div>
