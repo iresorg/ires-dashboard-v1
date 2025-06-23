@@ -1,5 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
+
+// Layouts and Pages
 import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
 import DashboardPage from "@/features/dashboard/components/DashboardPage";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
@@ -8,17 +10,17 @@ import AgentsPage from "@/features/agents/components/AgentsPage";
 import RegisterPage from "@/features/auth/components/RegisterPage";
 import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
 
-// ✅ Updated imports
+// Auth pages
 import TabLogin from "@/features/auth/pages/TabLogin";
-import LoginPage from "@/features/auth/pages/LoginPage"; // Page with layout and dynamic form
+import LoginPage from "@/features/auth/pages/LoginPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/select-login",
+    path: ROUTES.SELECT_LOGIN,
     element: <TabLogin />,
   },
   {
-    path: "/login/:type", // Dynamic route for admin/agent/responder
+    path: ROUTES.LOGIN,
     element: <LoginPage />,
   },
   {
@@ -49,10 +51,11 @@ export const router = createBrowserRouter([
         path: "agents",
         element: <AgentsPage />,
       },
+      
     ],
   },
   {
     path: "*",
-    element: <Navigate to={ROUTES.DASHBOARD} replace />,
+    element: <Navigate to={ROUTES.SELECT_LOGIN} replace />,
   },
 ]);

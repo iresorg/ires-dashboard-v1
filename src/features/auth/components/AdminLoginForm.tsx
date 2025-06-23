@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput"; // Adjust path if needed
 
 interface AdminLoginInputs {
@@ -8,6 +10,8 @@ interface AdminLoginInputs {
 }
 
 const AdminLoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,7 +19,14 @@ const AdminLoginForm: React.FC = () => {
   } = useForm<AdminLoginInputs>();
 
   const onSubmit = async (data: AdminLoginInputs) => {
-    alert(JSON.stringify(data));
+    try {
+      await login(data.email, data.password, 'admin');
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -35,7 +46,7 @@ const AdminLoginForm: React.FC = () => {
               type="email"
               autoComplete="email"
               {...register("email", { required: "Email is required" })}
-              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 light:text-() dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
               placeholder="Email"
             />
             {errors.email && (
