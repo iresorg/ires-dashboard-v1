@@ -23,6 +23,11 @@ export const router = createBrowserRouter([
     path: "/login/:type", // 👈 Dynamic login route (admin, agent, responder)
     element: <LoginPage />,
   },
+
+  {
+    path: "/src/features/dashboard/components/DashboardLayout.tsx",
+    element: <DashboardLayout />, // 👈 This path is not used, but included for completeness
+  },
   {
     path: ROUTES.REGISTER,
     element: <RegisterPage />,

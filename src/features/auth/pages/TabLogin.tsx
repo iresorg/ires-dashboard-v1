@@ -30,9 +30,11 @@ const TabLogin = () => {
         </div>
 
         {/* Heading */}
-        <h2 className="text-5xl mb-4 text-center p-0 m-0 sm:text-6xl dark:text-iresWhite text-[red] font-extrabold sm:mt-0 mt-16">
+        <h2 className="text-5xl mb-4 text-center p-0 m-0 sm:text-6xl dark:text-iresWhite text-iresNavyBlue font-extrabold sm:mt-0 mt-16">
           WELCOME!
         </h2>
+     
+
         <p className="font-montserrat text-lg sm:text-xl mb-6 text-center text-[#4A4A4A] dark:text-[#E2D1D1] -mt-3 font-extrabold">
           What do you want to login as?
         </p>
