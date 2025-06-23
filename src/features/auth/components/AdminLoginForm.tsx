@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput"; // Adjust path if needed
 
 interface AdminLoginInputs {
@@ -8,6 +10,8 @@ interface AdminLoginInputs {
 }
 
 const AdminLoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,7 +19,14 @@ const AdminLoginForm: React.FC = () => {
   } = useForm<AdminLoginInputs>();
 
   const onSubmit = async (data: AdminLoginInputs) => {
-    alert(JSON.stringify(data));
+    try {
+      await login(data.email, data.password, 'admin');
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (

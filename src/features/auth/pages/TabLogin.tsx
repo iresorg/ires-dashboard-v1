@@ -40,7 +40,7 @@ const TabLogin = () => {
         </p>
 
         {/* Button Grid */}
-        <div className="grid grid-cols-1 grid-cols-3 sm:gap-6 p-4 max-w-sm sm:max-w-xl md:max-w-3xl mx-auto mt-6 justify-items-center items-center">
+        <div className="grid grid-cols-3 sm:gap-6 p-4 max-w-sm sm:max-w-xl md:max-w-3xl mx-auto mt-6 justify-items-center items-center">
           <button
             className="row-start-1 col-start-1 duration-200 hover:opacity-50"
             type="button"

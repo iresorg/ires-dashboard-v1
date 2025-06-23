@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput"; // Adjust the path if needed
 
 interface AgentLoginInputs {
@@ -8,6 +10,8 @@ interface AgentLoginInputs {
 }
 
 const AgentLoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,7 +19,15 @@ const AgentLoginForm: React.FC = () => {
   } = useForm<AgentLoginInputs>();
 
   const onSubmit = async (data: AgentLoginInputs) => {
-    alert(JSON.stringify(data));
+    try {
+      // For agent login, use agentId as email and token as password
+      await login(data.agentId, data.token, 'agent');
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (

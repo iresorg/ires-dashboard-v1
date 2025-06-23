@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/shared/constants/routes';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import useStore from '@/shared/store/useStore';
@@ -12,7 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     {
-        label: 'Dashboard',
+        label: 'Overview',
         path: ROUTES.DASHBOARD,
         icon: (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,21 +38,38 @@ const navItems: NavItem[] = [
             </svg>
         ),
     },
+    {
+        label: 'Agents',
+        path: ROUTES.AGENTS,
+        icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+        ),
+    },
     ];
 
 const DashboardLayout: React.FC = () => {
     const location = useLocation();
-    const { user } = useAuth();
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
     const { theme, setTheme } = useStore();
+
+    const handleLogout = () => {
+        logout();
+        navigate(ROUTES.SELECT_LOGIN);
+    };
 
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Sidebar */}
-            <aside className="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white transition-transform duration-300 transform">
+            <aside className="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white transition-transform duration-300 transform flex flex-col">
                 <div className="flex items-center justify-center h-16 border-b border-gray-700">
                     <h1 className="text-xl font-bold">IRES Dashboard</h1>
                 </div>
-                <nav className="mt-6">
+                
+                {/* Navigation Items */}
+                <nav className="flex-1 mt-6">
                     <ul>
                         {navItems.map((item) => (
                             <li key={item.path}>
@@ -68,6 +85,19 @@ const DashboardLayout: React.FC = () => {
                         ))}
                     </ul>
                 </nav>
+
+                {/* Logout Button */}
+                <div className="p-4 border-t border-gray-700">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center w-full px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors rounded-lg"
+                    >
+                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
             </aside>
 
             {/* Main Content */}

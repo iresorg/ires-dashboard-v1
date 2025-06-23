@@ -11,7 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const { user } = useAuth();
 
     if (!user) {
-        return <Navigate to={ROUTES.LOGIN} replace />;
+        return <Navigate to={ROUTES.SELECT_LOGIN} replace />;
     }
 
     return <>{children}</>;

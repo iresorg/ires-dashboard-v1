@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput"; // Adjust path if needed
 
 interface ResponderLoginInputs {
@@ -8,6 +10,8 @@ interface ResponderLoginInputs {
 }
 
 const ResponderLoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,7 +19,15 @@ const ResponderLoginForm: React.FC = () => {
   } = useForm<ResponderLoginInputs>();
 
   const onSubmit = async (data: ResponderLoginInputs) => {
-    alert(JSON.stringify(data));
+    try {
+      // For responder login, use responderId as email and token as password
+      await login(data.responderId, data.token, 'responder');
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (

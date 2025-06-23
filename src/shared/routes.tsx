@@ -10,23 +10,18 @@ import AgentsPage from "@/features/agents/components/AgentsPage";
 import RegisterPage from "@/features/auth/components/RegisterPage";
 import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
 
-// 👇 Updated pages
+// Auth pages
 import TabLogin from "@/features/auth/pages/TabLogin";
 import LoginPage from "@/features/auth/pages/LoginPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/", // 👈 Default landing page now shows TabLogin
+    path: ROUTES.SELECT_LOGIN,
     element: <TabLogin />,
   },
   {
-    path: "/login/:type", // 👈 Dynamic login route (admin, agent, responder)
+    path: ROUTES.LOGIN,
     element: <LoginPage />,
-  },
-
-  {
-    path: "/src/features/dashboard/components/DashboardLayout.tsx",
-    element: <DashboardLayout />, // 👈 This path is not used, but included for completeness
   },
   {
     path: ROUTES.REGISTER,
@@ -56,10 +51,11 @@ export const router = createBrowserRouter([
         path: "agents",
         element: <AgentsPage />,
       },
+      
     ],
   },
   {
-    path: "*", // 👈 Redirect all unknown routes to the role selection page
-    element: <Navigate to="/" replace />,
+    path: "*",
+    element: <Navigate to={ROUTES.SELECT_LOGIN} replace />,
   },
 ]);
