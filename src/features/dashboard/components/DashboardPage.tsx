@@ -4,6 +4,7 @@ import { ROUTES } from '@/shared/constants/routes';
 import Button from '@/shared/components/ui/Button';
 import LineChart from '@/shared/components/charts/LineChart';
 
+
 const DashboardPage: React.FC = () => {
   const recentActivityData = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
