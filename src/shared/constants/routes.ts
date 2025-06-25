@@ -1,14 +1,17 @@
 export const ROUTES = {
-  SELECT_LOGIN: "/", 
-  LOGIN: "/login/:type", 
+  SELECT_LOGIN: "/",
+  LOGIN: "/login/:type",
   LOGIN_ADMIN: "/login/admin",
-  LOGIN_AGENT: "/login/agent", 
+  LOGIN_AGENT: "/login/agent",
   LOGIN_RESPONDER: "/login/responder",
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
   INCIDENTS: "/dashboard/incidents",
   RESPONDERS: "/dashboard/responders",
   AGENTS: "/dashboard/agents",
+  USERS: "/dashboard/users",
+  TICKETS: "/dashboard/tickets",
+  SETTINGS: "/dashboard/settings",
 } as const;
 
 export const PROTECTED_ROUTES = [
