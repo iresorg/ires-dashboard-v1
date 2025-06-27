@@ -75,7 +75,7 @@ const AgentsPage: React.FC = () => {
                         </tr>
                         {/* Agent 2 */}
                         <tr className="border-b">
-                            <td className="py-3 px-4 whitespace-nowrap">AGNT17J</td>
+                            <td className="py-3 px-4 whitespace-nowrap">AGNT117J</td>
                             <td className="py-3 px-4 whitespace-nowrap">
                                 <span className="inline-flex items-center gap-2">
                                     <span className="w-3 h-3 rounded-full bg-red-500"></span>
