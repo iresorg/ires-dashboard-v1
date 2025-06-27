@@ -2,6 +2,8 @@ import React from 'react';
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
+import SearchIcon from "@/shared/assets/icons/search.svg";
+// import { ThemeProvider } from "@/shared/ThemeContext";
 
 const AgentsPage: React.FC = () => {
     return (
@@ -13,17 +15,22 @@ const AgentsPage: React.FC = () => {
                     <span className="text-sm font-semibold">Create Agent</span>
                 </button>
                 {/* Search */}
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Search ID"
-                        className="px-4 py-2 border border-gray-300 rounded"
-                    />
-                </div>
+                <div className="relative flex items-center bottom-5">
+            <img
+                src={SearchIcon}
+                alt="Search Icon"
+                className="absolute top-3 left-3 h-4 text-gray-400 pointer-events-none"
+            />
+            <input
+                type="text"
+                placeholder="Search ID"
+                className="pl-10 pr-4 py-2 bg-gray-300 border border-gray-300 rounded-xl text-center"
+            />
+        </div>
             </div>
             {/* Table */}
             <div className="bg-white rounded-lg shadow overflow-x-auto">
-                <table className="min-w-full text-sm">
+                <table className="min-w-full text-sm dark:text-black">
                     <thead>
                         <tr className="text-left border-b">
                             <th className="py-3 px-4 font-semibold whitespace-nowrap">
@@ -114,7 +121,9 @@ const AgentsPage: React.FC = () => {
                 </table>
             </div>
             {/* Pagination */}
+            
         </div>
+        
     );
 };
 
