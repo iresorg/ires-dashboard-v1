@@ -121,6 +121,7 @@ const navItems: NavItem[] = [
 
 const Aside: React.FC = () => {
   const location = useLocation();
+  const isActiveSettings = location.pathname === ROUTES.SETTINGS;
 
   return (
     <aside
@@ -155,14 +156,13 @@ const Aside: React.FC = () => {
 
           {/* Settings*/}
           <li className="mt-10">
-            <Link
-              to={ROUTES.SETTINGS}
-              className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
-                location.pathname === ROUTES.SETTINGS
-                  ? "bg-[#EAF1FF] text-[#0C0E5D] font-semibold shadow-sm"
-                  : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
-              }`}
-            >
+           <Link
+  to={ROUTES.SETTINGS}
+  className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
+    isActiveSettings
+      ? "text-black font-semibold"
+      : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
+  }`}>
               <div className="w-6 h-6">
                 <svg
                   width="24"
