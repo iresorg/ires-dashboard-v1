@@ -22,9 +22,17 @@ jobs:
         run: npm ci
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment
+      - name: Force Link Vercel Project
+        run: |
+          rm -rf .vercel  # Clear any existing config
+          vercel link --yes --confirm \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --project=${{ secrets.VERCEL_PROJECT_ID }} \
+            --scope=${{ secrets.VERCEL_TEAM }}
+
+      - name: Pull Environment Variables
         run: |
           vercel pull --yes --environment=production \
             --token=${{ secrets.VERCEL_TOKEN }} \
@@ -33,7 +41,7 @@ jobs:
             --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Production
         run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
