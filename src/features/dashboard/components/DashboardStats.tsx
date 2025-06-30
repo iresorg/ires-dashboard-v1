@@ -32,10 +32,9 @@ const DashboardStats: React.FC = () => {
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Ticket Status Summary</h2>
+     
         <BarChart />
-      </div>
+    
     </>
   );
 };
