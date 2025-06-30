@@ -7,11 +7,11 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartOptions, // ✅ ADD THIS
 } from "chart.js";
+import type { ChartOptions } from "chart.js"; 
 import { Bar } from "react-chartjs-2";
 
-// ✅ REGISTER chart components
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-// ✅ Chart data
+//  Chart data
 const data = {
   labels: ["June", "July", "August"],
   datasets: [
@@ -34,13 +34,17 @@ const data = {
   ],
 };
 
-// ✅ Chart options (with type)
+// Chart options with proper typing
 const options: ChartOptions<"bar"> = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
     legend: {
       position: "right",
+      labels: {
+        usePointStyle: true, 
+        pointStyle: "circle", 
+      },
     },
     title: {
       display: false,
@@ -51,25 +55,33 @@ const options: ChartOptions<"bar"> = {
       beginAtZero: true,
       title: {
         display: true,
-        text: "↑ Number of Tickets",
-        font: { weight: "bold", size: 14 },
+        text: "Number of Tickets",
+        font: {
+          weight: 700,
+          size: 14,
+        },
       },
-      ticks: { stepSize: 5 },
+      ticks: {
+        stepSize: 5,
+      },
     },
     x: {
       title: {
         display: true,
         text: "Months",
-        font: { weight: "normal", size: 14 },
+        font: {
+          weight: "normal",
+          size: 14,
+        },
       },
     },
   },
 };
 
-// ✅ Bar chart component
+// Component
 const BarChart: React.FC = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mt-6 h-[450px]">
+    <div className="bg-white p-6 rounded-lg shadow-md mt-6 h-[300px]">
       <h2 className="text-lg font-semibold mb-4">Ticket Status Chart</h2>
       <Bar data={data} options={options} />
     </div>
