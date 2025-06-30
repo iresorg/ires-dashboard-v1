@@ -34,4 +34,4 @@ jobs:
         run: vercel env pull .env --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel (Production)
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm 
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm
