@@ -18,21 +18,27 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Link Vercel Project
+      - name: Force Project Link
         run: |
+          # Completely reset any existing link
+          rm -rf .vercel
           mkdir -p .vercel
-          vercel link --yes --confirm \
-            --token=${{ secrets.VERCEL_TOKEN }} \
-            --project=${{ secrets.VERCEL_PROJECT_ID }} \
-            --scope=${{ secrets.VERCEL_TEAM }}
+          
+          # Create project.json manually
+          echo '{
+            "projectId": "${{ secrets.VERCEL_PROJECT_ID }}",
+            "orgId": "${{ secrets.VERCEL_ORG_ID }}",
+            "settings": {}
+          }' > .vercel/project.json
 
       - name: Pull Environment
         run: |
           vercel pull --yes --environment=production \
-            --token=${{ secrets.VERCEL_TOKEN }}
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --scope=${{ secrets.VERCEL_TEAM }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy
         run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
