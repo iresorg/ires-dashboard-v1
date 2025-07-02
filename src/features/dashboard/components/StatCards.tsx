@@ -18,7 +18,7 @@ const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       className={`flex items-center gap-4 px-6 py-4 rounded-xl shadow-sm ${bgColor} ${textColor} ${
-        border ? "border" : ""
+        border ? "border border-[#CFC3C3]" : ""
       }`}
     >
       <img src={iconSrc} alt={label} className="w-8 h-8" />
