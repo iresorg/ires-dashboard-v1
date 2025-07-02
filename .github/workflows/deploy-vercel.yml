@@ -2,36 +2,43 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm ci
+          node-version: 18
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@latest
 
-      - name: Pull Vercel project settings (links project in CI)
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Force Project Link
+        run: |
+          # Completely reset any existing link
+          rm -rf .vercel
+          mkdir -p .vercel
+          
+          # Create project.json manually
+          echo '{
+            "projectId": "${{ secrets.VERCEL_PROJECT_ID }}",
+            "orgId": "${{ secrets.VERCEL_ORG_ID }}",
+            "settings": {}
+          }' > .vercel/project.json
+
+      - name: Pull Environment
+        run: |
+          vercel pull --yes --environment=production \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --scope=${{ secrets.VERCEL_TEAM }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Pull Environment Variables (optional)
-        run: vercel env pull .env --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Vercel (Production)
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm
+      - name: Deploy
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}

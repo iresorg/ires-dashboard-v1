@@ -1,22 +1,24 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
-// import { useAuth } from "@/features/auth/hooks/useAuth";
 import Aside from "@/features/dashboard/Aside";
 import Navbar from "@/features/dashboard/components/Navbar";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
-  // const { user } = useAuth();
+
 
   const pathname = location.pathname;
+  const lastSegment = pathname.split("/").pop();
+
+  const formattedSegment =
+    lastSegment
+      ?.replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase()) ?? "Dashboard";
+
   const pageName =
     pathname === "/dashboard"
       ? "Admin Dashboard"
-      : pathname
-          .split("/")
-          .pop()
-          ?.replace(/-/g, " ")
-          .replace(/\b\w/g, (char) => char.toUpperCase()) || "Dashboard";
+      : `${formattedSegment} Dashboard`;
 
   return (
     <div className="min-h-screen bg-gray-100">

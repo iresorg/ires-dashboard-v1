@@ -121,13 +121,14 @@ const navItems: NavItem[] = [
 
 const Aside: React.FC = () => {
   const location = useLocation();
+  const isActiveSettings = location.pathname === ROUTES.SETTINGS;
 
   return (
     <aside
       className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md"
       style={{ backgroundImage: `url(${Background})` }}
     >
-      <div className="h-20 flex items-center justify-center">
+      <div className="h-20 flex items-center px-6">
         <Logo />
       </div>
 
@@ -158,8 +159,8 @@ const Aside: React.FC = () => {
             <Link
               to={ROUTES.SETTINGS}
               className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
-                location.pathname === ROUTES.SETTINGS
-                  ? "bg-[#EAF1FF] text-[#0C0E5D] font-semibold shadow-sm"
+                isActiveSettings
+                  ? "text-black font-semibold"
                   : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
               }`}
             >
