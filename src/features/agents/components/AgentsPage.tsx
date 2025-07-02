@@ -16,17 +16,17 @@ const AgentsPage: React.FC = () => {
                 </button>
                 {/* Search */}
                 <div className="relative flex items-center bottom-5">
-            <img
-                src={SearchIcon}
-                alt="Search Icon"
-                className="absolute top-3 left-3 h-4 text-gray-400 pointer-events-none"
-            />
-            <input
-                type="text"
-                placeholder="Search ID"
-                className="pl-10 pr-4 py-2 bg-gray-300 border border-gray-300 rounded-xl text-center"
-            />
-        </div>
+                    <img
+                        src={SearchIcon}
+                        alt="Search Icon"
+                        className="absolute top-3 left-3 h-4 text-gray-400 pointer-events-none"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search ID"
+                        className="pl-10 pr-4 py-2 bg-gray-300 border border-gray-300 rounded-xl text-center"
+                    />
+                </div>
             </div>
             {/* Table */}
             <div className="bg-white rounded-lg shadow overflow-x-auto">
@@ -121,9 +121,17 @@ const AgentsPage: React.FC = () => {
                 </table>
             </div>
             {/* Pagination */}
-            
+            <div className="flex flex-row justify-center items-center mx-auto">
+                <button className="px-2 text-gray-700 hover:text-black">
+                    Previous
+                </button>
+                <p className="mx-2">Page 1 of 10</p>
+                <button className="px-2 rounded text-gray-700 hover:text-black">
+                    Next
+                </button>
+            </div>
         </div>
-        
+
     );
 };
 
