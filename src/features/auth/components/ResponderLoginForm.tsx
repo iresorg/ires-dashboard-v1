@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput"; // Adjust path if needed
 
 interface ResponderLoginInputs {
@@ -8,6 +10,8 @@ interface ResponderLoginInputs {
 }
 
 const ResponderLoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,7 +19,15 @@ const ResponderLoginForm: React.FC = () => {
   } = useForm<ResponderLoginInputs>();
 
   const onSubmit = async (data: ResponderLoginInputs) => {
-    alert(JSON.stringify(data));
+    try {
+      // For responder login, use responderId as email and token as password
+      await login(data.responderId, data.token, 'responder');
+      // Navigate to dashboard after successful login
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -36,7 +48,7 @@ const ResponderLoginForm: React.FC = () => {
               {...register("responderId", {
                 required: "Responder ID is required",
               })}
-              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-500 text-[var(--foreground-main)] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-500 text-[#727171] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
               placeholder="Responder ID"
             />
             {errors.responderId && (
