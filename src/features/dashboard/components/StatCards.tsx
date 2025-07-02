@@ -13,7 +13,7 @@ const StatCard: React.FC<StatCardProps> = ({
   iconSrc,
   bgColor = "bg-white",
   textColor = "text-black",
-  border = true,
+  border = false,
 }) => {
   return (
     <div

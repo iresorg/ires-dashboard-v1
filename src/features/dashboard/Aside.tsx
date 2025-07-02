@@ -128,7 +128,7 @@ const Aside: React.FC = () => {
       className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md"
       style={{ backgroundImage: `url(${Background})` }}
     >
-      <div className="h-20 flex items-center justify-center">
+      <div className="h-20 flex items-center px-6">
         <Logo />
       </div>
 
@@ -156,13 +156,14 @@ const Aside: React.FC = () => {
 
           {/* Settings*/}
           <li className="mt-10">
-           <Link
-  to={ROUTES.SETTINGS}
-  className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
-    isActiveSettings
-      ? "text-black font-semibold"
-      : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
-  }`}>
+            <Link
+              to={ROUTES.SETTINGS}
+              className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
+                isActiveSettings
+                  ? "text-black font-semibold"
+                  : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
+              }`}
+            >
               <div className="w-6 h-6">
                 <svg
                   width="24"
