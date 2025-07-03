@@ -121,15 +121,20 @@ const AgentsPage: React.FC = () => {
                 </table>
             </div>
             {/* Pagination */}
-            <div className="flex flex-row justify-center items-center mx-auto">
-                <button className="px-2 text-gray-700 hover:text-black">
-                    Previous
+            <div className="flex items-center justify-center space-x-2 mt-4">
+                {/* Previous */}
+                <button className="text-gray-400 cursor-not-allowed px-3 py-1">
+                    ← Previous
                 </button>
-                <p className="mx-2">Page 1 of 10</p>
-                <button className="px-2 rounded text-gray-700 hover:text-black">
-                    Next
-                </button>
+
+            {/* Page Numbers */}
+            <button className="bg-blue-900 text-white px-3 py-1 rounded-full">1</button>
+            <button className="text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
+            <button className="text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
+            <span className="text-gray-500 px-2">...</span>
+            <button className="text-gray-700 hover:bg-gray-200 px-3 py-1">Next →</button>
             </div>
+
         </div>
 
     );
