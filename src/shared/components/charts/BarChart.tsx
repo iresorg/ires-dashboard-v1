@@ -81,7 +81,7 @@ const options: ChartOptions<"bar"> = {
 // Component
 const BarChart: React.FC = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mt-6 h-[300px]">
+    <div className="p-6  bg-white rounded-lg shadow-md mt-6 h-[300px]">
       <h2 className="text-lg font-semibold mb-4">Ticket Status Chart</h2>
       <Bar data={data} options={options} />
     </div>
