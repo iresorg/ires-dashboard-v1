@@ -1,4 +1,4 @@
-// DashboardPage.tsx
+
 import React from "react";
 // import DashboardStats from "./DashboardStats";
 import ArrowLeft from "@/shared/assets/icons/ArrowLeft.svg";
@@ -7,7 +7,6 @@ import Person from "@shared/assets/icons/Vector.svg";
 import Role from "@shared/assets/icons/Shield.svg";
 import ActivityIcon from "@/shared/assets/icons/activity-icon.svg";
 import TimeIcon from "@/shared/assets/icons/time-icon.svg";
-
 
 const recentActivity = [
   {

@@ -2,21 +2,31 @@ import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
-import UserTable from "@/features/users/components/UserTable";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
+import UserTable from "@/features/users/components/UserTable";
+import AddAdminModal from "@/features/admin/components/AddAdminModal";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
 const UsersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAddAdminModal, setShowAddAdminModal] = useState(false);
 
-  const users = [
+  const users: User[] = [
     {
       id: 1,
       name: "Lexis Colenial",
       email: "lexiscole@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
-      actions: "Edit",
     },
     {
       id: 2,
@@ -24,7 +34,6 @@ const UsersPage: React.FC = () => {
       email: "robert.fox@gmail.com",
       role: "Super Admin",
       status: "Active",
-      actions: "Edit",
     },
     {
       id: 3,
@@ -32,7 +41,6 @@ const UsersPage: React.FC = () => {
       email: "mark@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
-      actions: "Edit",
     },
     {
       id: 4,
@@ -40,7 +48,6 @@ const UsersPage: React.FC = () => {
       email: "jenny.wilson@gmail.com",
       role: "Responder Admin",
       status: "Inactive",
-      actions: "Edit",
     },
     {
       id: 5,
@@ -48,7 +55,6 @@ const UsersPage: React.FC = () => {
       email: "ralph.edwards@gmail.com",
       role: "Responder Admin",
       status: "Active",
-      actions: "Edit",
     },
     {
       id: 6,
@@ -56,7 +62,6 @@ const UsersPage: React.FC = () => {
       email: "albert.flores@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
-      actions: "Edit",
     },
     {
       id: 7,
@@ -64,7 +69,6 @@ const UsersPage: React.FC = () => {
       email: "annette.black@gmail.com",
       role: "Agent Admin",
       status: "Active",
-      actions: "Edit",
     },
   ];
 
@@ -77,8 +81,11 @@ const UsersPage: React.FC = () => {
   return (
     <div className="flex flex-col h-full overflow-hidden px-4 py-2">
       <div className="flex flex-row justify-between">
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
-          <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
+        <button
+          onClick={() => setShowAddAdminModal(true)}
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+        >
+          <img src={AddIcon} alt="Add Admin" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Add New Admin</span>
         </button>
 
@@ -111,10 +118,8 @@ const UsersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Table */}
       <UserTable users={filteredUsers} />
 
-      {/* Pagination */}
       <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
@@ -132,6 +137,10 @@ const UsersPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {showAddAdminModal && (
+        <AddAdminModal onClose={() => setShowAddAdminModal(false)} />
+      )}
     </div>
   );
 };

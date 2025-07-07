@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import RedButton from "@shared/assets/icons/Ellipse 9.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import Person from "@shared/assets/icons/Vector.svg";
@@ -8,6 +8,7 @@ import Actions from "@shared/assets/icons/Group.svg";
 import Pen from "@shared/assets/icons/pen.svg";
 import Scissors from "@shared/assets/icons/scissors.svg";
 import Delete from "@shared/assets/icons/delete.svg";
+import EditAdminModal from "@/features/admin/components/EditAdminModal";
 
 interface User {
   id: number;
@@ -15,7 +16,6 @@ interface User {
   email: string;
   role: string;
   status: string;
-  actions: string;
 }
 
 interface UserTableProps {
@@ -23,6 +23,17 @@ interface UserTableProps {
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+
+  const handleEdit = (user: User) => {
+    setEditingUser(user);
+  };
+
+  const handleSaveEdit = (updatedUser: User) => {
+    console.log("Updated user data:", updatedUser);
+    setEditingUser(null);
+  };
+
   return (
     <div className="flex-1 overflow-auto mt-4">
       <table className="min-w-full table-fixed border-collapse text-sm">
@@ -75,7 +86,10 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
               </td>
               <td className="px-4 py-4">
                 <div className="flex items-center space-x-4">
-                  <button className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-5 rounded-sm">
+                  <button
+                    onClick={() => handleEdit(user)}
+                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-5 rounded-sm"
+                  >
                     <span className="text-sm">Edit</span>
                     <img src={Pen} className="h-3 w-3" />
                   </button>
@@ -90,6 +104,14 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
           ))}
         </tbody>
       </table>
+
+      {editingUser && (
+        <EditAdminModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
     </div>
   );
 };
