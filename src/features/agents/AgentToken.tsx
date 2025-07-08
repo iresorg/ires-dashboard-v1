@@ -8,7 +8,7 @@ import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import RevokeIcon from "@/shared/assets/icons/revoke.svg";
 import EyeToggleIcon from "@/shared/assets/icons/eye-toggle.svg";
 
-const initialAgents = [
+const Agents = [
   {
     id: "***********",
     actualToken: "1234-5678-XYZ",
@@ -37,9 +37,8 @@ const initialAgents = [
 
 const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [agents, setAgents] = useState(initialAgents);
+  const [agents, setAgents] = useState(Agents);
 
-  // Toggle token visibility
   const handleToggleToken = (index: number) => {
     const updated = [...agents];
     updated[index].showToken = !updated[index].showToken;
@@ -49,7 +48,7 @@ const AgentsPage: React.FC = () => {
     setAgents(updated);
   };
 
-  // Handle revoke
+ 
   const handleRevoke = (index: number) => {
     const updated = [...agents];
     updated[index].status = "Revoked";
