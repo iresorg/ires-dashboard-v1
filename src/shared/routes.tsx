@@ -7,6 +7,7 @@ import DashboardPage from "@/features/dashboard/components/DashboardPage";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
+import AgentTokenPage from "@/features/agents/components/AgentTokenPage"; // 
 import UsersPage from "@/features/users/components/UsersPage";
 import TicketsPage from "@/features/tickets/components/TicketsPage";
 import SettingsPage from "@/features/settings/components/SettingsPage";
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />, // /dashboard
+        element: <DashboardPage />,
       },
       {
         path: "incidents",
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: "agents",
         element: <AgentsPage />,
+      },
+      {
+        path: "agents/:agentId/tokens", 
+        element: <AgentTokenPage />, 
       },
       {
         path: "users",

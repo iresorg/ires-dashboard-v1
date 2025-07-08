@@ -3,7 +3,7 @@ import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
-import ResponderIcon from "@/shared/assets/icons/adminusers.svg";
+import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
@@ -53,7 +53,7 @@ const RespondersPage: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
           <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Generate Token</span>
+          <span className="text-sm font-semibold">Create New Responder</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
@@ -173,7 +173,7 @@ const RespondersPage: React.FC = () => {
                     </button>
 
                     <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
-                      <span>Update Status</span>
+                      <span>Manage Status</span>
                     </button>
                   </div>
                 </td>

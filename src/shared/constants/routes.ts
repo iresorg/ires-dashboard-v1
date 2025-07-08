@@ -5,10 +5,12 @@ export const ROUTES = {
   LOGIN_AGENT: "/login/agent",
   LOGIN_RESPONDER: "/login/responder",
   REGISTER: "/register",
+
   DASHBOARD: "/dashboard",
   INCIDENTS: "/dashboard/incidents",
   RESPONDERS: "/dashboard/responders",
   AGENTS: "/dashboard/agents",
+  AGENT_TOKENS: "/dashboard/agents/:agentId/tokens", 
   USERS: "/dashboard/users",
   TICKETS: "/dashboard/tickets",
   SETTINGS: "/dashboard/settings",
@@ -19,6 +21,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.INCIDENTS,
   ROUTES.RESPONDERS,
   ROUTES.AGENTS,
+  ROUTES.AGENT_TOKENS, 
 ] as const;
 
 export const PUBLIC_ROUTES = [

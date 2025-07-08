@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/shared/constants/routes";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
@@ -6,7 +8,6 @@ import SearchIcon from "@/shared/assets/icons/search.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
-
 
 const agents = [
   {
@@ -16,13 +17,13 @@ const agents = [
     updatedAt: "2025-06-20",
   },
   {
-    id: "AGNT117J",
+    id: "AGNT224Z",
     status: "Inactive",
     createdAt: "2025-06-05",
     updatedAt: "2025-06-10",
   },
   {
-    id: "AGNT117J",
+    id: "AGNT339B",
     status: "Active",
     createdAt: "2025-06-01",
     updatedAt: "2025-06-20",
@@ -31,6 +32,7 @@ const agents = [
 
 const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const filteredAgents = agents.filter((agent) =>
     agent.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -129,7 +131,14 @@ const AgentsPage: React.FC = () => {
                     <button className="px-3 py-1 rounded bg-[#D9D9D9] hover:bg-gray-200 text-sm">
                       View Details
                     </button>
-                    <button className="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600 text-sm">
+                    <button
+                      onClick={() =>
+                        navigate(
+                          ROUTES.AGENT_TOKENS.replace(":agentId", agent.id)
+                        )
+                      }
+                      className="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600 text-sm"
+                    >
                       Manage Tokens
                     </button>
                   </div>
