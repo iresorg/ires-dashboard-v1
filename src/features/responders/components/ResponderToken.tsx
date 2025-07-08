@@ -9,6 +9,8 @@ import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 
+
+
 const responders = [
   {
     id: "TIRSP2117J",
@@ -40,7 +42,7 @@ const responders = [
   },
 ];
 
-const RespondersPage: React.FC = () => {
+const ResponderToken: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredResponders = responders.filter((responder) =>
@@ -53,7 +55,7 @@ const RespondersPage: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
           <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Generate Token</span>
+          <span className="text-sm font-semibold">Create Responder</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
@@ -173,7 +175,7 @@ const RespondersPage: React.FC = () => {
                     </button>
 
                     <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
-                      <span>Update Status</span>
+                      <span>Manage Status</span>
                     </button>
                   </div>
                 </td>
@@ -205,4 +207,4 @@ const RespondersPage: React.FC = () => {
   );
 };
 
-export default RespondersPage;
+export default ResponderToken;

@@ -1,12 +1,12 @@
-
 import React from "react";
-// import DashboardStats from "./DashboardStats";
+import DashboardStats from "./DashboardStats";
 import ArrowLeft from "@/shared/assets/icons/ArrowLeft.svg";
 import ArrowRight from "@/shared/assets/icons/ArrowRight.svg";
 import Person from "@shared/assets/icons/Vector.svg";
 import Role from "@shared/assets/icons/Shield.svg";
 import ActivityIcon from "@/shared/assets/icons/activity-icon.svg";
 import TimeIcon from "@/shared/assets/icons/time-icon.svg";
+
 
 const recentActivity = [
   {
@@ -25,13 +25,17 @@ const recentActivity = [
 
 const DashboardPage: React.FC = () => {
   return (
-    <div className="min-h-screen p-6 space-y-10 overflow-auto">
-      {/* <DashboardStats /> */}
+    <div className="flex flex-col space-y-10 min-h-full">
+      {/* Stats Section */}
+      <DashboardStats />
 
-      <div className="p-6 rounded-xl">
-        <h3 className="text-lg font-semibold mb-4">Recent</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+      {/* Recent Activity Table */}
+      <div className="p-6 flex-1 flex flex-col overflow-hidden">
+        <h3 className="text-lg font-bold mb-4 text-[#0C0E5D]">Recent</h3>
+
+        {/* Table Scroll Area */}
+        <div className="flex-1 overflow-auto">
+          <table className="w-full text-sm text-left min-w-[600px] text-black">
             <thead className="font-bold">
               <tr className="border-b">
                 <th className="w-[200px] px-4 py-2 text-left">
@@ -63,16 +67,17 @@ const DashboardPage: React.FC = () => {
             <tbody>
               {recentActivity.map((item, index) => (
                 <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="py-3">{item.user}</td>
-                  <td className="py-3">{item.role}</td>
-                  <td className="py-3">{item.activity}</td>
-                  <td className="py-3">{item.timestamp}</td>
+                  <td className="py-3 px-4">{item.user}</td>
+                  <td className="py-3 px-4">{item.role}</td>
+                  <td className="py-3 px-4">{item.activity}</td>
+                  <td className="py-3 px-4">{item.timestamp}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
+        {/* Pagination */}
         <div className="flex items-center justify-center space-x-2 mt-6 text-sm text-gray-700">
           <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
             <img src={ArrowLeft} alt="Previous" className="h-4" />

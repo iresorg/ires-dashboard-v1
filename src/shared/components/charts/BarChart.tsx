@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -53,11 +53,17 @@ const options: ChartOptions<"bar"> = {
 };
 
 const BarChart: React.FC = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md min-h-[300px]">
+    <div className="bg-white p-6 rounded-xl shadow-md h-full overflow-hidden">
       <h2 className="text-lg font-semibold mb-4">Ticket Status Chart</h2>
-      <div className="h-[250px]">
-        <Bar data={data} options={options} />
+      <div className="h-full">
+        {mounted && <Bar data={data} options={options} />}
       </div>
     </div>
   );
