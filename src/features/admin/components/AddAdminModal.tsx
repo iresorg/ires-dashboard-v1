@@ -65,7 +65,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
           </div>
 
           {/* Role Dropdown */}
-          <div className="flex flex-row space-x-2">
+          <div className="flex flex-row">
             <label className="text-gray-700 mb-1 w-1/3 text-right">Role</label>
             <select className="w-full rounded-lg bg-gray-200 px-4 py-2 focus:outline-none appearance-none">
               <option value="" disabled selected className="hidden">-Select-</option>
@@ -74,7 +74,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
             </select>
             {/* Dropdown Icon */}
             <div className="absolute right-10 top-74 pointer-events-none">
-              <img src={DropdownIcon} alt="dropdown" className="h-3 w-3"/>
+              <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
             </div>
           </div>
 
