@@ -6,61 +6,56 @@ import SearchIcon from "@/shared/assets/icons/search.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import RevokeIcon from "@/shared/assets/icons/revoke.svg";
-import EyeToggleIcon from "@/shared/assets/icons/eye-toggle.svg";
+import EyeIcon from "@/shared/assets/icons/eyetoggle.svg"; 
 
-const Agents = [
+const Tokens = [
   {
     id: "***********",
     actualToken: "1234-5678-XYZ",
-    status: "Yes",
-    isRevoked: "2025-07-01 12:00",
+    isRevoked: true,
+    expiresAt: "2025-07-01 12:00",
     createdAt: "2025-07-01 12:00",
     showToken: false,
   },
   {
     id: "***********",
     actualToken: "AABB-1122-CCDD",
-    status: "Yes",
-    isRevoked: "2025-07-01 12:00",
+    isRevoked: false,
+    expiresAt: "2025-07-01 12:00",
     createdAt: "2025-07-01 12:00",
     showToken: false,
   },
   {
     id: "***********",
     actualToken: "ZXCV-7788-ASDF",
-    status: "Yes",
-    isRevoked: "2025-07-01 12:00",
+    isRevoked: true,
+    expiresAt: "2025-07-01 12:00",
     createdAt: "2025-07-01 12:00",
     showToken: false,
   },
 ];
 
-const AgentsPage: React.FC = () => {
+const AgentTokenPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [agents, setAgents] = useState(Agents);
+  const [tokens, setTokens] = useState(Tokens);
 
   const handleToggleToken = (index: number) => {
-    const updated = [...agents];
+    const updated = [...tokens];
     updated[index].showToken = !updated[index].showToken;
     updated[index].id = updated[index].showToken
       ? updated[index].actualToken
       : "***********";
-    setAgents(updated);
+    setTokens(updated);
   };
 
- 
   const handleRevoke = (index: number) => {
-    const updated = [...agents];
-    updated[index].status = "Revoked";
-    updated[index].isRevoked = new Date()
-      .toISOString()
-      .slice(0, 16)
-      .replace("T", " ");
-    setAgents(updated);
+    const updated = [...tokens];
+    updated[index].isRevoked = true;
+    setTokens(updated);
   };
 
-  const filteredAgents = agents.filter((agent) =>
-    agent.id.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredTokens = tokens.filter((token) =>
+    token.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -68,7 +63,7 @@ const AgentsPage: React.FC = () => {
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
-          <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
+          <img src={AddIcon} alt="Add Token" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Generate Token</span>
         </button>
 
@@ -80,7 +75,7 @@ const AgentsPage: React.FC = () => {
           />
           <input
             type="text"
-            placeholder="Search Name/ID"
+            placeholder="Search Token"
             className="pl-10 pr-4 bg-[#D9D9D9] text-sm w-64 h-10 rounded-sm flex items-center"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -116,47 +111,39 @@ const AgentsPage: React.FC = () => {
           </thead>
 
           <tbody className="text-gray-800">
-            {filteredAgents.map((agent, index) => (
+            {filteredTokens.map((token, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 whitespace-nowrap">{agent.id}</td>
+                <td className="py-3 px-4 whitespace-nowrap">{token.id}</td>
 
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
-                        agent.status === "Active"
-                          ? "bg-green-500"
-                          : agent.status === "Revoked"
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
+                        token.isRevoked ? "bg-green-500" : "bg-red-500"
                       }`}
                     />
                     <span
-                      className={`${
-                        agent.status === "Active"
-                          ? "text-green-600"
-                          : agent.status === "Revoked"
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                      }`}
+                      className={
+                        token.isRevoked ? "text-green-600" : "text-red-600"
+                      }
                     >
-                      {agent.status}
+                      {token.isRevoked ? "Yes" : "No"}
                     </span>
                   </span>
                 </td>
 
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.isRevoked}
+                  {token.expiresAt}
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.createdAt}
+                  {token.createdAt}
                 </td>
 
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <button
                       onClick={() => handleRevoke(index)}
-                      className="flex items-center space-x-2 px-3 py-1 rounded bg-[#4CB050] hover:bg-green-600 text-white text-sm"
+                      className="flex items-center space-x-2 px-3 py-1 rounded bg-green-100 hover:bg-green-200 text-black text-sm"
                     >
                       <img src={RevokeIcon} alt="Revoke" className="h-4 w-4" />
                       <span>Revoke</span>
@@ -164,15 +151,11 @@ const AgentsPage: React.FC = () => {
 
                     <button
                       onClick={() => handleToggleToken(index)}
-                      className="flex items-center space-x-2 px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600 text-sm"
+                      className="flex items-center space-x-2 px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-black text-sm"
                     >
-                      <img
-                        src={EyeToggleIcon}
-                        alt="Toggle Token"
-                        className="h-4 w-4"
-                      />
+                      <img src={EyeIcon} alt="View/Hide" className="h-4 w-4" />
                       <span>
-                        {agent.showToken ? "Hide Token" : "View Token"}
+                        {token.showToken ? "Hide Token" : "View Token"}
                       </span>
                     </button>
                   </div>
@@ -204,4 +187,4 @@ const AgentsPage: React.FC = () => {
   );
 };
 
-export default AgentsPage;
+export default AgentTokenPage;
