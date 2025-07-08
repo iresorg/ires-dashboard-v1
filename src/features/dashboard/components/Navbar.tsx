@@ -20,13 +20,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageName }) => {
 
         {/* Right: Icons + Profile */}
         <div className="flex items-center gap-4 text-gray-600">
-          <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
+          <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <ResetIcon />
-          </button>
-
-          <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
+          </div>
+          <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <NotificationBell />
-          </button>
+          </div>
 
           <button className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <img
@@ -44,9 +43,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageName }) => {
             />
           </button>
 
-          <button className="h-12 w-12 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
+          <div className="h-12 w-12 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <ThemeToggle />
-          </button>
+          </div>
         </div>
 
         {/* border line */}

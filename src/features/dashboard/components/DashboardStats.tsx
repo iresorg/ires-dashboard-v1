@@ -9,7 +9,7 @@ import DoughnutChart from "@/shared/components/charts/DoughnutChart";
 
 const DashboardStats: React.FC = () => {
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
@@ -33,12 +33,18 @@ const DashboardStats: React.FC = () => {
         />
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <BarChart />
+      {/* Charts with fixed height */}
+      <div className="flex flex-col lg:flex-row gap-6 h-[300px]">
+        <div className="w-full lg:w-1/2">
+          <div className="h-full">
+            <BarChart />
+          </div>
         </div>
-        <DoughnutChart />
+        <div className="w-full lg:w-1/2">
+          <div className="h-full">
+            <DoughnutChart />
+          </div>
+        </div>
       </div>
     </div>
   );

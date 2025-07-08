@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import type { ChartOptions } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
@@ -29,11 +29,17 @@ const options: ChartOptions<"doughnut"> = {
 };
 
 const DoughnutChart: React.FC = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md min-h-[300px] flex flex-col justify-between">
+    <div className="bg-white p-6 rounded-xl shadow-md h-full flex flex-col justify-between overflow-hidden">
       <h2 className="text-lg font-semibold mb-2">User Roles Chart</h2>
-      <div className="relative h-[200px]">
-        <Doughnut data={data} options={options} />
+      <div className="relative flex-1">
+        {mounted && <Doughnut data={data} options={options} />}
       </div>
       <div className="mt-4 space-y-2">
         <div className="flex items-center gap-2">
