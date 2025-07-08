@@ -49,7 +49,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
 
       {/* Modal box */}
       <div
-        className="relative z-10 bg-white p-6 rounded-lg w-full max-w-md"
+        className="relative z-10 bg-white p-6 rounded-lg w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title */}

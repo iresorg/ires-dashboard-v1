@@ -30,7 +30,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
 
       {/* Modal box */}
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-md"
+        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title */}
