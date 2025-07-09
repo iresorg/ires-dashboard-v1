@@ -53,7 +53,7 @@ const RespondersPage: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
           <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create New Responder</span>
+          <span className="text-sm font-semibold" >Create New Responder</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
