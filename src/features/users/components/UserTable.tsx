@@ -9,8 +9,9 @@ import Pen from "@shared/assets/icons/pen.svg";
 import Scissors from "@shared/assets/icons/scissors.svg";
 import Delete from "@shared/assets/icons/delete.svg";
 import EditAdminModal from "@/features/admin/components/EditAdminModal";
+import ConfirmModal from "@/features/admin/components/ConfirmModal";
 
-interface User {
+interface AdminUser {
   id: number;
   name: string;
   email: string;
@@ -18,18 +19,45 @@ interface User {
   status: string;
 }
 
+interface InternalUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
 interface UserTableProps {
-  users: User[];
+  users: AdminUser[];
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<InternalUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const [confirmType, setConfirmType] = useState<
+    "deactivate" | "delete" | null
+  >(null);
 
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
+  const handleEdit = (user: AdminUser) => {
+    const [firstName = "", lastName = ""] = user.name.split(" ");
+    setEditingUser({
+      id: user.id,
+      firstName,
+      lastName,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    });
   };
 
-  const handleSaveEdit = (updatedUser: User) => {
+  const handleConfirm = () => {
+    console.log(`${confirmType} confirmed for user`, selectedUser?.name);
+    setConfirmType(null);
+    setSelectedUser(null);
+  };
+
+  const handleSaveEdit = (updatedUser: InternalUser) => {
     console.log("Updated user data:", updatedUser);
     setEditingUser(null);
   };
@@ -93,11 +121,24 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                     <span className="text-sm">Edit</span>
                     <img src={Pen} className="h-3 w-3" />
                   </button>
-                  <button className="flex items-center bg-[#D00F24]/11 pl-2 pr-5 rounded-sm">
+                  <button
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setConfirmType("deactivate");
+                    }}
+                    className="flex items-center bg-[#D00F24]/11 pl-2 pr-5 rounded-sm"
+                  >
                     <span className="text-sm">Deactivate</span>
                     <img src={Scissors} className="h-3 w-3" />
                   </button>
-                  <img src={Delete} className="h-4 w-4 cursor-pointer" />
+                  <img
+                    src={Delete}
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setConfirmType("delete");
+                    }}
+                    className="h-4 w-4 cursor-pointer"
+                  />
                 </div>
               </td>
             </tr>
@@ -105,11 +146,25 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
         </tbody>
       </table>
 
+      {/* Edit Modal */}
       {editingUser && (
         <EditAdminModal
           user={editingUser}
           onClose={() => setEditingUser(null)}
           onSave={handleSaveEdit}
+        />
+      )}
+
+      {/* Confirm Modal */}
+      {selectedUser && confirmType && (
+        <ConfirmModal
+          type={confirmType}
+          userName={selectedUser.name}
+          onClose={() => {
+            setSelectedUser(null);
+            setConfirmType(null);
+          }}
+          onConfirm={handleConfirm}
         />
       )}
     </div>
