@@ -34,8 +34,8 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose }) => {
             >
                 {/* Title */}
                 <div className="flex flex-row justify-center mb-6 space-x-1">
-                    <h2 className="text-xl font-semibold text-center">Add Admin</h2>
-                    <img src={PencilIcon} alt="Add Admin " className="w-5 h-6" />
+                    <h2 className="text-xl font-semibold text-center">Create Agent</h2>
+                    <img src={PencilIcon} alt="Create Agent" className="w-5 h-6" />
                 </div>
 
                 {/* Close Icon */}
