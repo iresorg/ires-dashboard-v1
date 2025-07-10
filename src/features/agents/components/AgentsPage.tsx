@@ -9,30 +9,39 @@ import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
-const agents = [
-  {
-    id: "AGNT117J",
-    status: "Active",
-    createdAt: "2025-06-01",
-    updatedAt: "2025-06-20",
-  },
-  {
-    id: "AGNT224Z",
-    status: "Inactive",
-    createdAt: "2025-06-05",
-    updatedAt: "2025-06-10",
-  },
-  {
-    id: "AGNT339B",
-    status: "Active",
-    createdAt: "2025-06-01",
-    updatedAt: "2025-06-20",
-  },
-];
+import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
+
+interface Agent {
+  id: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const navigate = useNavigate();
+  const agents: Agent[] = [
+    {
+      id: "AGNT117J",
+      status: "Active",
+      createdAt: "2025-06-01",
+      updatedAt: "2025-06-20",
+    },
+    {
+      id: "AGNT224Z",
+      status: "Inactive",
+      createdAt: "2025-06-05",
+      updatedAt: "2025-06-10",
+    },
+    {
+      id: "AGNT339B",
+      status: "Active",
+      createdAt: "2025-06-01",
+      updatedAt: "2025-06-20",
+    },
+  ];
 
   const filteredAgents = agents.filter((agent) =>
     agent.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -43,7 +52,9 @@ const AgentsPage: React.FC = () => {
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         {/* Button */}
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+        <button
+          onClick={() => setShowCreateAgentModal(true)}
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
           <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Agent</span>
         </button>
@@ -103,18 +114,16 @@ const AgentsPage: React.FC = () => {
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className={`w-3 h-3 rounded-full ${
-                        agent.status === "Active"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
+                      className={`w-3 h-3 rounded-full ${agent.status === "Active"
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                        }`}
                     />
                     <span
-                      className={`${
-                        agent.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
+                      className={`${agent.status === "Active"
+                        ? "text-green-600"
+                        : "text-red-600"
+                        }`}
                     >
                       {agent.status}
                     </span>
@@ -167,6 +176,9 @@ const AgentsPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+      {showCreateAgentModal && (
+        <CreateAgentModal onClose={() => setShowCreateAgentModal(false)} />
+      )}
     </div>
   );
 };

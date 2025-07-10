@@ -6,7 +6,8 @@ import SearchIcon from "@/shared/assets/icons/search.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import RevokeIcon from "@/shared/assets/icons/revoke.svg";
-import EyeIcon from "@/shared/assets/icons/eyetoggle.svg"; 
+import EyeIcon from "@/shared/assets/icons/eyetoggle.svg";
+import ManageAgentModal from "@/features/agents/components/ManageAgentModal"; // ✅ import
 
 const Tokens = [
   {
@@ -38,6 +39,7 @@ const Tokens = [
 const AgentTokenPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [tokens, setTokens] = useState(Tokens);
+  const [showManageModal, setShowManageModal] = useState(false); // ✅ modal state
 
   const handleToggleToken = (index: number) => {
     const updated = [...tokens];
@@ -62,7 +64,10 @@ const AgentTokenPage: React.FC = () => {
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+        <button
+          onClick={() => setShowManageModal(true)} // ✅ open modal
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+        >
           <img src={AddIcon} alt="Add Token" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Generate Token</span>
         </button>
@@ -183,6 +188,11 @@ const AgentTokenPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {/* Modal */}
+      {showManageModal && (
+        <ManageAgentModal onClose={() => setShowManageModal(false)} />
+      )}
     </div>
   );
 };

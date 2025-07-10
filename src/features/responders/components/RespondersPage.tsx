@@ -8,8 +8,9 @@ import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
+import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
 
-const responders = [
+const initialResponders = [
   {
     id: "TIRSP2117J",
     tier: "Tier2",
@@ -41,24 +42,70 @@ const responders = [
 ];
 
 const RespondersPage: React.FC = () => {
+  const [responders, setResponders] = useState(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCreateResponderModal, setShowCreateResponderModal] =
+    useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const respondersPerPage = 4;
 
   const filteredResponders = responders.filter((responder) =>
     responder.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const indexOfLastResponder = currentPage * respondersPerPage;
+  const indexOfFirstResponder = indexOfLastResponder - respondersPerPage;
+  const currentResponders = filteredResponders.slice(
+    indexOfFirstResponder,
+    indexOfLastResponder
+  );
+
+  const handleNextPage = () => {
+    if (
+      currentPage < Math.ceil(filteredResponders.length / respondersPerPage)
+    ) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleCreateResponder = (data: {
+    firstName: string;
+    lastName: string;
+    tier: string;
+  }) => {
+    const newResponder = {
+      id: `TIRSP${Math.floor(Math.random() * 9000) + 1000}`,
+      tier: data.tier,
+      status: "Active",
+      createdAt: new Date().toISOString().split("T")[0],
+      updatedAt: new Date().toISOString().split("T")[0],
+    };
+    setResponders((prev) => [newResponder, ...prev]);
+    setShowCreateResponderModal(false);
+  };
+
   return (
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+        <button
+          type="button"
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          onClick={() => setShowCreateResponderModal(true)}
+        >
           <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create New Responder</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-            <img src={Search} className="h-5 mr-2" />
+            <img src={Search} className="h-5 mr-2" alt="Search" />
             <input
               type="text"
               placeholder="Search ID"
@@ -69,7 +116,7 @@ const RespondersPage: React.FC = () => {
           </div>
 
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-40">
-            <img src={Filter} className="h-5 mr-2" />
+            <img src={Filter} className="h-5 mr-2" alt="Filter" />
             <select
               className="bg-transparent outline-none text-sm text-gray-700 w-full"
               defaultValue=""
@@ -100,7 +147,7 @@ const RespondersPage: React.FC = () => {
               </th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" />
+                  <img src={GreenButton} className="h-4" alt="Status" />
                   <span>Status</span>
                 </div>
               </th>
@@ -118,14 +165,13 @@ const RespondersPage: React.FC = () => {
               </th>
             </tr>
           </thead>
-
           <tbody className="text-gray-800">
-            {filteredResponders.map((responder, index) => (
+            {currentResponders.map((responder, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <button
+                    type="button"
                     className={`text-xs px-3 py-1 rounded-sm ${
                       responder.tier === "Tier2"
                         ? "bg-red-100 text-red-600 hover:bg-red-200"
@@ -135,7 +181,6 @@ const RespondersPage: React.FC = () => {
                     {responder.tier}
                   </button>
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
@@ -156,23 +201,25 @@ const RespondersPage: React.FC = () => {
                     </span>
                   </span>
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   {responder.createdAt}
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   {responder.updatedAt}
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200">
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
+                    >
                       <img src={TokenIcon} alt="Token Icon" />
                       <span>Tokens</span>
                     </button>
-
-                    <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                    >
                       <span>Manage Status</span>
                     </button>
                   </div>
@@ -185,22 +232,61 @@ const RespondersPage: React.FC = () => {
 
       {/* Pagination */}
       <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
+        <button
+          type="button"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`flex items-center gap-1 px-3 py-1 ${
+            currentPage === 1
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-[#0C0E5D] hover:underline"
+          }`}
+        >
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
+        {Array.from(
+          { length: Math.ceil(filteredResponders.length / respondersPerPage) },
+          (_, i) => (
+            <button
+              key={i + 1}
+              type="button"
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded-full ${
+                currentPage === i + 1
+                  ? "bg-[#0C0E5D] text-white"
+                  : "hover:bg-gray-200"
+              }`}
+            >
+              {i + 1}
+            </button>
+          )
+        )}
+        <button
+          type="button"
+          onClick={handleNextPage}
+          disabled={
+            currentPage ===
+            Math.ceil(filteredResponders.length / respondersPerPage)
+          }
+          className={`flex items-center gap-1 px-3 py-1 ${
+            currentPage ===
+            Math.ceil(filteredResponders.length / respondersPerPage)
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-[#0C0E5D] hover:underline"
+          }`}
+        >
           Next
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {showCreateResponderModal && (
+        <CreateResponderModal
+          onClose={() => setShowCreateResponderModal(false)}
+          onCreateResponder={handleCreateResponder}
+        />
+      )}
     </div>
   );
 };
