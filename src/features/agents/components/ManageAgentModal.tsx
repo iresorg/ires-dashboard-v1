@@ -1,11 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
+import Calendar from "@/shared/assets/icons/noto_calendar.svg";
+import RevokeTrue from "@/shared/assets/icons/revoke_true.svg";
+import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
+
+interface TokenData {
+  id: string;
+  actualToken: string;
+  isRevoked: boolean;
+  expiresAt: string;
+  createdAt: string;
+}
 
 interface ManageAgentModalProps {
   onClose: () => void;
+  agentId: string;
+  token: TokenData;
 }
 
-const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose }) => {
+const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, token }) => {
+  const [showToken, setShowToken] = useState(false);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -14,31 +29,90 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center" aria-modal="true" role="dialog">
       <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
+
+      {/* Modal Box */}
       <div
-        className="relative bg-white p-6 w-[90%] sm:w-[450px] rounded-xl shadow-xl"
+        className="relative z-10 bg-white rounded-xl shadow-lg px-8 py-10 w-[550px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 hover:opacity-50"
-        >
-          <img src={CloseIcon} alt="Close Modal" />
-        </button>
-        <h2 className="text-xl font-bold mb-4">Generate Token</h2>
-        <p className="text-sm text-gray-600 mb-4">
-          (Form fields and logic for generating a token will go here.)
-        </p>
-        <button
-          onClick={onClose}
-          className="mt-4 bg-[#0C0E5D] text-white px-4 py-2 rounded-full text-sm"
-        >
-          Close
-        </button>
+        {/* Close Icon */}
+        <div className="absolute top-4 right-4 cursor-pointer">
+          <img
+            src={CloseIcon}
+            alt="Close"
+            onClick={onClose}
+            className="h-4 w-4"
+          />
+        </div>
+
+        {/* Title */}
+        <div className="flex items-center justify-center mb-8">
+          <h2 className="text-2xl font-bold text-center">Manage Token for Agent <span>{agentId}</span></h2>
+        </div>
+
+        {/* Form */}
+        <div className="space-y-6">
+          {/* Agent ID */}
+          <div className="flex items-center space-x-6">
+            <p>Agent ID:</p>
+            <p>{agentId}</p>
+          </div>
+
+          {/* Token */}
+          <div className="flex items-center space-x-6">
+            <p>Token:</p>
+            <p>{showToken ? token.actualToken : token.id}</p>
+            <button
+              className="ml-2 px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300"
+              onClick={() => setShowToken((prev) => !prev)}
+            >
+              {showToken ? "Hide" : "Show"}
+            </button>
+          </div>
+
+          {/* Created At */}
+          <div className="flex items-center space-x-6">
+            <p>Created At:</p>
+            <p>{token.createdAt}</p>
+          </div>
+
+          {/* Expires At */}
+          <div className="flex items-center space-x-6">
+            <p>Expires At:</p>
+            <p>{token.expiresAt}</p>
+          </div>
+
+          {/* Is Revoked */}
+          <div className="flex items-center space-x-6">
+            <p>Is Revoked:</p>
+            <p>{token.isRevoked ? <img src={RevokeTrue} alt="Revoked" className="h-4 w-4 inline" /> : <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4 inline" />}</p>
+          </div>
+
+          {/* Generate */}
+          <div className="flex items-center justify-evenly pt-6">
+            <button
+              type="button"
+              className="bg-[#0C0E5D] text-white px-8 py-2 text-sm font-semibold hover:bg-[#06083a] rounded-bl-2xl rounded-tr-2xl"
+            >
+              Revoke Token
+            </button>
+
+            {/* Generate Token */}
+            <button
+              type="button"
+              className="space-x-2 bg-[#0C0E5D] text-white px-8 py-2 text-sm font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
+            >
+              <img src={Calendar} alt="Calendar" className="h-4 w-4 inline mr-2" />
+              Generate
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
