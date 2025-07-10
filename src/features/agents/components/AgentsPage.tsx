@@ -1,3 +1,4 @@
+// src/pages/AgentsPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
@@ -10,6 +11,7 @@ import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
+import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal"; // Import the new component
 
 interface Agent {
   id: string;
@@ -20,7 +22,8 @@ interface Agent {
 
 const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
+  const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false); // State for confirmation modal
+  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false); // State for creation modal
   const navigate = useNavigate();
   const agents: Agent[] = [
     {
@@ -47,14 +50,21 @@ const AgentsPage: React.FC = () => {
     agent.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Handle confirm button click in ConfirmAgentModal
+  const handleConfirm = () => {
+    setShowConfirmAgentModal(false); // Close confirmation modal
+    setShowCreateAgentModal(true); // Open creation modal
+  };
+
   return (
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         {/* Button */}
         <button
-          onClick={() => setShowCreateAgentModal(true)}
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+          onClick={() => setShowConfirmAgentModal(true)} // Show confirmation modal
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+        >
           <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Agent</span>
         </button>
@@ -114,27 +124,21 @@ const AgentsPage: React.FC = () => {
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className={`w-3 h-3 rounded-full ${agent.status === "Active"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                        }`}
+                      className={`w-3 h-3 rounded-full ${
+                        agent.status === "Active" ? "bg-green-500" : "bg-red-500"
+                      }`}
                     />
                     <span
-                      className={`${agent.status === "Active"
-                        ? "text-green-600"
-                        : "text-red-600"
-                        }`}
+                      className={`${
+                        agent.status === "Active" ? "text-green-600" : "text-red-600"
+                      }`}
                     >
                       {agent.status}
                     </span>
                   </span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.createdAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.updatedAt}
-                </td>
+                <td className="py-3 px-4 whitespace-nowrap">{agent.createdAt}</td>
+                <td className="py-3 px-4 whitespace-nowrap">{agent.updatedAt}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <button className="px-3 py-1 rounded bg-[#D9D9D9] hover:bg-gray-200 text-sm">
@@ -142,9 +146,7 @@ const AgentsPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() =>
-                        navigate(
-                          ROUTES.AGENT_TOKENS.replace(":agentId", agent.id)
-                        )
+                        navigate(ROUTES.AGENT_TOKENS.replace(":agentId", agent.id))
                       }
                       className="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600 text-sm"
                     >
@@ -164,10 +166,7 @@ const AgentsPage: React.FC = () => {
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
+        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">1</button>
         <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
         <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
         <span className="text-gray-500 px-1">...</span>
@@ -176,6 +175,14 @@ const AgentsPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {/* Modals */}
+      {showConfirmAgentModal && (
+        <ConfirmAgentModal
+          onConfirm={handleConfirm}
+          onClose={() => setShowConfirmAgentModal(false)}
+        />
+      )}
       {showCreateAgentModal && (
         <CreateAgentModal onClose={() => setShowCreateAgentModal(false)} />
       )}
