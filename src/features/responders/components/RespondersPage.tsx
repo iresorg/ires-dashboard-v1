@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
-import Search from "@/shared/assets/icons/lineicons_search-2.svg";
-import Filter from "@/shared/assets/icons/uiw_filter.svg";
+import SearchIcon from "@/shared/assets/icons/lineicons_search-2.svg";
+import FilterIcon from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
-import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
+import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 
-const responders = [
+import CreateResponderModal from "./CreateResponderModal";
+
+interface Responder {
+  id: string;
+  tier: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const responders: Responder[] = [
   {
     id: "TIRSP2117J",
     tier: "Tier2",
@@ -42,23 +52,40 @@ const responders = [
 
 const RespondersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [filterTier, setFilterTier] = useState("");
 
-  const filteredResponders = responders.filter((responder) =>
-    responder.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    document.body.style.overflow = showCreateModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showCreateModal]);
+
+  const filteredResponders = responders.filter((responder) => {
+    const matchesSearch = responder?.id
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesTier = filterTier ? responder.tier === filterTier : true;
+    return matchesSearch && matchesTier;
+  });
 
   return (
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+        <button
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          onClick={() => setShowCreateModal(true)}
+        >
           <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
-          <span className="text-sm font-semibold" >Create New Responder</span>
+          <span className="text-sm font-semibold">Create New Responder</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
+          {/* Search */}
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-            <img src={Search} className="h-5 mr-2" />
+            <img src={SearchIcon} className="h-5 mr-2" />
             <input
               type="text"
               placeholder="Search ID"
@@ -68,17 +95,17 @@ const RespondersPage: React.FC = () => {
             />
           </div>
 
+          {/* Filter by Tier */}
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-40">
-            <img src={Filter} className="h-5 mr-2" />
+            <img src={FilterIcon} className="h-5 mr-2" />
             <select
+              value={filterTier}
+              onChange={(e) => setFilterTier(e.target.value)}
               className="bg-transparent outline-none text-sm text-gray-700 w-full"
-              defaultValue=""
             >
-              <option value="" disabled>
-                Filter by Role
-              </option>
-              <option value="Field Responder">Field Responder</option>
-              <option value="Remote Responder">Remote Responder</option>
+              <option value="">All Tiers</option>
+              <option value="Tier1">Tier 1</option>
+              <option value="Tier2">Tier 2</option>
             </select>
           </div>
         </div>
@@ -95,22 +122,16 @@ const RespondersPage: React.FC = () => {
                   Responder ID
                 </span>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Tier
-              </th>
-              <th className="w-[150px] px-4 py-2 text-left">
+              <th className="py-3 px-4 font-semibold">Tier</th>
+              <th className="py-3 px-4 font-semibold">
                 <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" />
+                  <img src={GreenDot} className="h-4" />
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Created At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Updated At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
+              <th className="py-3 px-4 font-semibold">Created At</th>
+              <th className="py-3 px-4 font-semibold">Updated At</th>
+              <th className="py-3 px-4 font-semibold text-center">
                 <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
                   Actions
@@ -118,25 +139,22 @@ const RespondersPage: React.FC = () => {
               </th>
             </tr>
           </thead>
-
           <tbody className="text-gray-800">
-            {filteredResponders.map((responder, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
-
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <button
+            {filteredResponders.map((responder) => (
+              <tr key={responder.id} className="border-b hover:bg-gray-50">
+                <td className="py-3 px-4">{responder.id}</td>
+                <td className="py-3 px-4">
+                  <span
                     className={`text-xs px-3 py-1 rounded-sm ${
                       responder.tier === "Tier2"
-                        ? "bg-red-100 text-red-600 hover:bg-red-200"
-                        : "bg-[#D9D9D9] text-gray-800 hover:bg-gray-300"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-[#D9D9D9] text-gray-800"
                     }`}
                   >
                     {responder.tier}
-                  </button>
+                  </span>
                 </td>
-
-                <td className="py-3 px-4 whitespace-nowrap">
+                <td className="py-3 px-4">
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
@@ -156,22 +174,14 @@ const RespondersPage: React.FC = () => {
                     </span>
                   </span>
                 </td>
-
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.createdAt}
-                </td>
-
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.updatedAt}
-                </td>
-
-                <td className="py-3 px-4 whitespace-nowrap">
+                <td className="py-3 px-4">{responder.createdAt}</td>
+                <td className="py-3 px-4">{responder.updatedAt}</td>
+                <td className="py-3 px-4">
                   <div className="flex items-center space-x-4">
                     <button className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200">
                       <img src={TokenIcon} alt="Token Icon" />
                       <span>Tokens</span>
                     </button>
-
                     <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
                       <span>Manage Status</span>
                     </button>
@@ -201,6 +211,19 @@ const RespondersPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {/* Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setShowCreateModal(false)}
+          />
+          <div className="relative z-10">
+            <CreateResponderModal onClose={() => setShowCreateModal(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
