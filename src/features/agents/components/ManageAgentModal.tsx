@@ -3,10 +3,13 @@ import CloseIcon from "@/shared/assets/icons/close.svg";
 import Calendar from "@/shared/assets/icons/noto_calendar.svg";
 import RevokeTrue from "@/shared/assets/icons/revoke_true.svg";
 import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
+import EyeHide from "@/shared/assets/icons/eyetoggle.svg";
+import EyeShow from "@/shared/assets/icons/eye_show.svg";
+
 
 interface TokenData {
-  id: string;
-  actualToken: string;
+  id: string; // The Masked token
+  actualToken: string; // The real token
   isRevoked: boolean;
   expiresAt: string;
   createdAt: string;
@@ -15,7 +18,7 @@ interface TokenData {
 interface ManageAgentModalProps {
   onClose: () => void;
   agentId: string;
-  token: TokenData;
+  token: TokenData; // The token for display when you click the (Generate Token button) or (manage button)
 }
 
 const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, token }) => {
@@ -51,54 +54,57 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
           />
         </div>
 
-        {/* Title */}
+        {/* Modal Title */}
         <div className="flex items-center justify-center mb-8">
-          <h2 className="text-2xl font-bold text-center">Manage Token for Agent <span>{agentId}</span></h2>
+          <h2 className="text-2xl font-bold text-center">
+            Manage Token for Agent <span>{agentId}</span>
+          </h2>
         </div>
 
-        {/* Form */}
+        {/* Token Details Form (no, its a div, I no know why I use form) */}
         <div className="space-y-6">
           {/* Agent ID */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             <p>Agent ID:</p>
             <p>{agentId}</p>
           </div>
 
           {/* Token */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             <p>Token:</p>
             <p>{showToken ? token.actualToken : token.id}</p>
             <button
-              className="ml-2 px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300"
+              className="ml-2 px-2 py-1 text-xs"
               onClick={() => setShowToken((prev) => !prev)}
             >
-              {showToken ? "Hide" : "Show"}
+              {showToken ? <img src={EyeHide} alt="Hide Token" className="h-4 w-4" /> : <img src={EyeShow} alt="Show Token" className="h-4 w-4" />}
             </button>
           </div>
 
           {/* Created At */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             <p>Created At:</p>
             <p>{token.createdAt}</p>
           </div>
 
           {/* Expires At */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             <p>Expires At:</p>
             <p>{token.expiresAt}</p>
           </div>
 
-          {/* Is Revoked */}
-          <div className="flex items-center space-x-6">
+          {/* Is Revoked Row with icon */}
+          <div className="flex items-center space-x-3">
             <p>Is Revoked:</p>
             <p>{token.isRevoked ? <img src={RevokeTrue} alt="Revoked" className="h-4 w-4 inline" /> : <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4 inline" />}</p>
           </div>
 
-          {/* Generate */}
+          {/* Buttons Here */}
           <div className="flex items-center justify-evenly pt-6">
+            {/* Revoke Token */}
             <button
               type="button"
-              className="bg-[#0C0E5D] text-white px-8 py-2 text-sm font-semibold hover:bg-[#06083a] rounded-bl-2xl rounded-tr-2xl"
+              className="bg-[#D10F24] text-white px-8 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
             >
               Revoke Token
             </button>
@@ -106,9 +112,9 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
             {/* Generate Token */}
             <button
               type="button"
-              className="space-x-2 bg-[#0C0E5D] text-white px-8 py-2 text-sm font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
+              className="space-x-2 bg-[#0C0E5D] text-white px-8 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
             >
-              <img src={Calendar} alt="Calendar" className="h-4 w-4 inline mr-2" />
+              <img src={Calendar} alt="Calendar" className="h-6 w-6 inline mr-2" />
               Generate
             </button>
           </div>
