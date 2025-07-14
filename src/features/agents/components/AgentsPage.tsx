@@ -1,4 +1,3 @@
-// src/pages/AgentsPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
@@ -11,7 +10,7 @@ import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
-import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal"; // Import the new component
+import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 
 interface Agent {
   id: string;
@@ -22,8 +21,9 @@ interface Agent {
 
 const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false); // State for confirmation modal
-  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false); // State for creation modal
+  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
+  const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
+  const [pendingAgent, setPendingAgent] = useState<{ firstName: string; lastName: string } | null>(null);
   const navigate = useNavigate();
   const agents: Agent[] = [
     {
@@ -50,10 +50,17 @@ const AgentsPage: React.FC = () => {
     agent.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle confirm button click in ConfirmAgentModal
+  const handleAgentSubmit = (firstName: string, lastName: string) => {
+    setPendingAgent({ firstName, lastName });
+    setShowCreateAgentModal(false);
+    setShowConfirmAgentModal(true);
+  };
+
   const handleConfirm = () => {
-    setShowConfirmAgentModal(false); // Close confirmation modal
-    setShowCreateAgentModal(true); // Open creation modal
+    // Here you can handle the final submission logic, e.g., API call
+    console.log("Agent created:", pendingAgent);
+    setShowConfirmAgentModal(false);
+    setPendingAgent(null);
   };
 
   return (
@@ -62,7 +69,7 @@ const AgentsPage: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         {/* Button */}
         <button
-          onClick={() => setShowConfirmAgentModal(true)} // Show confirmation modal
+          onClick={() => setShowCreateAgentModal(true)}
           className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
         >
           <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
@@ -177,14 +184,17 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Modals */}
+      {showCreateAgentModal && (
+        <CreateAgentModal
+          onClose={() => setShowCreateAgentModal(false)}
+          onSubmit={handleAgentSubmit}
+        />
+      )}
       {showConfirmAgentModal && (
         <ConfirmAgentModal
           onConfirm={handleConfirm}
           onClose={() => setShowConfirmAgentModal(false)}
         />
-      )}
-      {showCreateAgentModal && (
-        <CreateAgentModal onClose={() => setShowCreateAgentModal(false)} />
       )}
     </div>
   );
