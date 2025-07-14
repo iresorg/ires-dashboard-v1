@@ -79,7 +79,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
                     ticket.status === "Analyzing" ? "bg-[#D9CEED]" :
                     ticket.status === "Assigned" ? "bg-[#FF7143]" :
                     "bg-gray-500"
-                }  px-2 py-1 rounded`}>
+                }  px-2 py-1 rounded-xl`}>
                     {ticket.status}
                 </span>
               </td>

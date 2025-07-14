@@ -19,7 +19,7 @@ interface InternalTicket {
 }
 
 const TicketsPage: React.FC = () => {
-  const [tickets, setTickets] = useState<InternalTicket[]>([
+  const [tickets] = useState<InternalTicket[]>([
     {
       id: "TKT-001",
       ticket: "TKT-001",
@@ -54,12 +54,15 @@ const TicketsPage: React.FC = () => {
       actions: "View Ticket",
     },
   ]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterTier, setFilterTier] = useState("");
 
   const filteredTickets = tickets.filter(
     (ticket) =>
-      ticket.id.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (ticket.id + ticket.title + ticket.status + ticket.assignedto)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) &&
       (filterTier === "" || ticket.tier === filterTier)
   );
 
@@ -84,7 +87,7 @@ const TicketsPage: React.FC = () => {
             <img src={Search} className="h-5 mr-2" alt="Search" />
             <input
               type="text"
-              placeholder="Search ID"
+              placeholder="Search by ID"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
@@ -107,6 +110,7 @@ const TicketsPage: React.FC = () => {
       </div>
 
       <TicketsTable tickets={filteredTickets} />
+
       <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
@@ -124,13 +128,18 @@ const TicketsPage: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
       <div className="ml-3">
         <div>
           <p className="font-bold text-lg mb-4 mt-6">Status Progress Tracker</p>
         </div>
         <div>
-          <button className="bg-[#D9D9D9] w-100 h-9 rounded-2xl mb-10"><span className="text-[#ffffff] bg-[#4A4A4A] rounded-xl -ml-83 text-xs font-bold pb-2.5 pr-3 pl-3 pt-3">Pending</span></button>
-        </div> 
+          <button className="bg-[#D9D9D9] w-100 h-9 rounded-2xl mb-10">
+            <span className="text-[#ffffff] bg-[#4A4A4A] rounded-xl -ml-83 text-xs font-bold pb-2.5 pr-3 pl-3 pt-3">
+              Pending
+            </span>
+          </button>
+        </div>
         <div>
           <p className="font-bold mb-3">Activities Log</p>
         </div>
@@ -145,12 +154,12 @@ const TicketsPage: React.FC = () => {
             <p>2:30PM</p>
             <p>7:54PM</p>
           </div>
-           <div className="mr-3">
+          <div className="mr-3">
             <p>-</p>
             <p>-</p>
             <p>-</p>
           </div>
-           <div>
+          <div>
             <p>Status changed to ‘Analyzing’ by Responder Admin</p>
             <p>Assigned to Responder-04</p>
             <p>Responder updated status to ‘Resolved’</p>
