@@ -1,4 +1,6 @@
+// src/pages/dashboard/responders/index.tsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
@@ -25,20 +27,6 @@ const initialResponders = [
     createdAt: "2025-06-16",
     updatedAt: "2025-06-18",
   },
-  {
-    id: "TIRSP2145G",
-    tier: "Tier1",
-    status: "Active",
-    createdAt: "2025-06-05",
-    updatedAt: "2025-06-15",
-  },
-  {
-    id: "TIRSP2109R",
-    tier: "Tier2",
-    status: "Active",
-    createdAt: "2025-05-27",
-    updatedAt: "2025-06-02",
-  },
 ];
 
 const RespondersPage: React.FC = () => {
@@ -48,6 +36,7 @@ const RespondersPage: React.FC = () => {
     useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
+  const navigate = useNavigate();
 
   const filteredResponders = responders.filter((responder) =>
     responder.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -60,28 +49,10 @@ const RespondersPage: React.FC = () => {
     indexOfLastResponder
   );
 
-  const handleNextPage = () => {
-    if (
-      currentPage < Math.ceil(filteredResponders.length / respondersPerPage)
-    ) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleCreateResponder = (data: {
-    firstName: string;
-    lastName: string;
-    tier: string;
-  }) => {
+  const handleCreateResponder = () => {
     const newResponder = {
       id: `TIRSP${Math.floor(Math.random() * 9000) + 1000}`,
-      tier: data.tier,
+      tier: "Tier1",
       status: "Active",
       createdAt: new Date().toISOString().split("T")[0],
       updatedAt: new Date().toISOString().split("T")[0],
@@ -92,7 +63,6 @@ const RespondersPage: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
           type="button"
@@ -211,6 +181,9 @@ const RespondersPage: React.FC = () => {
                   <div className="flex items-center space-x-4">
                     <button
                       type="button"
+                      onClick={() =>
+                        navigate(`/dashboard/responders/${responder.id}/tokens`)
+                      }
                       className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
                     >
                       <img src={TokenIcon} alt="Token Icon" />
@@ -234,7 +207,7 @@ const RespondersPage: React.FC = () => {
       <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
         <button
           type="button"
-          onClick={handlePrevPage}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
           className={`flex items-center gap-1 px-3 py-1 ${
             currentPage === 1
@@ -264,7 +237,13 @@ const RespondersPage: React.FC = () => {
         )}
         <button
           type="button"
-          onClick={handleNextPage}
+          onClick={() =>
+            setCurrentPage((prev) =>
+              prev < Math.ceil(filteredResponders.length / respondersPerPage)
+                ? prev + 1
+                : prev
+            )
+          }
           disabled={
             currentPage ===
             Math.ceil(filteredResponders.length / respondersPerPage)

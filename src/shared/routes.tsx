@@ -6,14 +6,14 @@ import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
 import DashboardPage from "@/features/dashboard/components/DashboardPage";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
+import ResponderTokenPage from "@/features/responders/components/ResponderToken"; 
 import AgentsPage from "@/features/agents/components/AgentsPage";
-import AgentTokenPage from "@/features/agents/components/AgentTokenPage"; // 
+import AgentTokenPage from "@/features/agents/components/AgentTokenPage";
 import UsersPage from "@/features/users/components/UsersPage";
 import TicketsPage from "@/features/tickets/components/TicketsPage";
 import SettingsPage from "@/features/settings/components/SettingsPage";
 import RegisterPage from "@/features/auth/components/RegisterPage";
 import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
-
 
 // Auth pages
 import TabLogin from "@/features/auth/pages/TabLogin";
@@ -53,12 +53,16 @@ export const router = createBrowserRouter([
         element: <RespondersPage />,
       },
       {
+        path: "responders/:responderId/tokens",
+        element: <ResponderTokenPage />,
+      },
+      {
         path: "agents",
         element: <AgentsPage />,
       },
       {
-        path: "agents/:agentId/tokens", 
-        element: <AgentTokenPage />, 
+        path: "agents/:agentId/tokens",
+        element: <AgentTokenPage />,
       },
       {
         path: "users",
