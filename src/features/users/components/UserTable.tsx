@@ -145,28 +145,6 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
           ))}
         </tbody>
       </table>
-
-      {/* Edit Modal */}
-      {editingUser && (
-        <EditAdminModal
-          user={editingUser}
-          onClose={() => setEditingUser(null)}
-          onSave={handleSaveEdit}
-        />
-      )}
-
-      {/* Confirm Modal */}
-      {selectedUser && confirmType && (
-        <ConfirmModal
-          type={confirmType}
-          userName={selectedUser.name}
-          onClose={() => {
-            setSelectedUser(null);
-            setConfirmType(null);
-          }}
-          onConfirm={handleConfirm}
-        />
-      )}
     </div>
   );
 };
