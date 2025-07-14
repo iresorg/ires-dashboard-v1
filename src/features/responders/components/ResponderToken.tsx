@@ -1,16 +1,17 @@
+// src/pages/dashboard/responders/[responderId]/tokens.tsx
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
-
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
 
-const responders = [
+const tokenData = [
   {
     id: "TIRSP2117J",
     tier: "Tier2",
@@ -25,41 +26,32 @@ const responders = [
     createdAt: "2025-06-16",
     updatedAt: "2025-06-18",
   },
-  {
-    id: "TIRSP2145G",
-    tier: "Tier1",
-    status: "Active",
-    createdAt: "2025-06-05",
-    updatedAt: "2025-06-15",
-  },
-  {
-    id: "TIRSP2109R",
-    tier: "Tier2",
-    status: "Active",
-    createdAt: "2025-05-27",
-    updatedAt: "2025-06-02",
-  },
 ];
 
 const RespondersToken: React.FC = () => {
+  const { responderId } = useParams<{ responderId: string }>();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredResponders = responders.filter((responder) =>
-    responder.id.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredTokens = tokenData.filter(
+    (responder) =>
+      responder.id === responderId &&
+      responder.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="p-4 sm:p-6">
-      {/* Top Bar */}
+    
+
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
-          <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
+          <img src={AddIcon} alt="Generate Token" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Generate Token</span>
         </button>
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-            <img src={Search} className="h-5 mr-2" />
+            <img src={Search} className="h-5 mr-2" alt="Search" />
             <input
               type="text"
               placeholder="Search ID"
@@ -70,7 +62,7 @@ const RespondersToken: React.FC = () => {
           </div>
 
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-40">
-            <img src={Filter} className="h-5 mr-2" />
+            <img src={Filter} className="h-5 mr-2" alt="Filter" />
             <select
               className="bg-transparent outline-none text-sm text-gray-700 w-full"
               defaultValue=""
@@ -101,7 +93,7 @@ const RespondersToken: React.FC = () => {
               </th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" />
+                  <img src={GreenButton} className="h-4" alt="Status" />
                   <span>Status</span>
                 </div>
               </th>
@@ -119,12 +111,10 @@ const RespondersToken: React.FC = () => {
               </th>
             </tr>
           </thead>
-
           <tbody className="text-gray-800">
-            {filteredResponders.map((responder, index) => (
+            {filteredTokens.map((responder, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <button
                     className={`text-xs px-3 py-1 rounded-sm ${
@@ -136,7 +126,6 @@ const RespondersToken: React.FC = () => {
                     {responder.tier}
                   </button>
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
@@ -157,24 +146,20 @@ const RespondersToken: React.FC = () => {
                     </span>
                   </span>
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   {responder.createdAt}
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   {responder.updatedAt}
                 </td>
-
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center space-x-4">
                     <button className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200">
                       <img src={TokenIcon} alt="Token Icon" />
-                      <span>Tokens</span>
+                      <span>Regenerate</span>
                     </button>
-
                     <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
-                      <span>Update Status</span>
+                      <span>Deactivate</span>
                     </button>
                   </div>
                 </td>
@@ -190,7 +175,6 @@ const RespondersToken: React.FC = () => {
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-
         <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
           1
         </button>
