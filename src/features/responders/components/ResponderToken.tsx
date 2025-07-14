@@ -1,4 +1,3 @@
-// src/pages/dashboard/responders/[responderId]/tokens.tsx
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
@@ -10,41 +9,75 @@ import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
+import ManageResponderModal from "@/features/responders/components/ManageResponderModal";
 
-const tokenData = [
+
+interface TokenData {
+  id: string;
+  actualToken: string;
+  isRevoked: boolean;
+  tier: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt: string;
+}
+
+
+const tokenData: TokenData[] = [
   {
     id: "TIRSP2117J",
+    actualToken: "realtoken1",
+    isRevoked: false,
     tier: "Tier2",
     status: "Active",
     createdAt: "2025-06-20",
     updatedAt: "2025-06-22",
+    expiresAt: "2025-07-22",
   },
   {
     id: "TIRSP2123H",
+    actualToken: "realtoken2",
+    isRevoked: true,
     tier: "Tier1",
     status: "Inactive",
     createdAt: "2025-06-16",
     updatedAt: "2025-06-18",
+    expiresAt: "2025-07-18",
   },
 ];
 
 const RespondersToken: React.FC = () => {
   const { responderId } = useParams<{ responderId: string }>();
   const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredTokens = tokenData.filter(
-    (responder) =>
-      responder.id === responderId &&
-      responder.id.toLowerCase().includes(searchQuery.toLowerCase())
+  const [showModal, setShowModal] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null); 
+  const filteredTokens = tokenData.filter((responder) =>
+    responder.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleOpenModal = (token: TokenData) => {
+
+    setSelectedToken(token);
+    setShowModal(true);
+  };
 
   return (
     <div className="p-4 sm:p-6">
-    
+      {showModal && selectedToken && responderId && (
+        <ManageResponderModal
+          onClose={() => setShowModal(false)}
+          responderId={responderId}
+          token={selectedToken}
+        />
+      )}
 
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <button className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]">
+        <button
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          onClick={() => handleOpenModal(tokenData[0])}
+        >
           <img src={AddIcon} alt="Generate Token" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Generate Token</span>
         </button>
@@ -154,7 +187,10 @@ const RespondersToken: React.FC = () => {
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200">
+                    <button
+                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
+                      onClick={() => handleOpenModal(responder)}
+                    >
                       <img src={TokenIcon} alt="Token Icon" />
                       <span>Regenerate</span>
                     </button>
