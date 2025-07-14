@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
@@ -37,9 +38,13 @@ const Tokens = [
 ];
 
 const AgentTokenPage: React.FC = () => {
+  const { agentId } = useParams<{ agentId: string }>();
   const [searchQuery, setSearchQuery] = useState("");
   const [tokens, setTokens] = useState(Tokens);
-  const [showManageModal, setShowManageModal] = useState(false); // ✅ modal state
+  const [showManageModal, setShowManageModal] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<typeof Tokens[0] | null>(
+    null
+  );
 
   const handleToggleToken = (index: number) => {
     const updated = [...tokens];
@@ -60,12 +65,17 @@ const AgentTokenPage: React.FC = () => {
     token.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const openManageModal = (token: typeof Tokens[0]) => {
+    setSelectedToken(token);
+    setShowManageModal(true);
+  };
+
   return (
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
-          onClick={() => setShowManageModal(true)} // ✅ open modal
+          onClick={() => openManageModal(tokens[0])} // Open modal for first token as example
           className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
         >
           <img src={AddIcon} alt="Add Token" className="h-5 mb-1" />
@@ -123,9 +133,8 @@ const AgentTokenPage: React.FC = () => {
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className={`w-3 h-3 rounded-full ${
-                        token.isRevoked ? "bg-green-500" : "bg-red-500"
-                      }`}
+                      className={`w-3 h-3 rounded-full ${token.isRevoked ? "bg-green-500" : "bg-red-500"
+                        }`}
                     />
                     <span
                       className={
@@ -163,6 +172,13 @@ const AgentTokenPage: React.FC = () => {
                         {token.showToken ? "Hide Token" : "View Token"}
                       </span>
                     </button>
+
+                    <button
+                      onClick={() => openManageModal(token)}
+                      className="flex items-center space-x-2 px-3 py-1 rounded bg-blue-100 hover:bg-blue-200 text-blue-600 text-sm"
+                    >
+                      <span>Manage</span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -190,8 +206,12 @@ const AgentTokenPage: React.FC = () => {
       </div>
 
       {/* Modal */}
-      {showManageModal && (
-        <ManageAgentModal onClose={() => setShowManageModal(false)} />
+      {showManageModal && selectedToken && agentId && (
+        <ManageAgentModal
+          onClose={() => setShowManageModal(false)}
+          agentId={agentId}
+          token={selectedToken}
+        />
       )}
     </div>
   );
