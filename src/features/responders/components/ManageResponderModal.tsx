@@ -5,6 +5,7 @@ import RevokeTrue from "@/shared/assets/icons/revoke_true.svg";
 import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
 import EyeHide from "@/shared/assets/icons/eyetoggle.svg";
 import EyeShow from "@/shared/assets/icons/eye_show.svg";
+import { format } from 'date-fns';
 
 export interface TokenData {
   id: string;
@@ -26,6 +27,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
   token,
 }) => {
   const [showToken, setShowToken] = useState(false);
+  const [isRevoked, setIsRevoked] = useState(token.isRevoked); // Local state for revocation
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -33,6 +35,10 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  const handleRevokeToken = () => {
+    setIsRevoked(true);
+  };
 
   return (
     <div
@@ -58,24 +64,26 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
           />
         </div>
 
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-4">
           <h2 className="text-2xl font-bold text-center">
-            Manage Token for Responder <span>{responderId}</span>
+            Manage Token for <span>{responderId}</span>
           </h2>
         </div>
 
-        <div className="space-y-6 text-sm">
-          <div className="flex items-center space-x-3">
-            <p className="font-medium">Responder ID:</p>
+        <div className="space-y-1 text-sm ml-10">
+          <div className="flex items-center space-x-1 ml-8 text-base">
+            <p>Responder ID:</p>
             <p>{responderId}</p>
           </div>
-
-          <div className="flex items-center space-x-3">
-            <p className="font-medium">Token:</p>
-            <p>{showToken ? token.actualToken : token.id}</p>
+          <div className="flex items-center space-x-1 ml-8 text-base">
+            <p>Token:</p>
+            <p className="w-[100px] font-mono leading-none">
+              {showToken ? token.actualToken.slice(0, 10) : "**********"}
+            </p>
             <button
-              className="ml-2"
+              className="ml-3"
               onClick={() => setShowToken((prev) => !prev)}
+              aria-label={showToken ? "Hide token" : "Show token"}
             >
               {showToken ? (
                 <img src={EyeHide} alt="Hide Token" className="h-4 w-4" />
@@ -85,35 +93,37 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <p className="font-medium">Created At:</p>
-            <p>{token.createdAt}</p>
+          <div className="flex items-center space-x-1 ml-8 text-base">
+            <p>Created At:</p>
+            <p>{format(new Date(token.createdAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <p className="font-medium">Expires At:</p>
-            <p>{token.expiresAt}</p>
+          <div className="flex items-center space-x-1 ml-8 text-base">
+            <p>Expires At:</p>
+            <p>{format(new Date(token.expiresAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <p className="font-medium">Is Revoked:</p>
-            {token.isRevoked ? (
+          <div className="flex items-center space-x-1 ml-8 text-base">
+            <p>Is Revoked:</p>
+            {isRevoked ? (
               <img src={RevokeTrue} alt="Revoked" className="h-4 w-4" />
             ) : (
               <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4" />
             )}
           </div>
 
-          <div className="flex items-center justify-evenly pt-6">
+          <div className="flex items-center justify-evenly pt-6 -ml-6">
             <button
               type="button"
-              className="bg-[#D10F24] text-white px-8 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
+              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
+              onClick={handleRevokeToken}
+              disabled={isRevoked}
             >
               Revoke Token
             </button>
             <button
               type="button"
-              className="bg-[#0C0E5D] text-white px-8 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
+              className="bg-[#0C0E5D] text-white px-4 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
             >
               <img
                 src={Calendar}
