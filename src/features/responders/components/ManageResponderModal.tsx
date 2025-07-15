@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import Calendar from "@/shared/assets/icons/noto_calendar.svg";
 import RevokeTrue from "@/shared/assets/icons/revoke_true.svg";
 import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
 import EyeHide from "@/shared/assets/icons/eyetoggle.svg";
 import EyeShow from "@/shared/assets/icons/eye_show.svg";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 export interface TokenData {
   id: string;
@@ -19,25 +20,49 @@ interface ManageResponderModalProps {
   onClose: () => void;
   responderId: string;
   token: TokenData;
+  onGenerateToken?: () => void; // Optional callback to refresh tokens in parent
 }
 
 const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
   onClose,
   responderId,
   token,
+  onGenerateToken,
 }) => {
   const [showToken, setShowToken] = useState(false);
-  const [isRevoked, setIsRevoked] = useState(token.isRevoked); // Local state for revocation
+  const [isRevoked, setIsRevoked] = useState(token.isRevoked);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("Modal rendered with responderId:", responderId, "token:", token);
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, []);
+  }, [responderId, token]);
 
-  const handleRevokeToken = () => {
-    setIsRevoked(true);
+  const handleRevokeToken = async () => {
+    console.log("Revoking token for responderId:", responderId, "tokenId:", token.id);
+    try {
+      await axios.post(`/api/responders/${responderId}/tokens/${token.id}/revoke`);
+      setIsRevoked(true);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to revoke token");
+      console.error("Revoke error:", err);
+    }
+  };
+
+  const handleGenerateToken = async () => {
+    console.log("Generating token for responderId:", responderId);
+    try {
+      const response = await axios.post(`/api/responders/${responderId}/tokens/generate`);
+      console.log("Generate token response:", response.data);
+      onGenerateToken?.(); // Notify parent to refresh tokens
+      onClose(); // Close modal after generation
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to generate token");
+      console.error("Generate error:", err);
+    }
   };
 
   return (
@@ -50,7 +75,6 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
-
       <div
         className="relative z-10 bg-white rounded-xl shadow-lg px-8 py-10 w-[550px]"
         onClick={(e) => e.stopPropagation()}
@@ -69,6 +93,8 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
             Manage Token for <span>{responderId}</span>
           </h2>
         </div>
+
+        {error && <div className="text-red-600 mb-4">{error}</div>}
 
         <div className="space-y-1 text-sm ml-10">
           <div className="flex items-center space-x-1 ml-8 text-base">
@@ -92,17 +118,14 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
               )}
             </button>
           </div>
-
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Created At:</p>
             <p>{format(new Date(token.createdAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
-
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Expires At:</p>
             <p>{format(new Date(token.expiresAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
-
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Is Revoked:</p>
             {isRevoked ? (
@@ -111,7 +134,6 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
               <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4" />
             )}
           </div>
-
           <div className="flex items-center justify-evenly pt-6 -ml-6">
             <button
               type="button"
@@ -124,6 +146,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
             <button
               type="button"
               className="bg-[#0C0E5D] text-white px-4 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
+              onClick={handleGenerateToken}
             >
               <img
                 src={Calendar}

@@ -1,4 +1,3 @@
-// src/pages/dashboard/responders/index.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
@@ -12,7 +11,15 @@ import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
 
-const initialResponders = [
+interface Responder {
+  id: string;
+  tier: "Tier1" | "Tier2";
+  status: "Active" | "Inactive";
+  createdAt: string;
+  updatedAt: string;
+}
+
+const initialResponders: Responder[] = [
   {
     id: "TIRSP2117J",
     tier: "Tier2",
@@ -27,13 +34,26 @@ const initialResponders = [
     createdAt: "2025-06-16",
     updatedAt: "2025-06-18",
   },
+  {
+    id: "TIRSP2145G",
+    tier: "Tier1",
+    status: "Active",
+    createdAt: "2025-06-05",
+    updatedAt: "2025-06-15",
+  },
+  {
+    id: "TIRSP2109R",
+    tier: "Tier2",
+    status: "Active",
+    createdAt: "2025-05-27",
+    updatedAt: "2025-06-02",
+  },
 ];
 
 const RespondersPage: React.FC = () => {
-  const [responders, setResponders] = useState(initialResponders);
+  const [responders, setResponders] = useState<Responder[]>(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showCreateResponderModal, setShowCreateResponderModal] =
-    useState(false);
+  const [showCreateResponderModal, setShowCreateResponderModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
   const navigate = useNavigate();
@@ -50,7 +70,7 @@ const RespondersPage: React.FC = () => {
   );
 
   const handleCreateResponder = () => {
-    const newResponder = {
+    const newResponder: Responder = {
       id: `TIRSP${Math.floor(Math.random() * 9000) + 1000}`,
       tier: "Tier1",
       status: "Active",
@@ -112,21 +132,15 @@ const RespondersPage: React.FC = () => {
                   Responder ID
                 </span>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Tier
-              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">Tier</th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
                   <img src={GreenButton} className="h-4" alt="Status" />
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Created At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Updated At
-              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">Created At</th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">Updated At</th>
               <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
                 <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
@@ -136,8 +150,8 @@ const RespondersPage: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-gray-800">
-            {currentResponders.map((responder, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
+            {currentResponders.map((responder) => (
+              <tr key={responder.id} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <button
@@ -155,35 +169,25 @@ const RespondersPage: React.FC = () => {
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
-                        responder.status === "Active"
-                          ? "bg-green-500"
-                          : "bg-red-500"
+                        responder.status === "Active" ? "bg-green-500" : "bg-red-500"
                       }`}
                     />
                     <span
                       className={`${
-                        responder.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-600"
+                        responder.status === "Active" ? "text-green-600" : "text-red-600"
                       }`}
                     >
                       {responder.status}
                     </span>
                   </span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.createdAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.updatedAt}
-                </td>
+                <td className="py-3 px-4 whitespace-nowrap">{responder.createdAt}</td>
+                <td className="py-3 px-4 whitespace-nowrap">{responder.updatedAt}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center space-x-4">
                     <button
                       type="button"
-                      onClick={() =>
-                        navigate(`/dashboard/responders/${responder.id}/tokens`)
-                      }
+                      onClick={() => navigate(`/dashboard/responders/${responder.id}/tokens`)}
                       className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
                     >
                       <img src={TokenIcon} alt="Token Icon" />
@@ -226,9 +230,7 @@ const RespondersPage: React.FC = () => {
               type="button"
               onClick={() => setCurrentPage(i + 1)}
               className={`px-3 py-1 rounded-full ${
-                currentPage === i + 1
-                  ? "bg-[#0C0E5D] text-white"
-                  : "hover:bg-gray-200"
+                currentPage === i + 1 ? "bg-[#0C0E5D] text-white" : "hover:bg-gray-200"
               }`}
             >
               {i + 1}
@@ -244,13 +246,9 @@ const RespondersPage: React.FC = () => {
                 : prev
             )
           }
-          disabled={
-            currentPage ===
-            Math.ceil(filteredResponders.length / respondersPerPage)
-          }
+          disabled={currentPage === Math.ceil(filteredResponders.length / respondersPerPage)}
           className={`flex items-center gap-1 px-3 py-1 ${
-            currentPage ===
-            Math.ceil(filteredResponders.length / respondersPerPage)
+            currentPage === Math.ceil(filteredResponders.length / respondersPerPage)
               ? "text-gray-400 cursor-not-allowed"
               : "text-[#0C0E5D] hover:underline"
           }`}
