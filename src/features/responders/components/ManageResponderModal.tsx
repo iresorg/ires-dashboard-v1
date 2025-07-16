@@ -46,8 +46,14 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
     try {
       await axios.post(`/api/responders/${responderId}/tokens/${token.id}/revoke`);
       setIsRevoked(true);
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to revoke token");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || "Failed to revoke token");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to revoke token");
+      }
       console.error("Revoke error:", err);
     }
   };
@@ -59,11 +65,20 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
       console.log("Generate token response:", response.data);
       onGenerateToken?.(); // Notify parent to refresh tokens
       onClose(); // Close modal after generation
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to generate token");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || "Failed to generate token");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to generate token");
+      }
       console.error("Generate error:", err);
     }
   };
+
+  // Optional guard: if token is undefined/null (while loading)
+  if (!token) return null;
 
   return (
     <div
@@ -79,6 +94,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
         className="relative z-10 bg-white rounded-xl shadow-lg px-8 py-10 w-[550px]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
         <div className="absolute top-4 right-4 cursor-pointer">
           <img
             src={CloseIcon}
@@ -88,19 +104,23 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
           />
         </div>
 
+        {/* Title */}
         <div className="flex items-center justify-center mb-4">
           <h2 className="text-2xl font-bold text-center">
             Manage Token for <span>{responderId}</span>
           </h2>
         </div>
 
+        {/* Error Display */}
         {error && <div className="text-red-600 mb-4">{error}</div>}
 
+        {/* Token Details */}
         <div className="space-y-1 text-sm ml-10">
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Responder ID:</p>
             <p>{responderId}</p>
           </div>
+
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Token:</p>
             <p className="w-[100px] font-mono leading-none">
@@ -118,14 +138,17 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
               )}
             </button>
           </div>
+
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Created At:</p>
             <p>{format(new Date(token.createdAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
+
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Expires At:</p>
             <p>{format(new Date(token.expiresAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
+
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Is Revoked:</p>
             {isRevoked ? (
@@ -134,10 +157,12 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
               <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4" />
             )}
           </div>
+
+          {/* Buttons */}
           <div className="flex items-center justify-evenly pt-6 -ml-6">
             <button
               type="button"
-              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
+              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl disabled:opacity-50"
               onClick={handleRevokeToken}
               disabled={isRevoked}
             >

@@ -56,7 +56,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             {message}
           </h3>
           {isDelete && (
-            <p className="text-sm text[#000000] font-2xl mb-4 font-bold opacity-50">
+            <p className="text-sm text-[#000000] font-bold opacity-50 mb-4">
               This action is irreversible
             </p>
           )}
