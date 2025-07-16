@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RedButton from "@shared/assets/icons/Ellipse 9.svg";
+import RedButton from "@/shared/assets/icons/Ellipse 9.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import Person from "@shared/assets/icons/Vector.svg";
 import Email from "@shared/assets/icons/icon.svg";
@@ -145,6 +145,28 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
           ))}
         </tbody>
       </table>
+
+      {/* Edit Admin Modal */}
+      {editingUser && (
+        <EditAdminModal
+          user={editingUser}
+          onSave={handleSaveEdit}
+          onClose={() => setEditingUser(null)}
+        />
+      )}
+
+      {/* Confirm Modal */}
+      {confirmType && selectedUser && (
+        <ConfirmModal
+          type={confirmType}
+          userName={selectedUser.name}
+          onConfirm={handleConfirm}
+          onClose={() => {
+            setConfirmType(null);
+            setSelectedUser(null);
+          }}
+        />
+      )}
     </div>
   );
 };

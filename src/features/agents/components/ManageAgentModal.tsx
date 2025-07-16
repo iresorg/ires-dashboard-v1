@@ -5,7 +5,7 @@ import RevokeTrue from "@/shared/assets/icons/revoke_true.svg";
 import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
 import EyeHide from "@/shared/assets/icons/eyetoggle.svg";
 import EyeShow from "@/shared/assets/icons/eye_show.svg";
-
+import { format } from 'date-fns';
 
 interface TokenData {
   id: string; // The Masked token
@@ -23,6 +23,7 @@ interface ManageAgentModalProps {
 
 const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, token }) => {
   const [showToken, setShowToken] = useState(false);
+  const [isRevoked, setIsRevoked] = useState(token.isRevoked); // Local state for revocation
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -31,6 +32,9 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
     };
   }, []);
 
+  const handleRevokeToken = () => {
+    setIsRevoked(true);
+  };
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center" aria-modal="true" role="dialog">
@@ -55,66 +59,75 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
         </div>
 
         {/* Modal Title */}
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-4 -ml-4">
           <h2 className="text-2xl font-bold text-center">
-            Manage Token for Agent <span>{agentId}</span>
+            Manage Token for <span>{agentId}</span>
           </h2>
         </div>
 
         {/* Token Details Form (no, its a div, I no know why I use form) */}
-        <div className="space-y-6">
-          {/* Agent ID */}
-          <div className="flex items-center space-x-3">
+        <div className="space-y-1 text-sm ml-10">
+          <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Agent ID:</p>
             <p>{agentId}</p>
           </div>
 
           {/* Token */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Token:</p>
-            <p>{showToken ? token.actualToken : token.id}</p>
+            <p className="w-[100px] font-mono leading-none">
+              {showToken ? token.actualToken.slice(0, 10) : "**********"}
+            </p>
             <button
-              className="ml-2 px-2 py-1 text-xs"
+              className="ml-3"
               onClick={() => setShowToken((prev) => !prev)}
+              aria-label={showToken ? "Hide token" : "Show token"}
             >
-              {showToken ? <img src={EyeHide} alt="Hide Token" className="h-4 w-4" /> : <img src={EyeShow} alt="Show Token" className="h-4 w-4" />}
+              {showToken ? (
+                <img src={EyeHide} alt="Hide Token" className="h-4 w-4" />
+              ) : (
+                <img src={EyeShow} alt="Show Token" className="h-4 w-4" />
+              )}
             </button>
           </div>
 
-          {/* Created At */}
-          <div className="flex items-center space-x-3">
+<div className="flex items-center space-x-1 ml-8 text-base">
             <p>Created At:</p>
-            <p>{token.createdAt}</p>
+            <p>{format(new Date(token.createdAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
 
-          {/* Expires At */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Expires At:</p>
-            <p>{token.expiresAt}</p>
+            <p>{format(new Date(token.expiresAt), "yyyy-MM-dd h:mm:ss a")}</p>
           </div>
 
-          {/* Is Revoked Row with icon */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Is Revoked:</p>
-            <p>{token.isRevoked ? <img src={RevokeTrue} alt="Revoked" className="h-4 w-4 inline" /> : <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4 inline" />}</p>
+            {isRevoked ? (
+              <img src={RevokeTrue} alt="Revoked" className="h-4 w-4" />
+            ) : (
+              <img src={RevokeFalse} alt="Not Revoked" className="h-4 w-4" />
+            )}
           </div>
 
-          {/* Buttons Here */}
-          <div className="flex items-center justify-evenly pt-6">
-            {/* Revoke Token */}
+          <div className="flex items-center justify-evenly pt-6 -ml-6">
             <button
               type="button"
-              className="bg-[#D10F24] text-white px-8 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
+              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl"
+              onClick={handleRevokeToken}
+              disabled={isRevoked}
             >
               Revoke Token
             </button>
-
-            {/* Generate Token */}
             <button
               type="button"
-              className="space-x-2 bg-[#0C0E5D] text-white px-8 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
+              className="bg-[#0C0E5D] text-white px-4 py-2 text-lg font-semibold hover:bg-[#06083a] rounded-tl-2xl rounded-br-2xl"
             >
-              <img src={Calendar} alt="Calendar" className="h-6 w-6 inline mr-2" />
+              <img
+                src={Calendar}
+                alt="Calendar"
+                className="h-6 w-6 inline mr-2"
+              />
               Generate
             </button>
           </div>
