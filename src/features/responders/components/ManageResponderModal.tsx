@@ -107,7 +107,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
         {/* Title */}
         <div className="flex items-center justify-center mb-4">
           <h2 className="text-2xl font-bold text-center">
-            Manage Token for <span>{responderId}</span>
+            Manage Token for <span>{token.id}</span>
           </h2>
         </div>
 
@@ -118,7 +118,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
         <div className="space-y-1 text-sm ml-10">
           <div className="flex items-center space-x-1 ml-8 text-base">
             <p>Responder ID:</p>
-            <p>{responderId}</p>
+            <p>{token.id}</p>
           </div>
 
           <div className="flex items-center space-x-1 ml-8 text-base">

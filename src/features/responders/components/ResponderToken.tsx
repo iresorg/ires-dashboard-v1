@@ -10,7 +10,7 @@ import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
 import ManageResponderModal from "@/features/responders/components/ManageResponderModal";
-
+import ConfirmModal from "@/features/admin/components/ConfirmModal";
 
 interface TokenData {
   id: string;
@@ -22,7 +22,6 @@ interface TokenData {
   updatedAt: string;
   expiresAt: string;
 }
-
 
 const tokenData: TokenData[] = [
   {
@@ -65,23 +64,40 @@ const tokenData: TokenData[] = [
     updatedAt: "2025-06-02",
     expiresAt: "2025-07-10",
   },
-
-  
 ];
 
 const RespondersToken: React.FC = () => {
   const { responderId } = useParams<{ responderId: string }>();
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null); 
+  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null);
+
+  //  state for confirm modal
+  const [confirmType, setConfirmType] = useState<
+    "deactivate" | "delete" | null
+  >(null);
+  const [selectedResponder, setSelectedResponder] = useState<TokenData | null>(
+    null
+  );
+
   const filteredTokens = tokenData.filter((responder) =>
     responder.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleOpenModal = (token: TokenData) => {
-
     setSelectedToken(token);
     setShowModal(true);
+  };
+
+  // handle confirm action
+  const handleConfirmAction = () => {
+    console.log(
+      `${confirmType} confirmed for responder`,
+      selectedResponder?.id
+    );
+    // perform deactivate/delete action here
+    setConfirmType(null);
+    setSelectedResponder(null);
   };
 
   return (
@@ -216,7 +232,13 @@ const RespondersToken: React.FC = () => {
                       <img src={TokenIcon} alt="Token Icon" />
                       <span>Regenerate</span>
                     </button>
-                    <button className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300">
+                    <button
+                      onClick={() => {
+                        setSelectedResponder(responder);
+                        setConfirmType("deactivate");
+                      }}
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                    >
                       <span>Deactivate</span>
                     </button>
                   </div>
@@ -244,6 +266,19 @@ const RespondersToken: React.FC = () => {
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
+
+      {/* Confirm Modal */}
+      {confirmType && selectedResponder && (
+        <ConfirmModal
+          type={confirmType}
+          userName={selectedResponder.id}
+          onConfirm={handleConfirmAction}
+          onClose={() => {
+            setConfirmType(null);
+            setSelectedResponder(null);
+          }}
+        />
+      )}
     </div>
   );
 };
