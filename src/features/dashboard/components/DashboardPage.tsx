@@ -16,7 +16,7 @@ const recentActivity = [
     timestamp: "2025-06-29 12:30pm",
   },
   {
-    user: "Eleanor Pena",
+    user: "Simisola Olubodun",
     role: "Responder Admin",
     activity: "Updated Profile",
     timestamp: "2025-07-01 10:20am",
