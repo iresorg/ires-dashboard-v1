@@ -162,7 +162,7 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
           <div className="flex items-center justify-evenly pt-6 -ml-6">
             <button
               type="button"
-              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl disabled:opacity-50"
+              className="bg-[#D10F24] text-white px-4 py-2 text-lg font-semibold hover:bg-[#830311] rounded-bl-2xl rounded-tr-2xl "
               onClick={handleRevokeToken}
               disabled={isRevoked}
             >
