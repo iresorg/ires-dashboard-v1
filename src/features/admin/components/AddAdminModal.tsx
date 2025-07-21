@@ -2,21 +2,23 @@ import React, { useEffect, useState } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
-import AddAdminSuccessModal from "./AddAdminSuccessModal";
 
 interface AddAdminModalProps {
   onClose: () => void;
+  onAddAdmin: (newAdmin: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  }) => void;
 }
 
-const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
+const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [submittedName, setSubmittedName] = useState({ firstName: "", lastName: "" });
-  const [submittedRole, setSubmittedRole] = useState({role: ""});
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -27,7 +29,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!firstName.trim()) {
       newErrors.firstName = "First name is required";
     }
@@ -49,12 +51,11 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      // Store submitted values before resetting
-      setSubmittedName({ firstName, lastName });
-      setSubmittedRole({ role });
-      setShowSuccessPopup(true);
+      // Call onAddAdmin to update the users list and trigger success modal in UsersPage
+      onAddAdmin({ firstName, lastName, email, role });
+      // Reset form
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -197,19 +198,6 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose }) => {
           </div>
         </form>
       </div>
-
-      {/* Success Popup */}
-      {showSuccessPopup && (
-        <AddAdminSuccessModal
-          onClose={() => {
-            setShowSuccessPopup(false);
-            onClose();
-          }}
-          firstName={submittedName.firstName}
-          lastName={submittedName.lastName}
-          role={submittedRole.role}
-        />
-      )}
     </div>
   );
 };

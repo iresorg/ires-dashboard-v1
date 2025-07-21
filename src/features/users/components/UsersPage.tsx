@@ -4,9 +4,10 @@ import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
-
 import UserTable from "@/features/users/components/UserTable";
 import AddAdminModal from "@/features/admin/components/AddAdminModal";
+import AddAdminSuccessModal from "@/features/admin/components/AddAdminSuccessModal";
+import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
 
 interface User {
   id: number;
@@ -14,16 +15,26 @@ interface User {
   email: string;
   role: string;
   status: string;
+  firstName: string;
+  lastName: string;
 }
 
 const UsersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddAdminModal, setShowAddAdminModal] = useState(false);
-
-  const users: User[] = [
+  const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
+  const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
+  const [submittedAdmin, setSubmittedAdmin] = useState<{
+    firstName: string;
+    lastName: string;
+    role: string;
+  } | null>(null);
+  const [users, setUsers] = useState<User[]>([
     {
       id: 1,
       name: "Lexis Colenial",
+      firstName: "Lexis",
+      lastName: "Colenial",
       email: "lexiscole@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
@@ -31,6 +42,8 @@ const UsersPage: React.FC = () => {
     {
       id: 2,
       name: "Robert Fox",
+      firstName: "Robert",
+      lastName: "Fox",
       email: "robert.fox@gmail.com",
       role: "Super Admin",
       status: "Active",
@@ -38,6 +51,8 @@ const UsersPage: React.FC = () => {
     {
       id: 3,
       name: "Esther Howard",
+      firstName: "Esther",
+      lastName: "Howard",
       email: "mark@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
@@ -45,6 +60,8 @@ const UsersPage: React.FC = () => {
     {
       id: 4,
       name: "Jenny Wilson",
+      firstName: "Jenny",
+      lastName: "Wilson",
       email: "jenny.wilson@gmail.com",
       role: "Responder Admin",
       status: "Inactive",
@@ -52,6 +69,8 @@ const UsersPage: React.FC = () => {
     {
       id: 5,
       name: "Jacob Jones",
+      firstName: "Jacob",
+      lastName: "Jones",
       email: "ralph.edwards@gmail.com",
       role: "Responder Admin",
       status: "Active",
@@ -59,6 +78,8 @@ const UsersPage: React.FC = () => {
     {
       id: 6,
       name: "Albert Flores",
+      firstName: "Albert",
+      lastName: "Flores",
       email: "albert.flores@gmail.com",
       role: "Agent Admin",
       status: "Inactive",
@@ -66,11 +87,74 @@ const UsersPage: React.FC = () => {
     {
       id: 7,
       name: "Annette Black",
+      firstName: "Annette",
+      lastName: "Black",
       email: "annette.black@gmail.com",
       role: "Agent Admin",
       status: "Active",
     },
-  ];
+  ]);
+
+  const addNewAdmin = (newAdmin: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  }) => {
+    const newUser: User = {
+      id: users.length + 1,
+      name: `${newAdmin.firstName} ${newAdmin.lastName}`,
+      firstName: newAdmin.firstName,
+      lastName: newAdmin.lastName,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      status: "Active",
+    };
+    console.log("Adding new admin:", newUser);
+    setUsers([...users, newUser]);
+    setSubmittedAdmin({
+      firstName: newAdmin.firstName,
+      lastName: newAdmin.lastName,
+      role: newAdmin.role,
+    });
+    setShowAddSuccessModal(true);
+    setShowAddAdminModal(false);
+  };
+
+  const editAdmin = (updatedUser: any) => {
+    console.log("Editing admin with data:", updatedUser);
+    setUsers(
+      users.map((user) =>
+        user.id === updatedUser.id
+          ? {
+              ...user,
+              ...updatedUser,
+              name: `${updatedUser.firstName} ${updatedUser.lastName}`,
+            }
+          : user
+      )
+    );
+    setSubmittedAdmin({
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      role: updatedUser.role,
+    });
+    setShowEditSuccessModal(true);
+  };
+
+  const deactivateAdmin = (userId: number) => {
+    console.log("Deactivating user with ID:", userId);
+    setUsers(
+      users.map((user) =>
+        user.id === userId ? { ...user, status: "Inactive" } : user
+      )
+    );
+  };
+
+  const deleteAdmin = (userId: number) => {
+    console.log("Deleting user with ID:", userId);
+    setUsers(users.filter((user) => user.id !== userId));
+  };
 
   const filteredUsers = users.filter((user) =>
     `${user.name} ${user.email}`
@@ -118,7 +202,12 @@ const UsersPage: React.FC = () => {
         </div>
       </div>
 
-      <UserTable users={filteredUsers} />
+      <UserTable
+        users={filteredUsers}
+        onEditUser={editAdmin}
+        onDeactivateUser={deactivateAdmin}
+        onDeleteUser={deleteAdmin}
+      />
 
       <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
@@ -139,7 +228,31 @@ const UsersPage: React.FC = () => {
       </div>
 
       {showAddAdminModal && (
-        <AddAdminModal onClose={() => setShowAddAdminModal(false)} />
+        <AddAdminModal
+          onClose={() => setShowAddAdminModal(false)}
+          onAddAdmin={addNewAdmin}
+        />
+      )}
+
+      {showAddSuccessModal && submittedAdmin && (
+        <AddAdminSuccessModal
+          onClose={() => setShowAddSuccessModal(false)}
+          firstName={submittedAdmin.firstName}
+          lastName={submittedAdmin.lastName}
+          role={submittedAdmin.role}
+        />
+      )}
+
+      {showEditSuccessModal && submittedAdmin && (
+        <EditAdminSuccessModal
+          onClose={() => {
+            console.log("Closing EditAdminSuccessModal");
+            setShowEditSuccessModal(false);
+          }}
+          firstName={submittedAdmin.firstName}
+          lastName={submittedAdmin.lastName}
+          role={submittedAdmin.role}
+        />
       )}
     </div>
   );

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import RedButton from "@/shared/assets/icons/Ellipse 9.svg";
-import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
-import Person from "@shared/assets/icons/Vector.svg";
-import Email from "@shared/assets/icons/icon.svg";
-import Role from "@shared/assets/icons/Shield.svg";
-import Actions from "@shared/assets/icons/Group.svg";
-import Pen from "@shared/assets/icons/pen.svg";
-import Scissors from "@shared/assets/icons/scissors.svg";
-import Delete from "@shared/assets/icons/delete.svg";
+import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
+import Person from "@/shared/assets/icons/Vector.svg";
+import Email from "@/shared/assets/icons/icon.svg";
+import Role from "@/shared/assets/icons/Shield.svg";
+import Actions from "@/shared/assets/icons/Group.svg";
+import Pen from "@/shared/assets/icons/pen.svg";
+import Scissors from "@/shared/assets/icons/scissors.svg";
+import Delete from "@/shared/assets/icons/delete.svg";
 import EditAdminModal from "@/features/admin/components/EditAdminModal";
 import ConfirmModal from "@/features/admin/components/ConfirmModal";
 
@@ -30,17 +30,26 @@ interface InternalUser {
 
 interface UserTableProps {
   users: AdminUser[];
+  onEditUser: (updatedUser: InternalUser) => void;
+  onDeactivateUser: (userId: number) => void;
+  onDeleteUser: (userId: number) => void;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users }) => {
+const UserTable: React.FC<UserTableProps> = ({
+  users,
+  onEditUser,
+  onDeactivateUser,
+  onDeleteUser,
+}) => {
   const [editingUser, setEditingUser] = useState<InternalUser | null>(null);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
-  const [confirmType, setConfirmType] = useState<
-    "deactivate" | "delete" | null
-  >(null);
+  const [confirmType, setConfirmType] = useState<"deactivate" | "delete" | null>(
+    null
+  );
 
   const handleEdit = (user: AdminUser) => {
-    const [firstName = "", lastName = ""] = user.name.split(" ");
+    const [firstName = user.name, lastName = ""] = user.name.split(" ");
+    console.log("Opening edit modal for user:", user);
     setEditingUser({
       id: user.id,
       firstName,
@@ -52,13 +61,21 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
   };
 
   const handleConfirm = () => {
-    console.log(`${confirmType} confirmed for user`, selectedUser?.name);
+    if (selectedUser) {
+      if (confirmType === "deactivate") {
+        onDeactivateUser(selectedUser.id);
+      } else if (confirmType === "delete") {
+        onDeleteUser(selectedUser.id);
+      }
+      console.log(`${confirmType} confirmed for user`, selectedUser.name);
+    }
     setConfirmType(null);
     setSelectedUser(null);
   };
 
   const handleSaveEdit = (updatedUser: InternalUser) => {
-    console.log("Updated user data:", updatedUser);
+    console.log("Saving edited user:", updatedUser);
+    onEditUser(updatedUser);
     setEditingUser(null);
   };
 
@@ -146,7 +163,6 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
         </tbody>
       </table>
 
-      {/* Edit Admin Modal */}
       {editingUser && (
         <EditAdminModal
           user={editingUser}
@@ -155,7 +171,6 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
         />
       )}
 
-      {/* Confirm Modal */}
       {confirmType && selectedUser && (
         <ConfirmModal
           type={confirmType}
