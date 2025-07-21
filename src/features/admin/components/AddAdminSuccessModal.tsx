@@ -1,6 +1,6 @@
 import React from "react";
 import Admin from "@/shared/assets/icons/adminusers.svg";
-import Shield from "@/shared/assets/icons/shield.svg";
+import Shield from "@/shared/assets/icons/Shield.svg";
 import CheckBox from "@/shared/assets/icons/Checkboxes.svg";
 import close from "@/shared/assets/icons/close.svg";
 
