@@ -1,28 +1,19 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { ThemeProvider } from "@shared/ThemeContext";
 import ThemeToggle from "@shared/components/ui/ThemeToggle";
-import AdminLoginForm from "@features/auth/components/AdminLoginForm";
-import AgentLoginForm from "@features/auth/components/AgentLoginForm";
-import ResponderLoginForm from "@features/auth/components/ResponderLoginForm";
+import LoginForm from "@features/auth/components/LoginForm";
 import securityLaptop from "@shared/assets/images/security-laptop.png";
 import Logo from "../components/Logo";
 
 const LoginPage: React.FC = () => {
-  const { type } = useParams<{ type: string }>();
-  const loginType = type ?? "admin"; // fallback if type is missing
-
   return (
     <ThemeProvider>
       <div className="h-screen flex flex-col overflow-hidden">
         {/* Top Navbar */}
         <div className="flex items-center justify-between px-6 py-4 shrink-0">
-          {/* Logo */}
           <div className="flex items-center">
             <Logo />
           </div>
-
-          {/* Theme Toggle */}
           <div>
             <ThemeToggle />
           </div>
@@ -33,11 +24,7 @@ const LoginPage: React.FC = () => {
           <div className="relative w-full h-full mx-auto flex flex-col md:flex-row rounded-2xl overflow-hidden px-4 max-h-full">
             {/* Left: Form */}
             <div className="flex-1 flex flex-col justify-center px-8 py-8 md:py-0 overflow-auto">
-              <div>
-                {loginType === "admin" && <AdminLoginForm />}
-                {loginType === "agent" && <AgentLoginForm />}
-                {loginType === "responder" && <ResponderLoginForm />}
-              </div>
+              <LoginForm />
             </div>
 
             {/* Vertical Divider */}

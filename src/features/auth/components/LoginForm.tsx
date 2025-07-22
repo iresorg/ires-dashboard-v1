@@ -2,27 +2,25 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import PasswordInput from "./PasswordInput"; // Adjust the path if needed
+import PasswordInput from "./PasswordInput";
 
-interface AgentLoginInputs {
-  agentId: string;
-  token: string;
+interface LoginInputs {
+  email: string;
+  password: string;
 }
 
-const AgentLoginForm: React.FC = () => {
+const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<AgentLoginInputs>();
+  } = useForm<LoginInputs>();
 
-  const onSubmit = async (data: AgentLoginInputs) => {
+  const onSubmit = async (data: LoginInputs) => {
     try {
-      // For agent login, use agentId as email and token as password
-      await login(data.agentId, data.token, 'agent');
-      // Navigate to dashboard after successful login
+      await login(data.email, data.password, "admin");
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -33,36 +31,38 @@ const AgentLoginForm: React.FC = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="w-64">
-        <h2 className="text-xl font-bold mb-6 text-iresNavyBlue dark:text-iresWhite">
-          AGENT LOGIN
+        <h2 className="text-2xl font-bold text-iresNavyBlue dark:text-iresWhite mb-4">
+          WELCOME TO iRES
         </h2>
-
+        <p className="text-xs text-gray-500 mb-4">
+          Please enter your credentials to continue.
+        </p>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6 flex flex-col"
         >
           <div>
             <input
-              id="agentId"
-              type="text"
-              {...register("agentId", { required: "Agent ID is required" })}
-              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-500 text-[#727171] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
-              placeholder="Agent ID"
+              id="email"
+              type="email"
+              autoComplete="email"
+              {...register("email", { required: "Email is required" })}
+              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
+              placeholder="Email"
             />
-            {errors.agentId && (
+            {errors.email && (
               <span className="text-xs text-red-600 mt-1 block">
-                {errors.agentId.message}
+                {errors.email.message}
               </span>
             )}
           </div>
 
-          {/* Token field with show/hide password */}
           <PasswordInput
-            id="token"
-            placeholder="Token"
-            error={errors.token?.message}
-            register={register("token", {
-              required: "Token is required",
+            id="password"
+            placeholder="Password"
+            error={errors.password?.message}
+            register={register("password", {
+              required: "Password is required",
             })}
           />
 
@@ -75,7 +75,7 @@ const AgentLoginForm: React.FC = () => {
           </button>
 
           <p className="text-sm text-center">
-            <a href="#" className="text-gray-300 hover:underline">
+            <a href="#" className="text-gray-400 hover:underline">
               Forgot password?
             </a>
           </p>
@@ -85,4 +85,4 @@ const AgentLoginForm: React.FC = () => {
   );
 };
 
-export default AgentLoginForm;
+export default LoginForm;
