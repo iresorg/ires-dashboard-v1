@@ -32,10 +32,12 @@ const AdminLoginForm: React.FC = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="w-64">
-        <h2 className="text-xl font-bold text-iresNavyBlue dark:text-iresWhite mb-4">
-          ADMIN LOGIN
+        <h2 className="text-2xl font-bold text-iresNavyBlue dark:text-iresWhite mb-4">
+           WELCOME TO iRES
         </h2>
-
+         <p className="text-xs text-gray-500 mb-4">
+          Please enter your credentials to continue.
+        </p>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6 flex flex-col"
