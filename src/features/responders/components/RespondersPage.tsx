@@ -5,14 +5,17 @@ import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
-import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
+import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import TokenIcon from "@/shared/assets/icons/token.svg";
 import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
+import CreateResponderSucessModal from "@/features/responders/components/CreateResponderSucessModal";
 
 interface Responder {
   id: string;
+  firstName: string;
+  lastName: string;
   tier: "Tier1" | "Tier2";
   status: "Active" | "Inactive";
   createdAt: string;
@@ -22,6 +25,8 @@ interface Responder {
 const initialResponders: Responder[] = [
   {
     id: "TIRSP2117J",
+    firstName: "John",
+    lastName: "Doe",
     tier: "Tier2",
     status: "Active",
     createdAt: "2025-06-20",
@@ -29,6 +34,8 @@ const initialResponders: Responder[] = [
   },
   {
     id: "TIRSP2123H",
+    firstName: "Jane",
+    lastName: "Smith",
     tier: "Tier1",
     status: "Inactive",
     createdAt: "2025-06-16",
@@ -36,6 +43,8 @@ const initialResponders: Responder[] = [
   },
   {
     id: "TIRSP2145G",
+    firstName: "Alice",
+    lastName: "Johnson",
     tier: "Tier1",
     status: "Active",
     createdAt: "2025-06-05",
@@ -43,6 +52,8 @@ const initialResponders: Responder[] = [
   },
   {
     id: "TIRSP2109R",
+    firstName: "Bob",
+    lastName: "Williams",
     tier: "Tier2",
     status: "Active",
     createdAt: "2025-05-27",
@@ -54,12 +65,19 @@ const RespondersPage: React.FC = () => {
   const [responders, setResponders] = useState<Responder[]>(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateResponderModal, setShowCreateResponderModal] = useState(false);
+  const [showCreateSuccessModal, setShowCreateSuccessModal] = useState(false);
+  const [submittedResponder, setSubmittedResponder] = useState<{
+    id: string; // Changed to store id instead of firstName, lastName
+    tier: string;
+  } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
   const navigate = useNavigate();
 
   const filteredResponders = responders.filter((responder) =>
-    responder.id.toLowerCase().includes(searchQuery.toLowerCase())
+    `${responder.id} ${responder.firstName} ${responder.lastName}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
   );
 
   const indexOfLastResponder = currentPage * respondersPerPage;
@@ -69,16 +87,28 @@ const RespondersPage: React.FC = () => {
     indexOfLastResponder
   );
 
-  const handleCreateResponder = () => {
+  const handleCreateResponder = (data: {
+    firstName: string;
+    lastName: string;
+    tier: string;
+  }) => {
+    const newId = `TIRSP${Math.floor(Math.random() * 9000) + 1000}`; // Generate ID here
     const newResponder: Responder = {
-      id: `TIRSP${Math.floor(Math.random() * 9000) + 1000}`,
-      tier: "Tier1",
+      id: newId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      tier: data.tier as "Tier1" | "Tier2",
       status: "Active",
       createdAt: new Date().toISOString().split("T")[0],
       updatedAt: new Date().toISOString().split("T")[0],
     };
     setResponders((prev) => [newResponder, ...prev]);
+    setSubmittedResponder({
+      id: newId, // Store the generated ID
+      tier: data.tier,
+    });
     setShowCreateResponderModal(false);
+    setShowCreateSuccessModal(true);
   };
 
   return (
@@ -98,7 +128,7 @@ const RespondersPage: React.FC = () => {
             <img src={Search} className="h-5 mr-2" alt="Search" />
             <input
               type="text"
-              placeholder="Search ID"
+              placeholder="Search ID/Name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
@@ -112,10 +142,10 @@ const RespondersPage: React.FC = () => {
               defaultValue=""
             >
               <option value="" disabled>
-                Filter by Role
+                Filter by Tier
               </option>
-              <option value="Field Responder">Field Responder</option>
-              <option value="Remote Responder">Remote Responder</option>
+              <option value="Tier1">Tier 1</option>
+              <option value="Tier2">Tier 2</option>
             </select>
           </div>
         </div>
@@ -132,6 +162,7 @@ const RespondersPage: React.FC = () => {
                   Responder ID
                 </span>
               </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">Name</th>
               <th className="py-3 px-4 font-semibold whitespace-nowrap">Tier</th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
@@ -139,8 +170,12 @@ const RespondersPage: React.FC = () => {
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">Created At</th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">Updated At</th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                Created At
+              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                Updated At
+              </th>
               <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
                 <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
@@ -153,6 +188,7 @@ const RespondersPage: React.FC = () => {
             {currentResponders.map((responder) => (
               <tr key={responder.id} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
+                <td className="py-3 px-4 whitespace-nowrap">{`${responder.firstName} ${responder.lastName}`}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <button
                     type="button"
@@ -262,6 +298,14 @@ const RespondersPage: React.FC = () => {
         <CreateResponderModal
           onClose={() => setShowCreateResponderModal(false)}
           onCreateResponder={handleCreateResponder}
+        />
+      )}
+
+      {showCreateSuccessModal && submittedResponder && (
+        <CreateResponderSucessModal
+          onClose={() => setShowCreateSuccessModal(false)}
+          id={submittedResponder.id}
+          tier={submittedResponder.tier}
         />
       )}
     </div>

@@ -8,9 +8,9 @@ import SearchIcon from "@/shared/assets/icons/search.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
-
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
+import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
 interface Agent {
   id: string;
@@ -23,8 +23,11 @@ const AgentsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [pendingAgent, setPendingAgent] = useState<{ firstName: string; lastName: string } | null>(null);
+  const [newAgentId, setNewAgentId] = useState<string | null>(null); // State to store new agent ID
   const navigate = useNavigate();
+
   const agents: Agent[] = [
     {
       id: "AGNT117J",
@@ -56,18 +59,29 @@ const AgentsPage: React.FC = () => {
     setShowConfirmAgentModal(true);
   };
 
+  const generateAgentId = () => {
+    // Simple example: Generate a random agent ID (you can replace this with your own logic)
+    return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
+  };
+
   const handleConfirm = () => {
-    // Here you can handle the final submission logic, e.g., API call
-    console.log("Agent created:", pendingAgent);
+    console.log("Agent created:", pendingAgent); // For debugging
+    const agentId = generateAgentId(); // Generate new agent ID
+    setNewAgentId(agentId); // Store the new agent ID
     setShowConfirmAgentModal(false);
+    setShowSuccessModal(true);
     setPendingAgent(null);
+  };
+
+  const handleSuccessClose = () => {
+    setShowSuccessModal(false);
+    setNewAgentId(null); // Clear the agent ID after closing
   };
 
   return (
     <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        {/* Button */}
         <button
           onClick={() => setShowCreateAgentModal(true)}
           className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
@@ -76,7 +90,6 @@ const AgentsPage: React.FC = () => {
           <span className="text-sm font-semibold">Create Agent</span>
         </button>
 
-        {/* Search */}
         <div className="relative">
           <img
             src={SearchIcon}
@@ -194,6 +207,12 @@ const AgentsPage: React.FC = () => {
         <ConfirmAgentModal
           onConfirm={handleConfirm}
           onClose={() => setShowConfirmAgentModal(false)}
+        />
+      )}
+      {showSuccessModal && (
+        <CreateAgentSucessModal
+          onClose={handleSuccessClose}
+          id={newAgentId || ""} // Pass the new agent ID
         />
       )}
     </div>

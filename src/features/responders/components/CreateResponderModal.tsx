@@ -82,7 +82,6 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                   className="bg-[#D9D9D9] rounded-xl h-10 mb-3"
                   required
                 />
-
                 <div className="relative">
                   <select
                     name="tier"
