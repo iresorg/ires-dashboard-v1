@@ -1,12 +1,11 @@
 import React from "react";
 import Hear from "@/shared/assets/icons/hear.svg";
-import Shield from "@/shared/assets/icons/Shield.svg";
 import CheckBox from "@/shared/assets/icons/Checkboxes.svg";
 import close from "@/shared/assets/icons/close.svg";
 
 interface CreateResponderSucessModalProps {
   onClose: () => void;
-  id: string; // Changed from firstName, lastName to id
+  id: string; 
   tier: string;
 }
 
@@ -36,9 +35,11 @@ const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
         >
           <img src={close} alt="Close" className="h-6 w-6 hover:opacity-50" />
         </button>
-        <div className="flex flex-col  items-center">
+        <div className="flex flex-col items-center">
           <div className="flex">
-            <p className="text-[#0C0E5D] font-bold">Responder Created Successfully</p>
+            <p className="text-[#0C0E5D] font-bold">
+              Responder Created Successfully
+            </p>
             <img src={CheckBox} alt="Success Icon" className="-mt-3 -ml-2" />
           </div>
           <div className="flex">
@@ -46,15 +47,16 @@ const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
               <img src={Hear} alt="Admin Icon" className="h-5 w-5 mb-4 mt-0" />
             </div>
             <div className="flex flex-col">
-                <p className="text-[#0C0E5D] font-bold mb-2">
+              <p className="text-[#0C0E5D] font-bold mb-2">
                 Responder ID:{" "}
-                    <span className="text-[#000000] font-normal">{id}</span>
-                </p>
+                <span className="text-[#000000] font-normal">{id}</span>
+              </p>
             </div>
           </div>
           <div>
             <p className="text-[#0C0E5D] font-bold">
-                Tier: <span className="text-[#000000] font-extralight">{tier}</span>
+              Tier:{" "}
+              <span className="text-[#000000] font-extralight">{tier}</span>
             </p>
           </div>
         </div>
