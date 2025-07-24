@@ -1,38 +1,23 @@
 import React, { useState } from "react";
-import RedButton from "@/shared/assets/icons/Ellipse 9.svg";
-import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
-import Person from "@/shared/assets/icons/Vector.svg";
-import Email from "@/shared/assets/icons/icon.svg";
-import Role from "@/shared/assets/icons/Shield.svg";
-import Actions from "@/shared/assets/icons/Group.svg";
-import Pen from "@/shared/assets/icons/pen.svg";
-import Scissors from "@/shared/assets/icons/scissors.svg";
-import Delete from "@/shared/assets/icons/delete.svg";
+import type { User } from "@/features/admin/components/EditAdminModal";
 import EditAdminModal from "@/features/admin/components/EditAdminModal";
 import ConfirmModal from "@/features/admin/components/ConfirmModal";
 
-interface AdminUser {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-}
-
-interface InternalUser {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-}
+import PersonIcon from "@/shared/assets/icons/Vector.svg";
+import EmailIcon from "@/shared/assets/icons/icon.svg";
+import RoleIcon from "@/shared/assets/icons/Shield.svg";
+import ActionsIcon from "@/shared/assets/icons/Group.svg";
+import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
+import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
+import Pen from "@/shared/assets/icons/pen.svg";
+import Scissors from "@/shared/assets/icons/scissors.svg";
+import Trash from "@/shared/assets/icons/delete.svg";
 
 interface UserTableProps {
-  users: AdminUser[];
-  onEditUser: (updatedUser: InternalUser) => void;
-  onDeactivateUser: (userId: number) => void;
-  onDeleteUser: (userId: number) => void;
+  users: User[];
+  onEditUser: (u: User) => void;
+  onDeactivateUser: (id: number) => void;
+  onDeleteUser: (id: number) => void;
 }
 
 const UserTable: React.FC<UserTableProps> = ({
@@ -41,76 +26,44 @@ const UserTable: React.FC<UserTableProps> = ({
   onDeactivateUser,
   onDeleteUser,
 }) => {
-  const [editingUser, setEditingUser] = useState<InternalUser | null>(null);
-  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
-  const [confirmType, setConfirmType] = useState<"deactivate" | "delete" | null>(
-    null
-  );
+  // State for edit modal
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const handleEdit = (user: AdminUser) => {
-    const [firstName = user.name, lastName = ""] = user.name.split(" ");
-    console.log("Opening edit modal for user:", user);
-    setEditingUser({
-      id: user.id,
-      firstName,
-      lastName,
-      email: user.email,
-      role: user.role,
-      status: user.status,
-    });
-  };
-
-  const handleConfirm = () => {
-    if (selectedUser) {
-      if (confirmType === "deactivate") {
-        onDeactivateUser(selectedUser.id);
-      } else if (confirmType === "delete") {
-        onDeleteUser(selectedUser.id);
-      }
-      console.log(`${confirmType} confirmed for user`, selectedUser.name);
-    }
-    setConfirmType(null);
-    setSelectedUser(null);
-  };
-
-  const handleSaveEdit = (updatedUser: InternalUser) => {
-    console.log("Saving edited user:", updatedUser);
-    onEditUser(updatedUser);
-    setEditingUser(null);
-  };
+  // State for confirm modal (both type and user stored together)
+  const [confirming, setConfirming] = useState<{
+    type: "deactivate" | "delete";
+    user: User;
+  } | null>(null);
 
   return (
-    <div className="flex-1 overflow-auto mt-4">
-      <table className="min-w-full table-fixed border-collapse text-sm">
-        <thead className="bg-gray-100">
+    <div className="overflow-auto mt-6">
+      <table className="w-full table-auto text-sm">
+        <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="w-[200px] px-4 py-2 text-left">
-              <div className="flex items-center">
-                <img src={Person} className="h-4 pr-2" />
-                <span>Full Name</span>
+            <th className="px-4 py-2">
+              <div className="flex items-center gap-2">
+                <img src={PersonIcon} className="h-4" alt="person" />
+                <span>Name</span>
               </div>
             </th>
-            <th className="w-[250px] px-4 py-2 text-left">
-              <div className="flex items-center space-x-2">
-                <img src={Email} className="h-4" />
+            <th className="px-4 py-2">
+              <div className="flex items-center gap-2">
+                <img src={EmailIcon} className="h-4" alt="email" />
                 <span>Email</span>
               </div>
             </th>
-            <th className="w-[150px] px-4 py-2 text-left">
-              <div className="flex items-center space-x-2">
-                <img src={Role} className="h-4" />
+            <th className="px-4 py-2">
+              <div className="flex items-center gap-2">
+                <img src={RoleIcon} className="h-4" alt="role" />
                 <span>Role</span>
               </div>
             </th>
-            <th className="w-[150px] px-4 py-2 text-left">
-              <div className="flex items-center space-x-2">
-                <img src={GreenButton} className="h-4" />
-                <span>Status</span>
-              </div>
+            <th className="px-4 py-2">
+              <span>Status</span>
             </th>
-            <th className="w-[200px] px-4 py-2 text-left">
-              <div className="flex items-center space-x-2">
-                <img src={Actions} className="h-4" />
+            <th className="px-4 py-2">
+              <div className="flex items-center gap-2">
+                <img src={ActionsIcon} className="h-4" alt="actions" />
                 <span>Actions</span>
               </div>
             </th>
@@ -118,43 +71,44 @@ const UserTable: React.FC<UserTableProps> = ({
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="border-t border-[#D4CDCD]">
-              <td className="px-4 py-4">{user.name}</td>
-              <td className="px-4 py-4">{user.email}</td>
-              <td className="px-4 py-4">{user.role}</td>
-              <td className="px-4 py-4 flex items-center space-x-2">
-                <img
-                  src={user.status === "Active" ? GreenButton : RedButton}
-                  className="h-4 w-4"
-                />
-                <span>{user.status}</span>
+            <tr key={user.id} className="border-t">
+              <td className="px-4 py-2">
+                {user.firstName} {user.lastName}
               </td>
-              <td className="px-4 py-4">
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => handleEdit(user)}
-                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-5 rounded-sm"
-                  >
-                    <span className="text-sm">Edit</span>
-                    <img src={Pen} className="h-3 w-3" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setConfirmType("deactivate");
-                    }}
-                    className="flex items-center bg-[#D00F24]/11 pl-2 pr-5 rounded-sm"
-                  >
-                    <span className="text-sm">Deactivate</span>
-                    <img src={Scissors} className="h-3 w-3" />
-                  </button>
+              <td className="px-4 py-2">{user.email}</td>
+              <td className="px-4 py-2">{user.role}</td>
+              <td className="px-4 py-2">
+                <div className="flex items-center gap-2">
                   <img
-                    src={Delete}
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setConfirmType("delete");
-                    }}
-                    className="h-4 w-4 cursor-pointer"
+                    src={user.status === "Active" ? GreenDot : RedDot}
+                    className="h-3"
+                    alt={user.status}
+                  />
+                  {user.status}
+                </div>
+              </td>
+              <td className="px-4 py-2">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setEditingUser(user)}
+                    className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
+                  >
+                    Edit <img src={Pen} className="h-3" alt="edit" />
+                  </button>
+
+                  <button
+                    onClick={() => setConfirming({ type: "deactivate", user })}
+                    className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
+                  >
+                    Deactivate{" "}
+                    <img src={Scissors} className="h-3" alt="deactivate" />
+                  </button>
+
+                  <img
+                    src={Trash}
+                    onClick={() => setConfirming({ type: "delete", user })}
+                    className="h-4 cursor-pointer"
+                    alt="delete"
                   />
                 </div>
               </td>
@@ -163,23 +117,32 @@ const UserTable: React.FC<UserTableProps> = ({
         </tbody>
       </table>
 
+      {/* Edit modal */}
       {editingUser && (
         <EditAdminModal
           user={editingUser}
-          onSave={handleSaveEdit}
           onClose={() => setEditingUser(null)}
+          onSave={(updatedUser) => {
+            onEditUser(updatedUser);
+            setEditingUser(null);
+          }}
         />
       )}
 
-      {confirmType && selectedUser && (
+      {/* Confirm modal */}
+      {confirming && (
         <ConfirmModal
-          type={confirmType}
-          userName={selectedUser.name}
-          onConfirm={handleConfirm}
-          onClose={() => {
-            setConfirmType(null);
-            setSelectedUser(null);
+          type={confirming.type}
+          userName={`${confirming.user.firstName} ${confirming.user.lastName}`}
+          onConfirm={() => {
+            if (confirming.type === "deactivate") {
+              onDeactivateUser(confirming.user.id);
+            } else {
+              onDeleteUser(confirming.user.id);
+            }
+            setConfirming(null);
           }}
+          onClose={() => setConfirming(null)}
         />
       )}
     </div>

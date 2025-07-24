@@ -1,38 +1,21 @@
+"use client";
 import React, { useState } from "react";
-import AddIcon from "@/shared/assets/icons/add.svg";
-import Search from "@/shared/assets/icons/lineicons_search-2.svg";
-import Filter from "@/shared/assets/icons/uiw_filter.svg";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import UserTable from "@/features/users/components/UserTable";
 import AddAdminModal from "@/features/admin/components/AddAdminModal";
 import AddAdminSuccessModal from "@/features/admin/components/AddAdminSuccessModal";
 import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
+import type { User } from "@/features/admin/components/EditAdminModal";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  firstName: string;
-  lastName: string;
-}
+import AddIcon from "@/shared/assets/icons/add.svg";
+import SearchIcon from "@/shared/assets/icons/lineicons_search-2.svg";
+import FilterIcon from "@/shared/assets/icons/uiw_filter.svg";
+import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
+import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
 const UsersPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showAddAdminModal, setShowAddAdminModal] = useState(false);
-  const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
-  const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
-  const [submittedAdmin, setSubmittedAdmin] = useState<{
-    firstName: string;
-    lastName: string;
-    role: string;
-  } | null>(null);
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
-      name: "Lexis Colenial",
       firstName: "Lexis",
       lastName: "Colenial",
       email: "lexiscole@gmail.com",
@@ -41,61 +24,24 @@ const UsersPage: React.FC = () => {
     },
     {
       id: 2,
-      name: "Robert Fox",
       firstName: "Robert",
       lastName: "Fox",
       email: "robert.fox@gmail.com",
       role: "Super Admin",
       status: "Active",
     },
-    {
-      id: 3,
-      name: "Esther Howard",
-      firstName: "Esther",
-      lastName: "Howard",
-      email: "mark@gmail.com",
-      role: "Agent Admin",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Jenny Wilson",
-      firstName: "Jenny",
-      lastName: "Wilson",
-      email: "jenny.wilson@gmail.com",
-      role: "Responder Admin",
-      status: "Inactive",
-    },
-    {
-      id: 5,
-      name: "Jacob Jones",
-      firstName: "Jacob",
-      lastName: "Jones",
-      email: "ralph.edwards@gmail.com",
-      role: "Responder Admin",
-      status: "Active",
-    },
-    {
-      id: 6,
-      name: "Albert Flores",
-      firstName: "Albert",
-      lastName: "Flores",
-      email: "albert.flores@gmail.com",
-      role: "Agent Admin",
-      status: "Inactive",
-    },
-    {
-      id: 7,
-      name: "Annette Black",
-      firstName: "Annette",
-      lastName: "Black",
-      email: "annette.black@gmail.com",
-      role: "Agent Admin",
-      status: "Active",
-    },
   ]);
+  const [search, setSearch] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
+  const [showAddSuccess, setShowAddSuccess] = useState(false);
+  const [showEditSuccess, setShowEditSuccess] = useState(false);
+  const [submitted, setSubmitted] = useState<{
+    firstName: string;
+    lastName: string;
+    role: string;
+  } | null>(null);
 
-  const addNewAdmin = (newAdmin: {
+  const addAdmin = (newAdmin: {
     firstName: string;
     lastName: string;
     email: string;
@@ -103,155 +49,116 @@ const UsersPage: React.FC = () => {
   }) => {
     const newUser: User = {
       id: users.length + 1,
-      name: `${newAdmin.firstName} ${newAdmin.lastName}`,
       firstName: newAdmin.firstName,
       lastName: newAdmin.lastName,
       email: newAdmin.email,
       role: newAdmin.role,
       status: "Active",
     };
-    console.log("Adding new admin:", newUser);
     setUsers([...users, newUser]);
-    setSubmittedAdmin({
+    setSubmitted({
       firstName: newAdmin.firstName,
       lastName: newAdmin.lastName,
       role: newAdmin.role,
     });
-    setShowAddSuccessModal(true);
-    setShowAddAdminModal(false);
+    setShowAdd(false);
+    setShowAddSuccess(true);
   };
 
-  const editAdmin = (updatedUser: any) => {
-    console.log("Editing admin with data:", updatedUser);
-    setUsers(
-      users.map((user) =>
-        user.id === updatedUser.id
-          ? {
-              ...user,
-              ...updatedUser,
-              name: `${updatedUser.firstName} ${updatedUser.lastName}`,
-            }
-          : user
-      )
-    );
-    setSubmittedAdmin({
-      firstName: updatedUser.firstName,
-      lastName: updatedUser.lastName,
-      role: updatedUser.role,
+  const editAdmin = (u: User) => {
+    setUsers(users.map((item) => (item.id === u.id ? u : item)));
+    setSubmitted({
+      firstName: u.firstName,
+      lastName: u.lastName,
+      role: u.role,
     });
-    setShowEditSuccessModal(true);
+    setShowEditSuccess(true);
   };
 
-  const deactivateAdmin = (userId: number) => {
-    console.log("Deactivating user with ID:", userId);
+  const deactivateAdmin = (id: number) =>
     setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, status: "Inactive" } : user
-      )
+      users.map((u) => (u.id === id ? { ...u, status: "Inactive" } : u))
     );
-  };
 
-  const deleteAdmin = (userId: number) => {
-    console.log("Deleting user with ID:", userId);
-    setUsers(users.filter((user) => user.id !== userId));
-  };
+  const deleteAdmin = (id: number) =>
+    setUsers(users.filter((u) => u.id !== id));
 
-  const filteredUsers = users.filter((user) =>
-    `${user.name} ${user.email}`
+  const filtered = users.filter((u) =>
+    `${u.firstName} ${u.lastName} ${u.email}`
       .toLowerCase()
-      .includes(searchQuery.toLowerCase())
+      .includes(search.toLowerCase())
   );
 
   return (
-    <div className="flex flex-col h-full overflow-hidden px-4 py-2">
-      <div className="flex flex-row justify-between">
+    <div className="p-4 h-full flex flex-col">
+      <div className="flex justify-between">
         <button
-          onClick={() => setShowAddAdminModal(true)}
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          onClick={() => setShowAdd(true)}
+          className="flex flex-col items-center bg-[var(--ires-dark-blue)] text-white px-4 py-3 rounded-lg"
         >
-          <img src={AddIcon} alt="Add Admin" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Add New Admin</span>
+          <img src={AddIcon} className="h-5 mb-1" />
+          <span className="text-sm">Add New Admin</span>
         </button>
 
-        <div className="flex flex-row">
-          <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-            <img src={Search} className="h-6 mr-2" />
+        <div className="flex gap-4">
+          <div className="flex items-center bg-gray-200 rounded px-3">
+            <img src={SearchIcon} className="h-4 mr-2" />
             <input
-              type="text"
+              className="bg-transparent outline-none text-sm"
               placeholder="Search Name/Email"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-
-          <div className="flex items-center bg-[#D9D9D9] ml-4 rounded-sm px-4 h-12 w-36">
-            <img src={Filter} className="h-6 mr-2" />
-            <select
-              className="bg-transparent outline-none text-sm text-gray-700"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Filter by Role
-              </option>
-              <option value="Agent Admin">Agent Admin</option>
-              <option value="Responder Admin">Responder Admin</option>
-              <option value="Super Admin">Super Admin</option>
+          <div className="flex items-center bg-gray-200 rounded px-3">
+            <img src={FilterIcon} className="h-4 mr-2" />
+            <select className="bg-transparent outline-none text-sm">
+              <option>Filter by Role</option>
+              <option>Super Admin</option>
+              <option>Agent Admin</option>
+              <option>Responder Admin</option>
             </select>
           </div>
         </div>
       </div>
 
       <UserTable
-        users={filteredUsers}
+        users={filtered}
         onEditUser={editAdmin}
         onDeactivateUser={deactivateAdmin}
         onDeleteUser={deleteAdmin}
       />
 
-      <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
+      <div className="flex justify-center items-center gap-2 mt-8">
+        <button className="text-gray-400 flex items-center gap-1">
+          <img src={ArrowLeft} className="h-4" />
+          Prev
         </button>
-
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
+        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded">1</button>
+        <button className="px-3 py-1">2</button>
+        <button className="px-3 py-1">3</button>
+        <button className="text-[#0C0E5D] flex items-center gap-1">
           Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
+          <img src={ArrowRight} className="h-4" />
         </button>
       </div>
 
-      {showAddAdminModal && (
+      {showAdd && (
         <AddAdminModal
-          onClose={() => setShowAddAdminModal(false)}
-          onAddAdmin={addNewAdmin}
+          onClose={() => setShowAdd(false)}
+          onAddAdmin={addAdmin}
         />
       )}
-
-      {showAddSuccessModal && submittedAdmin && (
+      {showAddSuccess && submitted && (
         <AddAdminSuccessModal
-          onClose={() => setShowAddSuccessModal(false)}
-          firstName={submittedAdmin.firstName}
-          lastName={submittedAdmin.lastName}
-          role={submittedAdmin.role}
+          onClose={() => setShowAddSuccess(false)}
+          {...submitted}
         />
       )}
-
-      {showEditSuccessModal && submittedAdmin && (
+      {showEditSuccess && submitted && (
         <EditAdminSuccessModal
-          onClose={() => {
-            console.log("Closing EditAdminSuccessModal");
-            setShowEditSuccessModal(false);
-          }}
-          firstName={submittedAdmin.firstName}
-          lastName={submittedAdmin.lastName}
-          role={submittedAdmin.role}
+          onClose={() => setShowEditSuccess(false)}
+          {...submitted}
         />
       )}
     </div>
