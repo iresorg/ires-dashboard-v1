@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
@@ -64,15 +63,15 @@ const initialResponders: Responder[] = [
 const RespondersPage: React.FC = () => {
   const [responders, setResponders] = useState<Responder[]>(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showCreateResponderModal, setShowCreateResponderModal] = useState(false);
+  const [showCreateResponderModal, setShowCreateResponderModal] =
+    useState(false);
   const [showCreateSuccessModal, setShowCreateSuccessModal] = useState(false);
   const [submittedResponder, setSubmittedResponder] = useState<{
-    id: string; // Changed to store id instead of firstName, lastName
+    id: string;
     tier: string;
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
-  const navigate = useNavigate();
 
   const filteredResponders = responders.filter((responder) =>
     `${responder.id} ${responder.firstName} ${responder.lastName}`
@@ -92,7 +91,7 @@ const RespondersPage: React.FC = () => {
     lastName: string;
     tier: string;
   }) => {
-    const newId = `TIRSP${Math.floor(Math.random() * 9000) + 1000}`; // Generate ID here
+    const newId = `TIRSP${Math.floor(Math.random() * 9000) + 1000}`;
     const newResponder: Responder = {
       id: newId,
       firstName: data.firstName,
@@ -104,7 +103,7 @@ const RespondersPage: React.FC = () => {
     };
     setResponders((prev) => [newResponder, ...prev]);
     setSubmittedResponder({
-      id: newId, // Store the generated ID
+      id: newId,
       tier: data.tier,
     });
     setShowCreateResponderModal(false);
@@ -113,6 +112,7 @@ const RespondersPage: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6">
+      {/* Top bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
           type="button"
@@ -162,8 +162,12 @@ const RespondersPage: React.FC = () => {
                   Responder ID
                 </span>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">Name</th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">Tier</th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                Name
+              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                Tier
+              </th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
                   <img src={GreenButton} className="h-4" alt="Status" />
@@ -205,25 +209,33 @@ const RespondersPage: React.FC = () => {
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
-                        responder.status === "Active" ? "bg-green-500" : "bg-red-500"
+                        responder.status === "Active"
+                          ? "bg-green-500"
+                          : "bg-red-500"
                       }`}
                     />
                     <span
                       className={`${
-                        responder.status === "Active" ? "text-green-600" : "text-red-600"
+                        responder.status === "Active"
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
                       {responder.status}
                     </span>
                   </span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">{responder.createdAt}</td>
-                <td className="py-3 px-4 whitespace-nowrap">{responder.updatedAt}</td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {responder.createdAt}
+                </td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {responder.updatedAt}
+                </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center space-x-4">
+                    {/* Tokens button no longer navigates */}
                     <button
                       type="button"
-                      onClick={() => navigate(`/dashboard/responders/${responder.id}/tokens`)}
                       className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
                     >
                       <img src={TokenIcon} alt="Token Icon" />
@@ -266,7 +278,9 @@ const RespondersPage: React.FC = () => {
               type="button"
               onClick={() => setCurrentPage(i + 1)}
               className={`px-3 py-1 rounded-full ${
-                currentPage === i + 1 ? "bg-[#0C0E5D] text-white" : "hover:bg-gray-200"
+                currentPage === i + 1
+                  ? "bg-[#0C0E5D] text-white"
+                  : "hover:bg-gray-200"
               }`}
             >
               {i + 1}
@@ -282,9 +296,13 @@ const RespondersPage: React.FC = () => {
                 : prev
             )
           }
-          disabled={currentPage === Math.ceil(filteredResponders.length / respondersPerPage)}
+          disabled={
+            currentPage ===
+            Math.ceil(filteredResponders.length / respondersPerPage)
+          }
           className={`flex items-center gap-1 px-3 py-1 ${
-            currentPage === Math.ceil(filteredResponders.length / respondersPerPage)
+            currentPage ===
+            Math.ceil(filteredResponders.length / respondersPerPage)
               ? "text-gray-400 cursor-not-allowed"
               : "text-[#0C0E5D] hover:underline"
           }`}
@@ -313,3 +331,4 @@ const RespondersPage: React.FC = () => {
 };
 
 export default RespondersPage;
+

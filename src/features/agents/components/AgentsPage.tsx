@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/shared/constants/routes";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
@@ -24,9 +22,7 @@ const AgentsPage: React.FC = () => {
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [pendingAgent, setPendingAgent] = useState<{ firstName: string; lastName: string } | null>(null);
-  const [newAgentId, setNewAgentId] = useState<string | null>(null); // State to store new agent ID
-  const navigate = useNavigate();
+  const [newAgentId, setNewAgentId] = useState<string | null>(null);
 
   const agents: Agent[] = [
     {
@@ -53,29 +49,27 @@ const AgentsPage: React.FC = () => {
     agent.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAgentSubmit = (firstName: string, lastName: string) => {
-    setPendingAgent({ firstName, lastName });
+  const handleAgentSubmit = () => {
     setShowCreateAgentModal(false);
     setShowConfirmAgentModal(true);
   };
 
   const generateAgentId = () => {
-    // Simple example: Generate a random agent ID (you can replace this with your own logic)
-    return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
+    return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(
+      65 + Math.floor(Math.random() * 26)
+    )}`;
   };
 
   const handleConfirm = () => {
-    console.log("Agent created:", pendingAgent); // For debugging
-    const agentId = generateAgentId(); // Generate new agent ID
-    setNewAgentId(agentId); // Store the new agent ID
+    const agentId = generateAgentId();
+    setNewAgentId(agentId);
     setShowConfirmAgentModal(false);
     setShowSuccessModal(true);
-    setPendingAgent(null);
   };
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
-    setNewAgentId(null); // Clear the agent ID after closing
+    setNewAgentId(null);
   };
 
   return (
@@ -145,33 +139,34 @@ const AgentsPage: React.FC = () => {
                   <span className="inline-flex items-center gap-2">
                     <span
                       className={`w-3 h-3 rounded-full ${
-                        agent.status === "Active" ? "bg-green-500" : "bg-red-500"
+                        agent.status === "Active"
+                          ? "bg-green-500"
+                          : "bg-red-500"
                       }`}
                     />
                     <span
                       className={`${
-                        agent.status === "Active" ? "text-green-600" : "text-red-600"
+                        agent.status === "Active"
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
                       {agent.status}
                     </span>
                   </span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">{agent.createdAt}</td>
-                <td className="py-3 px-4 whitespace-nowrap">{agent.updatedAt}</td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {agent.createdAt}
+                </td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {agent.updatedAt}
+                </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <button className="px-3 py-1 rounded bg-[#D9D9D9] hover:bg-gray-200 text-sm">
                       View Details
                     </button>
-                    <button
-                      onClick={() =>
-                        navigate(ROUTES.AGENT_TOKENS.replace(":agentId", agent.id))
-                      }
-                      className="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600 text-sm"
-                    >
-                      Manage Tokens
-                    </button>
+                    {/* Manage Tokens removed */}
                   </div>
                 </td>
               </tr>
@@ -186,7 +181,9 @@ const AgentsPage: React.FC = () => {
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">1</button>
+        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
+          1
+        </button>
         <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
         <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
         <span className="text-gray-500 px-1">...</span>
@@ -212,7 +209,7 @@ const AgentsPage: React.FC = () => {
       {showSuccessModal && (
         <CreateAgentSucessModal
           onClose={handleSuccessClose}
-          id={newAgentId || ""} // Pass the new agent ID
+          id={newAgentId || ""}
         />
       )}
     </div>
