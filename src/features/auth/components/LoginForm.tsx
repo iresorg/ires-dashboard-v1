@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -20,11 +21,11 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: LoginInputs) => {
     try {
-      await login(data.email, data.password, "admin");
+      await login(data.email, data.password);
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("Login failed. Please try again.");
+    } catch (error: any) {
+      const message = error?.response?.data?.message || error?.message || "Login failed. Please try again.";
+      alert(message);
     }
   };
 
