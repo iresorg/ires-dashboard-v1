@@ -186,20 +186,20 @@ const AgentsPage: React.FC = () => {
                     {/* All buttons do not navigate */}
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
                     >
                       <span>View Details</span>
                     </button>
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
                     >
                       <span>Edit</span>
                       <img src={EditIcon} alt="Edit Icon" className="h-4" />
                     </button>
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
+                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
                     >
                       <span>Deactivate</span>
                       <img src={DeactivateIcon} alt="Deactivate Icon" className="h-4" />
