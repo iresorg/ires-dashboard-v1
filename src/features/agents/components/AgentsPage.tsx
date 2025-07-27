@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
+import EditIcon from "@/shared/assets/icons/edit.svg";
+import DeactivateIcon from "@/shared/assets/icons/scissors.svg";
+import BinIcon from "@/shared/assets/icons/delete.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
 import SearchIcon from "@/shared/assets/icons/search.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
@@ -12,9 +15,8 @@ import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSuce
 
 interface Agent {
   id: string;
+  email: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 const AgentsPage: React.FC = () => {
@@ -26,22 +28,29 @@ const AgentsPage: React.FC = () => {
 
   const agents: Agent[] = [
     {
-      id: "AGNT117J",
-      status: "Active",
-      createdAt: "2025-06-01",
-      updatedAt: "2025-06-20",
-    },
-    {
-      id: "AGNT224Z",
+      id: "Lexis Colenial",
+      email: "lexiscole@gmail.com",
       status: "Inactive",
-      createdAt: "2025-06-05",
-      updatedAt: "2025-06-10",
     },
     {
-      id: "AGNT339B",
+      id: "Esther Howard",
+      email: "estherhoward@gmail.com",
       status: "Active",
-      createdAt: "2025-06-01",
-      updatedAt: "2025-06-20",
+    },
+    {
+      id: "William Ash",
+      email: "williamash@gmail.com",
+      status: "Active",
+    },
+    {
+      id: "Lexis Colenial",
+      email: "lexiscole@gmail.com",
+      status: "Inactive",
+    },
+     {
+      id: "William Ash",
+      email: "williamash@gmail.com",
+      status: "Active",
     },
   ];
 
@@ -108,8 +117,11 @@ const AgentsPage: React.FC = () => {
               <th className="py-3 px-4 font-semibold whitespace-nowrap">
                 <span className="inline-flex items-center gap-2">
                   <img src={AgentIcon} alt="Agent" className="h-5" />
-                  Agent ID
+                  Full Name
                 </span>
+              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                Email
               </th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
@@ -117,13 +129,7 @@ const AgentsPage: React.FC = () => {
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Created At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Updated At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
+              <th className="py-3 px-4 font-semibold whitespace-nowrap text-left">
                 <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
                   Actions
@@ -134,7 +140,10 @@ const AgentsPage: React.FC = () => {
           <tbody className="text-gray-800">
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 whitespace-nowrap">{agent.id}</td>
+                <td className="inline-flex items-center gap-2 px-3 py-5 whitespace-nowrap">
+                  <img src={ActionIcon} alt="Agent Icon" className="h-5" />
+                  <span>{agent.id}</span>
+                </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
@@ -156,17 +165,37 @@ const AgentsPage: React.FC = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.createdAt}
+                  {agent.email}
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.updatedAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    <button className="px-3 py-1 rounded bg-[#D9D9D9] hover:bg-gray-200 text-sm">
-                      View Details
+                  <div className="flex items-center justify-start space-x-4">
+                    {/* Tokens button no longer navigates */}
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                    >
+                      <span>View Details</span>
                     </button>
-                    {/* Manage Tokens removed */}
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                    >
+                      <span>Edit</span>
+                      <img src={EditIcon} alt="Edit Icon" className="h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
+                    >
+                      <span>Deactivate</span>
+                      <img src={DeactivateIcon} alt="Deactivate Icon" className="h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 px-3 py-1"
+                    >
+                      <img src={BinIcon} alt="Bin Icon"/>
+                    </button>
                   </div>
                 </td>
               </tr>
