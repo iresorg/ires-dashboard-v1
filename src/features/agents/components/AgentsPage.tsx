@@ -3,6 +3,7 @@ import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import EditIcon from "@/shared/assets/icons/edit.svg";
 import DeactivateIcon from "@/shared/assets/icons/scissors.svg";
+import EmailIcon from "@/shared/assets/icons/icon.svg";
 import BinIcon from "@/shared/assets/icons/delete.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
 import SearchIcon from "@/shared/assets/icons/search.svg";
@@ -13,7 +14,12 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
+{/* Import Profile Images -- I can't think of a better way to do this */}
+import LexisPic from "@/shared/assets/images/lexis.png";
+import WilliamPic from "@/shared/assets/images/william.png";
+
 interface Agent {
+  profilePic: string; // Assuming profile is a string path to an image
   id: string;
   email: string;
   status: string;
@@ -28,28 +34,33 @@ const AgentsPage: React.FC = () => {
 
   const agents: Agent[] = [
     {
-      id: "Lexis Colenial",
+      profilePic: LexisPic,
+      id: "Lexis Colenial", 
       email: "lexiscole@gmail.com",
       status: "Inactive",
     },
     {
+      profilePic: LexisPic,
       id: "Esther Howard",
       email: "estherhoward@gmail.com",
       status: "Active",
     },
     {
+      profilePic: WilliamPic,
       id: "William Ash",
-      email: "williamash@gmail.com",
+      email: "william.ash@gmail.com",
       status: "Active",
     },
     {
+      profilePic: LexisPic,
       id: "Lexis Colenial",
       email: "lexiscole@gmail.com",
       status: "Inactive",
     },
-     {
+    {
+      profilePic: WilliamPic,
       id: "William Ash",
-      email: "williamash@gmail.com",
+      email: "william.ash@gmail.com",
       status: "Active",
     },
   ];
@@ -116,12 +127,15 @@ const AgentsPage: React.FC = () => {
             <tr className="border-b">
               <th className="py-3 px-4 font-semibold whitespace-nowrap">
                 <span className="inline-flex items-center gap-2">
-                  <img src={AgentIcon} alt="Agent" className="h-5" />
+                  <img src={AgentIcon} alt="Agent Icon" className="h-5" />
                   Full Name
                 </span>
               </th>
               <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Email
+                <span className="inline-flex items-center gap-2">
+                  <img src={EmailIcon} alt="Email Icon" className="h-4" />
+                  Email
+                </span>
               </th>
               <th className="w-[150px] px-4 py-2 text-left">
                 <div className="flex items-center space-x-2">
@@ -141,8 +155,11 @@ const AgentsPage: React.FC = () => {
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="inline-flex items-center gap-2 px-3 py-5 whitespace-nowrap">
-                  <img src={ActionIcon} alt="Agent Icon" className="h-5" />
+                  <img src={agent.profilePic} alt={agent.id + " Profile Pic"} className="h-5" />
                   <span>{agent.id}</span>
+                </td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {agent.email}
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
@@ -165,11 +182,8 @@ const AgentsPage: React.FC = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.email}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
                   <div className="flex items-center justify-start space-x-4">
-                    {/* Tokens button no longer navigates */}
+                    {/* All buttons do not navigate */}
                     <button
                       type="button"
                       className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
@@ -196,6 +210,7 @@ const AgentsPage: React.FC = () => {
                     >
                       <img src={BinIcon} alt="Bin Icon"/>
                     </button>
+                    {/* All buttons do not navigate */}
                   </div>
                 </td>
               </tr>
