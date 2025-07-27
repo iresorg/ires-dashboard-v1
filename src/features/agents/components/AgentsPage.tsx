@@ -112,7 +112,7 @@ const AgentsPage: React.FC = () => {
           />
           <input
             type="text"
-            placeholder="Search ID"
+            placeholder="Search Name/Email"
             className="pl-10 pr-4 bg-[#D9D9D9] text-sm w-64 h-10 rounded-sm flex items-center"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
