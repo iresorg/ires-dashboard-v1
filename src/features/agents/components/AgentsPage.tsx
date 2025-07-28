@@ -125,7 +125,7 @@ const AgentsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 h-full flex flex-col sm:p-6 -mt-6">
+    <div className="p-4 h-full flex flex-col sm:p-6 -mt-8">
       {/* Top Bar */}
       <div className="flex justify-between mb-6 gap-4">
         <button
@@ -155,7 +155,7 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg shadow overflow-auto">
+      <div className="overflow-auto">
         <table className="w-full text-sm table-auto">
           <thead className="bg-gray-100 text-left">
             <tr>
@@ -267,7 +267,7 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
+      <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
