@@ -14,7 +14,9 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
-{/* Import Profile Images -- I can't think of a better way to do this */}
+{
+  /* Import Profile Images -- I can't think of a better way to do this */
+}
 import LexisPic from "@/shared/assets/images/lexis.png";
 import WilliamPic from "@/shared/assets/images/william.png";
 
@@ -35,7 +37,7 @@ const AgentsPage: React.FC = () => {
   const agents: Agent[] = [
     {
       profilePic: LexisPic,
-      id: "Lexis Colenial", 
+      id: "Lexis Colenial",
       email: "lexiscole@gmail.com",
       status: "Inactive",
     },
@@ -155,12 +157,14 @@ const AgentsPage: React.FC = () => {
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="inline-flex items-center gap-2 px-3 py-5 whitespace-nowrap">
-                  <img src={agent.profilePic} alt={agent.id + " Profile Pic"} className="h-5" />
+                  <img
+                    src={agent.profilePic}
+                    alt={agent.id + " Profile Pic"}
+                    className="h-5"
+                  />
                   <span>{agent.id}</span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.email}
-                </td>
+                <td className="py-3 px-4 whitespace-nowrap">{agent.email}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
@@ -202,13 +206,17 @@ const AgentsPage: React.FC = () => {
                       className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
                     >
                       <span>Deactivate</span>
-                      <img src={DeactivateIcon} alt="Deactivate Icon" className="h-4" />
+                      <img
+                        src={DeactivateIcon}
+                        alt="Deactivate Icon"
+                        className="h-4"
+                      />
                     </button>
                     <button
                       type="button"
                       className="flex items-center space-x-1 px-3 py-1"
                     >
-                      <img src={BinIcon} alt="Bin Icon"/>
+                      <img src={BinIcon} alt="Bin Icon" />
                     </button>
                     {/* All buttons do not navigate */}
                   </div>
