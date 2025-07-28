@@ -12,6 +12,8 @@ import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
+import ProfileImage from "@/shared/assets/images/profile.png";
+
 
 interface UserTableProps {
   users: User[];
@@ -26,10 +28,7 @@ const UserTable: React.FC<UserTableProps> = ({
   onDeactivateUser,
   onDeleteUser,
 }) => {
-  // State for edit modal
   const [editingUser, setEditingUser] = useState<User | null>(null);
-
-  // State for confirm modal (both type and user stored together)
   const [confirming, setConfirming] = useState<{
     type: "deactivate" | "delete";
     user: User;
@@ -40,28 +39,35 @@ const UserTable: React.FC<UserTableProps> = ({
       <table className="w-full table-auto text-sm">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="px-4 py-2">
-              <div className="flex items-center gap-2">
+            <th className="px-4 py-1">
+              <div className="pl-2 flex items-center gap-2">
                 <img src={PersonIcon} className="h-4" alt="person" />
-                <span>Name</span>
               </div>
             </th>
-            <th className="px-4 py-2">
+            <th className="px-4 py-1">
+              <div className="flex items-center gap-2">
+                <span>Full Name</span>
+              </div>
+            </th>
+            <th className="px-4 py-1">
               <div className="flex items-center gap-2">
                 <img src={EmailIcon} className="h-4" alt="email" />
                 <span>Email</span>
               </div>
             </th>
-            <th className="px-4 py-2">
+            <th className="px-4 py-1">
               <div className="flex items-center gap-2">
                 <img src={RoleIcon} className="h-4" alt="role" />
                 <span>Role</span>
               </div>
             </th>
-            <th className="px-4 py-2">
-              <span>Status</span>
+            <th className="px-4 py-1">
+              <div className="flex items-center gap-2">
+                <img src={GreenDot} className="h-3"></img>
+                <span>Status</span>
+              </div>
             </th>
-            <th className="px-4 py-2">
+            <th className="px-4 py-1">
               <div className="flex items-center gap-2">
                 <img src={ActionsIcon} className="h-4" alt="actions" />
                 <span>Actions</span>
@@ -72,12 +78,19 @@ const UserTable: React.FC<UserTableProps> = ({
         <tbody>
           {users.map((user) => (
             <tr key={user.id} className="border-t">
-              <td className="px-4 py-2">
-                {user.firstName} {user.lastName}
+              <td className="px-4 py-1">
+                <div className="flex items-center justify-start">
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
+                    <img src={ProfileImage}></img>
+                  </div>
+                </div>
               </td>
-              <td className="px-4 py-2">{user.email}</td>
-              <td className="px-4 py-2">{user.role}</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-1">
+                <span>{user.firstName} {user.lastName}</span>
+              </td>
+              <td className="px-4 py-1">{user.email}</td>
+              <td className="px-4 py-1">{user.role}</td>
+              <td className="px-4 py-1">
                 <div className="flex items-center gap-2">
                   <img
                     src={user.status === "Active" ? GreenDot : RedDot}
@@ -87,7 +100,7 @@ const UserTable: React.FC<UserTableProps> = ({
                   {user.status}
                 </div>
               </td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-1">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setEditingUser(user)}
@@ -95,15 +108,12 @@ const UserTable: React.FC<UserTableProps> = ({
                   >
                     Edit <img src={Pen} className="h-3" alt="edit" />
                   </button>
-
                   <button
                     onClick={() => setConfirming({ type: "deactivate", user })}
                     className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
                   >
-                    Deactivate{" "}
-                    <img src={Scissors} className="h-3" alt="deactivate" />
+                    Deactivate <img src={Scissors} className="h-3" alt="deactivate" />
                   </button>
-
                   <img
                     src={Trash}
                     onClick={() => setConfirming({ type: "delete", user })}
@@ -117,7 +127,6 @@ const UserTable: React.FC<UserTableProps> = ({
         </tbody>
       </table>
 
-      {/* Edit modal */}
       {editingUser && (
         <EditAdminModal
           user={editingUser}
@@ -129,7 +138,6 @@ const UserTable: React.FC<UserTableProps> = ({
         />
       )}
 
-      {/* Confirm modal */}
       {confirming && (
         <ConfirmModal
           type={confirming.type}
