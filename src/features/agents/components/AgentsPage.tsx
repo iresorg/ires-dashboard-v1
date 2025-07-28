@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
+import EditIcon from "@/shared/assets/icons/edit.svg";
+import DeactivateIcon from "@/shared/assets/icons/scissors.svg";
+import EmailIcon from "@/shared/assets/icons/icon.svg";
+import BinIcon from "@/shared/assets/icons/delete.svg";
 import AgentIcon from "@/shared/assets/icons/adminusers.svg";
 import SearchIcon from "@/shared/assets/icons/search.svg";
 import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
@@ -10,11 +14,15 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
+{/* Import Profile Images -- I can't think of a better way to do this */}
+import LexisPic from "@/shared/assets/images/lexis.png";
+import WilliamPic from "@/shared/assets/images/william.png";
+
 interface Agent {
+  profilePic: string; // Assuming profile is a string path to an image
   id: string;
+  email: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 const AgentsPage: React.FC = () => {
@@ -26,22 +34,34 @@ const AgentsPage: React.FC = () => {
 
   const agents: Agent[] = [
     {
-      id: "AGNT117J",
-      status: "Active",
-      createdAt: "2025-06-01",
-      updatedAt: "2025-06-20",
-    },
-    {
-      id: "AGNT224Z",
+      profilePic: LexisPic,
+      id: "Lexis Colenial", 
+      email: "lexiscole@gmail.com",
       status: "Inactive",
-      createdAt: "2025-06-05",
-      updatedAt: "2025-06-10",
     },
     {
-      id: "AGNT339B",
+      profilePic: LexisPic,
+      id: "Esther Howard",
+      email: "estherhoward@gmail.com",
       status: "Active",
-      createdAt: "2025-06-01",
-      updatedAt: "2025-06-20",
+    },
+    {
+      profilePic: WilliamPic,
+      id: "William Ash",
+      email: "william.ash@gmail.com",
+      status: "Active",
+    },
+    {
+      profilePic: LexisPic,
+      id: "Lexis Colenial",
+      email: "lexiscole@gmail.com",
+      status: "Inactive",
+    },
+    {
+      profilePic: WilliamPic,
+      id: "William Ash",
+      email: "william.ash@gmail.com",
+      status: "Active",
     },
   ];
 
@@ -92,7 +112,7 @@ const AgentsPage: React.FC = () => {
           />
           <input
             type="text"
-            placeholder="Search ID"
+            placeholder="Search Name/Email"
             className="pl-10 pr-4 bg-[#D9D9D9] text-sm w-64 h-10 rounded-sm flex items-center"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -107,8 +127,14 @@ const AgentsPage: React.FC = () => {
             <tr className="border-b">
               <th className="py-3 px-4 font-semibold whitespace-nowrap">
                 <span className="inline-flex items-center gap-2">
-                  <img src={AgentIcon} alt="Agent" className="h-5" />
-                  Agent ID
+                  <img src={AgentIcon} alt="Agent Icon" className="h-5" />
+                  Full Name
+                </span>
+              </th>
+              <th className="py-3 px-4 font-semibold whitespace-nowrap">
+                <span className="inline-flex items-center gap-2">
+                  <img src={EmailIcon} alt="Email Icon" className="h-4" />
+                  Email
                 </span>
               </th>
               <th className="w-[150px] px-4 py-2 text-left">
@@ -117,13 +143,7 @@ const AgentsPage: React.FC = () => {
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Created At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Updated At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
+              <th className="py-3 px-4 font-semibold whitespace-nowrap text-left">
                 <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
                   Actions
@@ -134,7 +154,13 @@ const AgentsPage: React.FC = () => {
           <tbody className="text-gray-800">
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 whitespace-nowrap">{agent.id}</td>
+                <td className="inline-flex items-center gap-2 px-3 py-5 whitespace-nowrap">
+                  <img src={agent.profilePic} alt={agent.id + " Profile Pic"} className="h-5" />
+                  <span>{agent.id}</span>
+                </td>
+                <td className="py-3 px-4 whitespace-nowrap">
+                  {agent.email}
+                </td>
                 <td className="py-3 px-4 whitespace-nowrap">
                   <span className="inline-flex items-center gap-2">
                     <span
@@ -156,17 +182,35 @@ const AgentsPage: React.FC = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.createdAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {agent.updatedAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    <button className="px-3 py-1 rounded bg-[#D9D9D9] hover:bg-gray-200 text-sm">
-                      View Details
+                  <div className="flex items-center justify-start space-x-4">
+                    {/* All buttons do not navigate */}
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+                    >
+                      <span>View Details</span>
                     </button>
-                    {/* Manage Tokens removed */}
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+                    >
+                      <span>Edit</span>
+                      <img src={EditIcon} alt="Edit Icon" className="h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
+                    >
+                      <span>Deactivate</span>
+                      <img src={DeactivateIcon} alt="Deactivate Icon" className="h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 px-3 py-1"
+                    >
+                      <img src={BinIcon} alt="Bin Icon"/>
+                    </button>
+                    {/* All buttons do not navigate */}
                   </div>
                 </td>
               </tr>
