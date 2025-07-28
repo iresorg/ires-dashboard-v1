@@ -1,7 +1,14 @@
-import api from '@shared/services/api';
-import Cookies from 'js-cookie';
+import api from "@shared/services/api";
+import Cookies from "js-cookie";
 
 export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface RegisterPayload {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
@@ -25,13 +32,20 @@ export interface LoginResponse {
 }
 
 export const login = async (payload: LoginPayload): Promise<User> => {
-  const response = await api.post<LoginResponse>('/auth/login', payload);
+  const response = await api.post<LoginResponse>("/auth/login", payload);
   const { user, accessToken } = response.data.data;
-  Cookies.set('token', accessToken, { expires: 7 }); // 7 days expiry
+  Cookies.set("token", accessToken, { expires: 7 }); // 7 days expiry
+  return user;
+};
+
+export const register = async (payload: RegisterPayload): Promise<User> => {
+  const response = await api.post<LoginResponse>("/auth/register", payload);
+  const { user, accessToken } = response.data.data;
+  Cookies.set("token", accessToken, { expires: 7 }); 
   return user;
 };
 
 export const logout = () => {
-  Cookies.remove('token');
-  window.location.href = '/login';
-}; 
+  Cookies.remove("token");
+  window.location.href = "/login";
+};
