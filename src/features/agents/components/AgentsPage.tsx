@@ -156,7 +156,7 @@ const AgentsPage: React.FC = () => {
 
       {/* Table */}
       <div className="rounded-lg shadow overflow-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm table-auto">
           <thead className="bg-gray-100 text-left">
             <tr>
               <th className="py-1 px-4">
@@ -189,7 +189,7 @@ const AgentsPage: React.FC = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="text-gray-800">
+          <tbody>
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-t">
                 <td className="px-4 py-1">
