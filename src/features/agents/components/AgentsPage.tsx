@@ -14,11 +14,14 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
+{
+  /* Import Profile Images -- I can't think of a better way to do this */
+}
 import LexisPic from "@/shared/assets/images/lexis.png";
 import WilliamPic from "@/shared/assets/images/william.png";
 
 interface Agent {
-  profilePic: string;
+  profilePic: string; // Assuming profile is a string path to an image
   id: string;
   email: string;
   status: string;
@@ -92,7 +95,7 @@ const AgentsPage: React.FC = () => {
   };
 
   return (
-    <div className="overflow-x-hidden p-4 sm:p-6">
+    <div className="p-4 sm:p-6">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
@@ -112,7 +115,7 @@ const AgentsPage: React.FC = () => {
           <input
             type="text"
             placeholder="Search Name/Email"
-            className="pl-10 pr-4 bg-[#D9D9D9] text-sm w-64 h-10 rounded-sm"
+            className="pl-10 pr-4 bg-[#D9D9D9] text-sm w-64 h-10 rounded-sm flex items-center"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -120,7 +123,7 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto rounded-lg shadow">
+      <div className="rounded-lg shadow overflow-x-auto">
         <table className="min-w-full text-sm text-left">
           <thead className="bg-gray-100 text-gray-700">
             <tr className="border-b">
@@ -143,7 +146,7 @@ const AgentsPage: React.FC = () => {
                 </div>
               </th>
               <th className="py-3 px-4 font-semibold whitespace-nowrap text-left">
-                <span className="inline-flex items-center gap-2">
+                <span className="inline-flex items-center gap-2 justify-center">
                   <img src={ActionIcon} alt="Actions" className="h-5" />
                   Actions
                 </span>
@@ -153,15 +156,13 @@ const AgentsPage: React.FC = () => {
           <tbody className="text-gray-800">
             {filteredAgents.map((agent, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="px-3 py-5 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={agent.profilePic}
-                      alt={`${agent.id} Profile`}
-                      className="h-5"
-                    />
-                    <span>{agent.id}</span>
-                  </div>
+                <td className="inline-flex items-center gap-2 px-3 py-5 whitespace-nowrap">
+                  <img
+                    src={agent.profilePic}
+                    alt={agent.id + " Profile Pic"}
+                    className="h-5"
+                  />
+                  <span>{agent.id}</span>
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">{agent.email}</td>
                 <td className="py-3 px-4 whitespace-nowrap">
@@ -185,7 +186,8 @@ const AgentsPage: React.FC = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center justify-start space-x-4">
+                    {/* All buttons do not navigate */}
                     <button
                       type="button"
                       className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
@@ -210,9 +212,13 @@ const AgentsPage: React.FC = () => {
                         className="h-4"
                       />
                     </button>
-                    <button type="button" className="px-3 py-1">
-                      <img src={BinIcon} alt="Delete" />
+                    <button
+                      type="button"
+                      className="flex items-center space-x-1 px-3 py-1"
+                    >
+                      <img src={BinIcon} alt="Bin Icon" />
                     </button>
+                    {/* All buttons do not navigate */}
                   </div>
                 </td>
               </tr>
@@ -222,7 +228,7 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-10 text-sm text-gray-700">
+      <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
