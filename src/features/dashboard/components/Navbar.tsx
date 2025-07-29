@@ -1,6 +1,6 @@
 import React from "react";
 import ThemeToggle from "@/shared/components/ui/ThemeToggle";
-import NotificationBell from "@/shared/components/ui/Bell";
+import NotificationButton from "@dashboard/components/NotificationButton"; 
 import ResetIcon from "@/shared/components/ui/Reset";
 import ProfileButton from "@dashboard/components/ProfileButton";
 
@@ -22,9 +22,10 @@ const Navbar: React.FC<NavbarProps> = ({ pageName }) => {
           <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <ResetIcon />
           </div>
-          <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
+          {/* <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
             <NotificationBell />
-          </div>
+          </div> */}
+          <NotificationButton />
 
           {/* Profile Button*/}
           <ProfileButton />

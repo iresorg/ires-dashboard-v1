@@ -14,14 +14,12 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
-{
-  /* Import Profile Images -- I can't think of a better way to do this */
-}
+
 import LexisPic from "@/shared/assets/images/lexis.png";
 import WilliamPic from "@/shared/assets/images/william.png";
 
 interface Agent {
-  profilePic: string; // Assuming profile is a string path to an image
+  profilePic: string; 
   id: string;
   email: string;
   status: string;
