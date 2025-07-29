@@ -173,7 +173,7 @@ const UsersPage: React.FC = () => {
         </button>
 
         <div className="flex gap-4">
-          <div className="flex items-center bg-gray-200 rounded px-3 -mt-5">
+          <div className="flex items-center bg-gray-200 rounded h-10 pl-5">
             <img src={SearchIcon} className="h-4 mr-2" />
             <input
               className="bg-transparent outline-none text-sm"
@@ -182,9 +182,9 @@ const UsersPage: React.FC = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex items-center bg-gray-200 rounded px-3 -mt-5">
+          <div className="flex items-center bg-gray-200 rounded h-10 pl-5 pr-3">
             <img src={FilterIcon} className="h-4 mr-2" />
-            <select className="bg-transparent outline-none text-sm">
+            <select className="bg-transparent outline-none text-sm opacity-50">
               <option>Filter by Role</option>
               <option>Super Admin</option>
               <option>Agent Admin</option>
@@ -201,17 +201,20 @@ const UsersPage: React.FC = () => {
         onDeleteUser={deleteAdmin}
       />
 
-      <div className="flex justify-center items-center gap-2 mt-8">
-        <button className="text-gray-400 flex items-center gap-1">
-          <img src={ArrowLeft} className="h-4" />
-          Prev
+       <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
+        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
+          <img src={ArrowLeft} alt="Previous" className="h-4" />
+          Previous
         </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded">1</button>
-        <button className="px-3 py-1">2</button>
-        <button className="px-3 py-1">3</button>
-        <button className="text-[#0C0E5D] flex items-center gap-1">
+        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
+          1
+        </button>
+        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
+        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
+        <span className="text-gray-500 px-1">...</span>
+        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
           Next
-          <img src={ArrowRight} className="h-4" />
+          <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
       </div>
 

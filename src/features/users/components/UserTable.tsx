@@ -39,8 +39,8 @@ const UserTable: React.FC<UserTableProps> = ({
       <table className="w-full table-auto text-sm">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="px-4 py-1">
-              <div className="pl-2 flex items-center gap-2">
+            <th className="px-2 py-1">
+              <div className="flex items-center gap-2">
                 <img src={PersonIcon} className="h-4" alt="person" />
               </div>
             </th>
@@ -78,7 +78,7 @@ const UserTable: React.FC<UserTableProps> = ({
         <tbody>
           {users.map((user) => (
             <tr key={user.id} className="border-t">
-              <td className="px-4 py-1">
+              <td className="px-0 py-1">
                 <div className="flex items-center justify-start">
                   <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
                     <img src={ProfileImage}></img>

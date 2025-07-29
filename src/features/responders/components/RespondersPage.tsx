@@ -3,22 +3,28 @@ import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
-import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
 import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
+import RedDot from "@/shared/assets/icons/Ellipse 9.png";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
-import TokenIcon from "@/shared/assets/icons/token.svg";
+import Email from "@/shared/assets/icons/icon.svg";
+import Pen from "@/shared/assets/icons/pen.svg";
+import Scissors from "@/shared/assets/icons/scissors.svg"; 
+import Responder from "@/shared/assets/icons/respondericon.svg";
+import Trash from "@/shared/assets/icons/delete.svg";
+import ProfileImage from "@/shared/assets/images/profile.png";
 import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
 import CreateResponderSucessModal from "@/features/responders/components/CreateResponderSucessModal";
+import EditResponderModal from "@/features/responders/components/EditResponderModal";
+import ConfirmResponderModal from "@/features/responders/components/ConfirmResponderModal";
 
 interface Responder {
   id: string;
   firstName: string;
   lastName: string;
+  email: string;
   tier: "Tier1" | "Tier2";
   status: "Active" | "Inactive";
-  createdAt: string;
-  updatedAt: string;
 }
 
 const initialResponders: Responder[] = [
@@ -26,55 +32,55 @@ const initialResponders: Responder[] = [
     id: "TIRSP2117J",
     firstName: "John",
     lastName: "Doe",
+    email: "john.doe@example.com",
     tier: "Tier2",
     status: "Active",
-    createdAt: "2025-06-20",
-    updatedAt: "2025-06-22",
   },
   {
     id: "TIRSP2123H",
     firstName: "Jane",
     lastName: "Smith",
+    email: "jane.smith@example.com",
     tier: "Tier1",
     status: "Inactive",
-    createdAt: "2025-06-16",
-    updatedAt: "2025-06-18",
   },
   {
     id: "TIRSP2145G",
     firstName: "Alice",
     lastName: "Johnson",
+    email: "alice.johnson@example.com",
     tier: "Tier1",
     status: "Active",
-    createdAt: "2025-06-05",
-    updatedAt: "2025-06-15",
   },
   {
     id: "TIRSP2109R",
     firstName: "Bob",
     lastName: "Williams",
+    email: "bob.williams@example.com",
     tier: "Tier2",
     status: "Active",
-    createdAt: "2025-05-27",
-    updatedAt: "2025-06-02",
   },
 ];
 
 const RespondersPage: React.FC = () => {
   const [responders, setResponders] = useState<Responder[]>(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showCreateResponderModal, setShowCreateResponderModal] =
-    useState(false);
+  const [showCreateResponderModal, setShowCreateResponderModal] = useState(false);
   const [showCreateSuccessModal, setShowCreateSuccessModal] = useState(false);
   const [submittedResponder, setSubmittedResponder] = useState<{
     id: string;
     tier: string;
   } | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [editingResponder, setEditingResponder] = useState<Responder | null>(null);
+  const [confirming, setConfirming] = useState<{
+    type: "deactivate" | "delete";
+    responder: Responder;
+  } | null>(null);
+  const [currentPage] = useState(1);
   const respondersPerPage = 4;
 
   const filteredResponders = responders.filter((responder) =>
-    `${responder.id} ${responder.firstName} ${responder.lastName}`
+    `${responder.firstName} ${responder.lastName} ${responder.email}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   );
@@ -96,10 +102,9 @@ const RespondersPage: React.FC = () => {
       id: newId,
       firstName: data.firstName,
       lastName: data.lastName,
+      email: `${data.firstName.toLowerCase()}.${data.lastName.toLowerCase()}@example.com`,
       tier: data.tier as "Tier1" | "Tier2",
       status: "Active",
-      createdAt: new Date().toISOString().split("T")[0],
-      updatedAt: new Date().toISOString().split("T")[0],
     };
     setResponders((prev) => [newResponder, ...prev]);
     setSubmittedResponder({
@@ -110,8 +115,29 @@ const RespondersPage: React.FC = () => {
     setShowCreateSuccessModal(true);
   };
 
+  const handleEditResponder = (updatedResponder: Responder) => {
+    setResponders((prev) =>
+      prev.map((responder) =>
+        responder.id === updatedResponder.id ? updatedResponder : responder
+      )
+    );
+    setEditingResponder(null);
+  };
+
+  const handleDeactivateResponder = (id: string) => {
+    setResponders((prev) =>
+      prev.map((responder) =>
+        responder.id === id ? { ...responder, status: "Inactive" } : responder
+      )
+    );
+  };
+
+  const handleDeleteResponder = (id: string) => {
+    setResponders((prev) => prev.filter((responder) => responder.id !== id));
+  };
+
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6 -mt-8">
       {/* Top bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
@@ -128,7 +154,7 @@ const RespondersPage: React.FC = () => {
             <img src={Search} className="h-5 mr-2" alt="Search" />
             <input
               type="text"
-              placeholder="Search ID/Name"
+              placeholder="Search Name/Email"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
@@ -152,101 +178,110 @@ const RespondersPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg shadow overflow-x-auto">
-        <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr className="border-b">
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                <span className="inline-flex items-center gap-2">
-                  <img src={ResponderIcon} alt="Responder" className="h-5" />
-                  Responder ID
-                </span>
+      <div className="overflow-auto mt-6">
+        <table className="w-full table-auto text-sm">
+          <thead className="bg-gray-100 text-left">
+            <tr>
+              <th className="px-0 py-1">
+                <div className="flex items-center gap-2">
+                  <img src={Responder} className="w-6 h-6 " alt="person" />
+                </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Name
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <span>Full Name</span>
+                </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Tier
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={Email} className="h-4" alt="email" />
+                  <span>Email</span>
+                </div>
               </th>
-              <th className="w-[150px] px-4 py-2 text-left">
-                <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" alt="Status" />
+              <th className="px-4 py-1 pl-6">
+                <div className="flex items-center gap-1">
+                  <span>Tier</span>
+                </div>
+              </th>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={GreenButton} className="h-3" alt="status" />
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Created At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap">
-                Updated At
-              </th>
-              <th className="py-3 px-4 font-semibold whitespace-nowrap text-center">
-                <span className="inline-flex items-center gap-2 justify-center">
-                  <img src={ActionIcon} alt="Actions" className="h-5" />
-                  Actions
-                </span>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={ActionIcon} className="h-4" alt="actions" />
+                  <span>Actions</span>
+                </div>
               </th>
             </tr>
           </thead>
-          <tbody className="text-gray-800">
+          <tbody>
             {currentResponders.map((responder) => (
-              <tr key={responder.id} className="border-b hover:bg-gray-50">
-                <td className="py-3 px-4 whitespace-nowrap">{responder.id}</td>
-                <td className="py-3 px-4 whitespace-nowrap">{`${responder.firstName} ${responder.lastName}`}</td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <button
-                    type="button"
-                    className={`text-xs px-3 py-1 rounded-sm ${
+              <tr key={responder.id} className="border-t whitespace-nowrap">
+                <td className="px-0 py-1">
+                  <div className="flex items-center justify-start ">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
+                      <img src={ProfileImage} alt={`${responder.firstName} ${responder.lastName}`} />
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-1">
+                  <span>{`${responder.firstName} ${responder.lastName}`}</span>
+                </td>
+                <td className="px-4 py-1">{responder.email}</td>
+                <td className="px-4 py-1">
+                  <span
+                    className={`text-[#000000] px-2 py-1 rounded-lg ${
                       responder.tier === "Tier2"
-                        ? "bg-red-100 text-red-600 hover:bg-red-200"
-                        : "bg-[#D9D9D9] text-gray-800 hover:bg-gray-300"
+                        ? "bg-[#D00F24]/32"
+                        : responder.tier === "Tier1"
+                        ? "bg-[#0C0E5D]/30"
+                        : "bg-gray-500"
                     }`}
                   >
                     {responder.tier}
-                  </button>
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <span className="inline-flex items-center gap-2">
-                    <span
-                      className={`w-3 h-3 rounded-full ${
-                        responder.status === "Active"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
-                    />
-                    <span
-                      className={`${
-                        responder.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {responder.status}
-                    </span>
                   </span>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.createdAt}
+                <td className="px-4 py-1">
+                  <div className="flex items-center gap-1">
+                    <img
+                      src={responder.status === "Active" ? GreenButton : RedDot}
+                      className="h-3"
+                      alt={responder.status}
+                    />
+                    {responder.status}
+                  </div>
                 </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {responder.updatedAt}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex items-center space-x-4">
-                    {/* Tokens button no longer navigates */}
+                <td className="px-4 py-1 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-sm text-sm text-[#D00F24] hover:bg-red-200"
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
                     >
-                      <img src={TokenIcon} alt="Token Icon" />
-                      <span>Tokens</span>
+                      View Details
                     </button>
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-sm text-sm hover:bg-gray-300"
+                      onClick={() => setEditingResponder(responder)}
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
                     >
-                      <span>Manage Status</span>
+                      Edit <img src={Pen} className="h-3" alt="Edit" />
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirming({ type: "deactivate", responder })}
+                      className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
+                    >
+                      Deactivate <img src={Scissors} className="h-3" alt="Deactivate" />
+                    </button>
+                    <img
+                      src={Trash}
+                      onClick={() => setConfirming({ type: "delete", responder })}
+                      className="h-4 cursor-pointer"
+                      alt="delete"
+                    />
                   </div>
                 </td>
               </tr>
@@ -256,57 +291,18 @@ const RespondersPage: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
-        <button
-          type="button"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`flex items-center gap-1 px-3 py-1 ${
-            currentPage === 1
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-[#0C0E5D] hover:underline"
-          }`}
-        >
+     <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
+        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-        {Array.from(
-          { length: Math.ceil(filteredResponders.length / respondersPerPage) },
-          (_, i) => (
-            <button
-              key={i + 1}
-              type="button"
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded-full ${
-                currentPage === i + 1
-                  ? "bg-[#0C0E5D] text-white"
-                  : "hover:bg-gray-200"
-              }`}
-            >
-              {i + 1}
-            </button>
-          )
-        )}
-        <button
-          type="button"
-          onClick={() =>
-            setCurrentPage((prev) =>
-              prev < Math.ceil(filteredResponders.length / respondersPerPage)
-                ? prev + 1
-                : prev
-            )
-          }
-          disabled={
-            currentPage ===
-            Math.ceil(filteredResponders.length / respondersPerPage)
-          }
-          className={`flex items-center gap-1 px-3 py-1 ${
-            currentPage ===
-            Math.ceil(filteredResponders.length / respondersPerPage)
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-[#0C0E5D] hover:underline"
-          }`}
-        >
+        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
+          1
+        </button>
+        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
+        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
+        <span className="text-gray-500 px-1">...</span>
+        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
           Next
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
@@ -326,9 +322,33 @@ const RespondersPage: React.FC = () => {
           tier={submittedResponder.tier}
         />
       )}
+
+      {editingResponder && (
+        <EditResponderModal
+          responder={editingResponder}
+          onClose={() => setEditingResponder(null)}
+          onSave={(updatedResponder) => {
+            handleEditResponder(updatedResponder);
+          }}
+        />
+      )}
+      {confirming && (
+        <ConfirmResponderModal
+          type={confirming.type}
+          responderName={`${confirming.responder.firstName} ${confirming.responder.lastName}`}
+          onConfirm={() => {
+            if (confirming.type === "deactivate") {
+              handleDeactivateResponder(confirming.responder.id);
+            } else {
+              handleDeleteResponder(confirming.responder.id);
+            }
+            setConfirming(null);
+          }}
+          onClose={() => setConfirming(null)}
+        />
+      )}
     </div>
   );
 };
 
 export default RespondersPage;
-
