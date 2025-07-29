@@ -1,108 +1,77 @@
 import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
+import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
-import EditIcon from "@/shared/assets/icons/edit.svg";
-import DeactivateIcon from "@/shared/assets/icons/scissors.svg";
+import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import EmailIcon from "@/shared/assets/icons/icon.svg";
-import BinIcon from "@/shared/assets/icons/delete.svg";
-import AgentIcon from "@/shared/assets/icons/adminusers.svg";
-import SearchIcon from "@/shared/assets/icons/search.svg";
-import GreenButton from "@shared/assets/icons/Ellipse 8.svg";
+import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
+import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
+import Pen from "@/shared/assets/icons/pen.svg";
+import Scissors from "@/shared/assets/icons/scissors.svg";
+import Trash from "@/shared/assets/icons/delete.svg";
+import ProfileImage from "@/shared/assets/images/profile.png";
 import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
 import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
-
-
-import LexisPic from "@/shared/assets/images/lexis.png";
-import WilliamPic from "@/shared/assets/images/william.png";
+import EditAgentModal from "@/features/agents/components/EditAgentModal";
 
 interface Agent {
-  profilePic: string; 
   id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  status: string;
+  status: "Active" | "Inactive";
 }
 
 const AgentsPage: React.FC = () => {
+  const [agents, setAgents] = useState<Agent[]>([
+    {
+      id: "AGNT117J",
+      firstName: "Mark",
+      lastName: "Johnson",
+      email: "mark.johnson@example.com",
+      status: "Active",
+    },
+    {
+      id: "AGNT224Z",
+      firstName: "Sarah",
+      lastName: "Brown",
+      email: "sarah.brown@example.com",
+      status: "Inactive",
+    },
+    {
+      id: "AGNT339B",
+      firstName: "James",
+      lastName: "Taylor",
+      email: "james.taylor@example.com",
+      status: "Active",
+    },
+  ]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [newAgentId, setNewAgentId] = useState<string | null>(null);
-
-  const agents: Agent[] = [
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Esther Howard",
-      email: "estherhoward@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Esther Howard",
-      email: "estherhoward@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-  ];
+  const [pendingAgent, setPendingAgent] = useState<Agent | null>(null);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [confirming, setConfirming] = useState<{
+    type: "deactivate" | "delete";
+    agent: Agent;
+  } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const agentsPerPage = 4;
 
   const filteredAgents = agents.filter((agent) =>
-    agent.id.toLowerCase().includes(searchQuery.toLowerCase())
+    `${agent.firstName} ${agent.lastName} ${agent.email}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
   );
 
-  const handleAgentSubmit = () => {
-    setShowCreateAgentModal(false);
-    setShowConfirmAgentModal(true);
-  };
+  const totalPages = Math.ceil(filteredAgents.length / agentsPerPage);
+  const indexOfLastAgent = currentPage * agentsPerPage;
+  const indexOfFirstAgent = indexOfLastAgent - agentsPerPage;
+  const currentAgents = filteredAgents.slice(indexOfFirstAgent, indexOfLastAgent);
 
   const generateAgentId = () => {
     return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(
@@ -110,148 +79,182 @@ const AgentsPage: React.FC = () => {
     )}`;
   };
 
+  const handleAgentSubmit = (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
+    const newAgentData: Agent = {
+      id: generateAgentId(),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      status: "Active",
+    };
+    setPendingAgent(newAgentData); // Store new agent temporarily
+    setShowCreateAgentModal(false);
+    setShowConfirmAgentModal(true);
+  };
+
   const handleConfirm = () => {
-    const agentId = generateAgentId();
-    setNewAgentId(agentId);
-    setShowConfirmAgentModal(false);
-    setShowSuccessModal(true);
+    if (pendingAgent) {
+      setAgents((prev) => [pendingAgent, ...prev]); // Add agent to state only after confirmation
+      setShowConfirmAgentModal(false);
+      setShowSuccessModal(true);
+    }
   };
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
-    setNewAgentId(null);
+    setPendingAgent(null);
+  };
+
+  const handleEditAgent = (updatedAgent: Agent) => {
+    setAgents((prev) =>
+      prev.map((agent) => (agent.id === updatedAgent.id ? updatedAgent : agent))
+    );
+    setEditingAgent(null);
+  };
+
+  const handleDeactivateAgent = (id: string) => {
+    setAgents((prev) =>
+      prev.map((agent) =>
+        agent.id === id ? { ...agent, status: "Inactive" } : agent
+      )
+    );
+  };
+
+  const handleDeleteAgent = (id: string) => {
+    setAgents((prev) => prev.filter((agent) => agent.id !== id));
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
-    <div className="p-4 h-full flex flex-col sm:p-6 -mt-8">
+    <div className="">
       {/* Top Bar */}
-      <div className="flex justify-between mb-6 gap-4">
+      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
+          type="button"
           onClick={() => setShowCreateAgentModal(true)}
-          className="flex flex-col items-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
         >
           <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Agent</span>
         </button>
 
-        <div className="flex gap-2">
-          <div className="flex items-center rounded bg-[#D9D9D9] w-60 h-10">
-            <img src={SearchIcon} alt="Search Icon" className="ml-2 h-5" />
-            <input
-              type="text"
-              placeholder="Search Name/Email"
-              className="bg-transparent outline-none pl-7 text-sm flex items-center"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
+          <img src={Search} className="h-5 mr-2" alt="Search" />
+          <input
+            type="text"
+            className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
+            placeholder="Search Name/Email"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-auto">
-        <table className="w-full text-sm table-auto">
+      <div className="overflow-auto mt-6">
+        <table className="w-full table-auto text-sm">
           <thead className="bg-gray-100 text-left">
             <tr>
-              <th className="py-1 px-4">
-                <div className="pl-2 flex items-center gap-2">
-                  <img src={AgentIcon} alt="Agent Icon" className="h-4" />
+              <th className="px-2 py-1">
+                <div className="flex items-center gap-0">
+                  <img src={PersonIcon} className="h-4" alt="Person" />
                 </div>
               </th>
-              <th className="px-4 py-1">
-                <div className="flex items-center gap-2">
+              <th className="px-0 py-1">
+                <div className="flex items-center gap-1">
                   <span>Full Name</span>
                 </div>
               </th>
-              <th className="py-1 px-4">
-                <div className="flex items-center gap-2">
-                  <img src={EmailIcon} alt="Email Icon" className="h-4" />
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={EmailIcon} className="h-4" alt="Email" />
                   <span>Email</span>
                 </div>
               </th>
-              <th className="w-[150px] px-4 py-1 text-left">
-                <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" />
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={GreenDot} className="h-3" alt="Status" />
                   <span>Status</span>
                 </div>
               </th>
-              <th className="py-1 px-4">
-                <span className="inline-flex items-center gap-2 justify-center">
-                  <img src={ActionIcon} alt="Actions" className="h-5" />
-                  Actions
-                </span>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={ActionIcon} className="h-4" alt="Actions" />
+                  <span>Actions</span>
+                </div>
               </th>
             </tr>
           </thead>
           <tbody>
-            {filteredAgents.map((agent, index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-1">
-                  <div className="flex items-center gap-2 justify-start">
-                    <div>
+            {currentAgents.map((agent) => (
+              <tr key={agent.id} className="border-t whitespace-nowrap">
+                <td className="px-0 py-1">
+                  <div className="flex items-center justify-start">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
                       <img
-                        src={agent.profilePic}
-                        alt={agent.id + " Profile Pic"}
+                        src={ProfileImage}
+                        alt={`${agent.firstName} ${agent.lastName}`}
                       />
                     </div>
                   </div>
                 </td>
-                <td className="py-1 px-4">{agent.id}</td>
-                <td className="py-1 px-4">{agent.email}</td>
-                <td className="py-1 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span
-                      className={`w-3 h-3 rounded-full ${
-                        agent.status === "Active"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
-                    />
-                    <span
-                      className={`${
-                        agent.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {agent.status}
-                    </span>
-                  </span>
+                <td className="px-0 py-1">
+                  <span>{`${agent.firstName} ${agent.lastName}`}</span>
                 </td>
-                <td className="py-1 px-4">
-                  <div className="flex items-center justify-start space-x-4">
-                    {/* All buttons do not navigate */}
+                <td className="px-4 py-1">{agent.email}</td>
+                <td className="px-4 py-1">
+                  <div className="flex items-center gap-1">
+                    <img
+                      src={agent.status === "Active" ? GreenDot : RedDot}
+                      className="h-3"
+                      alt={agent.status}
+                    />
+                    {agent.status}
+                  </div>
+                </td>
+                <td className="px-4 py-1 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
                     >
-                      <span>View Details</span>
+                      View Details
                     </button>
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+                      onClick={() => setEditingAgent(agent)}
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
                     >
-                      <span>Edit</span>
-                      <img src={EditIcon} alt="Edit Icon" className="h-4" />
+                      Edit <img src={Pen} className="h-3" alt="Edit" />
                     </button>
                     <button
                       type="button"
-                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
+                      onClick={() => setConfirming({ type: "deactivate", agent })}
+                      className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
                     >
-                      <span>Deactivate</span>
-                      <img
-                        src={DeactivateIcon}
-                        alt="Deactivate Icon"
-                        className="h-4"
-                      />
+                      Deactivate <img src={Scissors} className="h-3" alt="Deactivate" />
                     </button>
-                    <button
-                      type="button"
-                      className="flex items-center space-x-1 px-3 py-1"
-                    >
-                      <img src={BinIcon} alt="Bin Icon" />
-                    </button>
-                    {/* All buttons do not navigate */}
+                    <img
+                      src={Trash}
+                      onClick={() => setConfirming({ type: "delete", agent })}
+                      className="h-4 cursor-pointer"
+                      alt="Delete"
+                    />
                   </div>
                 </td>
               </tr>
@@ -261,18 +264,42 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
+      <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
+        <button
+          type="button"
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`flex items-center gap-1 px-3 py-1 ${
+            currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-[#0C0E5D] hover:underline"
+          }`}
+        >
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous
         </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            type="button"
+            onClick={() => setCurrentPage(page)}
+            className={`px-3 py-1 rounded-sm ${
+              currentPage === page
+                ? "bg-[#0C0E5D] text-white"
+                : "hover:bg-gray-200"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`flex items-center gap-1 px-3 py-1 ${
+            currentPage === totalPages
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-[#0C0E5D] hover:underline"
+          }`}
+        >
           Next
           <img src={ArrowRight} alt="Next" className="h-4" />
         </button>
@@ -285,16 +312,43 @@ const AgentsPage: React.FC = () => {
           onSubmit={handleAgentSubmit}
         />
       )}
-      {showConfirmAgentModal && (
+      {showConfirmAgentModal && pendingAgent && (
         <ConfirmAgentModal
+          type="create"
+          userName={`${pendingAgent.firstName} ${pendingAgent.lastName}`}
           onConfirm={handleConfirm}
-          onClose={() => setShowConfirmAgentModal(false)}
+          onClose={() => {
+            setShowConfirmAgentModal(false);
+            setPendingAgent(null);
+          }}
         />
       )}
-      {showSuccessModal && (
+      {showSuccessModal && pendingAgent && (
         <CreateAgentSucessModal
           onClose={handleSuccessClose}
-          id={newAgentId || ""}
+          id={pendingAgent.id}
+        />
+      )}
+      {editingAgent && (
+        <EditAgentModal
+          agent={editingAgent}
+          onClose={() => setEditingAgent(null)}
+          onSave={handleEditAgent}
+        />
+      )}
+      {confirming && (
+        <ConfirmAgentModal
+          type={confirming.type}
+          userName={`${confirming.agent.firstName} ${confirming.agent.lastName}`}
+          onConfirm={() => {
+            if (confirming.type === "deactivate") {
+              handleDeactivateAgent(confirming.agent.id);
+            } else {
+              handleDeleteAgent(confirming.agent.id);
+            }
+            setConfirming(null);
+          }}
+          onClose={() => setConfirming(null)}
         />
       )}
     </div>
@@ -302,4 +356,3 @@ const AgentsPage: React.FC = () => {
 };
 
 export default AgentsPage;
- 

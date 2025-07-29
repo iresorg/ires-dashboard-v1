@@ -162,7 +162,7 @@ const UsersPage: React.FC = () => {
   );
 
   return (
-    <div className="p-4 h-full flex flex-col">
+    <div className="h-full flex flex-col pt-5">
       <div className="flex justify-between">
         <button
           onClick={() => setShowAdd(true)}

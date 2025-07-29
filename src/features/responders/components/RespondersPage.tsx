@@ -137,7 +137,7 @@ const RespondersPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 -mt-8">
+    <div className="">
       {/* Top bar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         <button
