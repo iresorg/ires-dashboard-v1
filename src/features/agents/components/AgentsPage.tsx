@@ -15,296 +15,296 @@ import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 
 {
-  /* Import Profile Images -- I can't think of a better way to do this */
+	/* Import Profile Images -- I can't think of a better way to do this */
 }
 import LexisPic from "@/shared/assets/images/lexis.png";
 import WilliamPic from "@/shared/assets/images/william.png";
 
 interface Agent {
-  profilePic: string; // Assuming profile is a string path to an image
-  id: string;
-  email: string;
-  status: string;
+	profilePic: string; // Assuming profile is a string path to an image
+	id: string;
+	email: string;
+	status: string;
 }
 
 const AgentsPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
-  const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [newAgentId, setNewAgentId] = useState<string | null>(null);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
+	const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
+	const [showSuccessModal, setShowSuccessModal] = useState(false);
+	const [newAgentId, setNewAgentId] = useState<string | null>(null);
 
-  const agents: Agent[] = [
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Esther Howard",
-      email: "estherhoward@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Esther Howard",
-      email: "estherhoward@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      profilePic: LexisPic,
-      id: "Lexis Colenial",
-      email: "lexiscole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      profilePic: WilliamPic,
-      id: "William Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-  ];
+	const agents: Agent[] = [
+		{
+			profilePic: LexisPic,
+			id: "Lexis Colenial",
+			email: "lexiscole@gmail.com",
+			status: "Inactive",
+		},
+		{
+			profilePic: LexisPic,
+			id: "Esther Howard",
+			email: "estherhoward@gmail.com",
+			status: "Active",
+		},
+		{
+			profilePic: WilliamPic,
+			id: "William Ash",
+			email: "william.ash@gmail.com",
+			status: "Active",
+		},
+		{
+			profilePic: LexisPic,
+			id: "Lexis Colenial",
+			email: "lexiscole@gmail.com",
+			status: "Inactive",
+		},
+		{
+			profilePic: WilliamPic,
+			id: "William Ash",
+			email: "william.ash@gmail.com",
+			status: "Active",
+		},
+		{
+			profilePic: LexisPic,
+			id: "Lexis Colenial",
+			email: "lexiscole@gmail.com",
+			status: "Inactive",
+		},
+		{
+			profilePic: LexisPic,
+			id: "Esther Howard",
+			email: "estherhoward@gmail.com",
+			status: "Active",
+		},
+		{
+			profilePic: WilliamPic,
+			id: "William Ash",
+			email: "william.ash@gmail.com",
+			status: "Active",
+		},
+		{
+			profilePic: LexisPic,
+			id: "Lexis Colenial",
+			email: "lexiscole@gmail.com",
+			status: "Inactive",
+		},
+		{
+			profilePic: WilliamPic,
+			id: "William Ash",
+			email: "william.ash@gmail.com",
+			status: "Active",
+		},
+	];
 
-  const filteredAgents = agents.filter((agent) =>
-    agent.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+	const filteredAgents = agents.filter((agent) =>
+		agent.id.toLowerCase().includes(searchQuery.toLowerCase())
+	);
 
-  const handleAgentSubmit = () => {
-    setShowCreateAgentModal(false);
-    setShowConfirmAgentModal(true);
-  };
+	const handleAgentSubmit = () => {
+		setShowCreateAgentModal(false);
+		setShowConfirmAgentModal(true);
+	};
 
-  const generateAgentId = () => {
-    return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(
-      65 + Math.floor(Math.random() * 26)
-    )}`;
-  };
+	const generateAgentId = () => {
+		return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(
+			65 + Math.floor(Math.random() * 26)
+		)}`;
+	};
 
-  const handleConfirm = () => {
-    const agentId = generateAgentId();
-    setNewAgentId(agentId);
-    setShowConfirmAgentModal(false);
-    setShowSuccessModal(true);
-  };
+	const handleConfirm = () => {
+		const agentId = generateAgentId();
+		setNewAgentId(agentId);
+		setShowConfirmAgentModal(false);
+		setShowSuccessModal(true);
+	};
 
-  const handleSuccessClose = () => {
-    setShowSuccessModal(false);
-    setNewAgentId(null);
-  };
+	const handleSuccessClose = () => {
+		setShowSuccessModal(false);
+		setNewAgentId(null);
+	};
 
-  return (
-    <div className="p-4 h-full flex flex-col sm:p-6 -mt-8">
-      {/* Top Bar */}
-      <div className="flex justify-between mb-6 gap-4">
-        <button
-          onClick={() => setShowCreateAgentModal(true)}
-          className="flex flex-col items-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
-        >
-          <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create Agent</span>
-        </button>
+	return (
+		<div className="p-4 h-full flex flex-col sm:p-6 -mt-8">
+			{/* Top Bar */}
+			<div className="flex justify-between mb-6 gap-4">
+				<button
+					onClick={() => setShowCreateAgentModal(true)}
+					className="flex flex-col items-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+				>
+					<img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
+					<span className="text-sm font-semibold">Create Agent</span>
+				</button>
 
-        <div className="flex gap-2">
-          <div className="flex items-center rounded bg-[#D9D9D9] w-60 h-10">
-            <img
-              src={SearchIcon}
-              alt="Search Icon"
-              className="ml-2 h-5"
-            />
-            <input
-              type="text"
-              placeholder="Search Name/Email"
-              className="bg-transparent outline-none pl-7 text-sm flex items-center"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
+				<div className="flex gap-2">
+					<div className="flex items-center rounded bg-[#D9D9D9] w-60 h-10">
+						<img
+							src={SearchIcon}
+							alt="Search Icon"
+							className="ml-2 h-5"
+						/>
+						<input
+							type="text"
+							placeholder="Search Name/Email"
+							className="bg-transparent outline-none pl-7 text-sm flex items-center"
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
+						/>
+					</div>
+				</div>
+			</div>
 
-      {/* Table */}
-      <div className="overflow-auto">
-        <table className="w-full text-sm table-auto">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="py-1 px-4">
-                <div className="pl-2 flex items-center gap-2">
-                  <img src={AgentIcon} alt="Agent Icon" className="h-4" />
-                </div>
-              </th>
-              <th className="px-4 py-1">
-                <div className="flex items-center gap-2">
-                  <span>Full Name</span>
-                </div>
-              </th>
-              <th className="py-1 px-4">
-                <div className="flex items-center gap-2">
-                  <img src={EmailIcon} alt="Email Icon" className="h-4" />
-                  <span>Email</span>
-                </div>
-              </th>
-              <th className="w-[150px] px-4 py-1 text-left">
-                <div className="flex items-center space-x-2">
-                  <img src={GreenButton} className="h-4" />
-                  <span>Status</span>
-                </div>
-              </th>
-              <th className="py-1 px-4">
-                <span className="inline-flex items-center gap-2 justify-center">
-                  <img src={ActionIcon} alt="Actions" className="h-5" />
-                  Actions
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAgents.map((agent, index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-1">
-                  <div className="flex items-center gap-2 justify-start">
-                    <div>
-                      <img
-                        src={agent.profilePic}
-                        alt={agent.id + " Profile Pic"}
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="py-1 px-4">{agent.id}</td>
-                <td className="py-1 px-4">{agent.email}</td>
-                <td className="py-1 px-4">
-                  <span className="inline-flex items-center gap-2">
-                    <span
-                      className={`w-3 h-3 rounded-full ${
-                        agent.status === "Active"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
-                    />
-                    <span
-                      className={`${
-                        agent.status === "Active"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {agent.status}
-                    </span>
-                  </span>
-                </td>
-                <td className="py-1 px-4">
-                  <div className="flex items-center justify-start space-x-4">
-                    {/* All buttons do not navigate */}
-                    <button
-                      type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
-                    >
-                      <span>View Details</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
-                    >
-                      <span>Edit</span>
-                      <img src={EditIcon} alt="Edit Icon" className="h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
-                    >
-                      <span>Deactivate</span>
-                      <img
-                        src={DeactivateIcon}
-                        alt="Deactivate Icon"
-                        className="h-4"
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center space-x-1 px-3 py-1"
-                    >
-                      <img src={BinIcon} alt="Bin Icon" />
-                    </button>
-                    {/* All buttons do not navigate */}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+			{/* Table */}
+			<div className="overflow-auto">
+				<table className="w-full text-sm table-auto">
+					<thead className="bg-gray-100 text-left">
+						<tr>
+							<th className="py-1 px-4">
+								<div className="pl-2 flex items-center gap-2">
+									<img src={AgentIcon} alt="Agent Icon" className="h-4" />
+								</div>
+							</th>
+							<th className="px-4 py-1">
+								<div className="flex items-center gap-2">
+									<span>Full Name</span>
+								</div>
+							</th>
+							<th className="py-1 px-4">
+								<div className="flex items-center gap-2">
+									<img src={EmailIcon} alt="Email Icon" className="h-4" />
+									<span>Email</span>
+								</div>
+							</th>
+							<th className="w-[150px] px-4 py-1 text-left">
+								<div className="flex items-center space-x-2">
+									<img src={GreenButton} className="h-4" />
+									<span>Status</span>
+								</div>
+							</th>
+							<th className="py-1 px-4">
+								<span className="inline-flex items-center gap-2 justify-center">
+									<img src={ActionIcon} alt="Actions" className="h-5" />
+									Actions
+								</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{filteredAgents.map((agent, index) => (
+							<tr key={index} className="border-t">
+								<td className="px-4 py-1">
+									<div className="flex items-center gap-2 justify-start">
+										<div>
+											<img
+												src={agent.profilePic}
+												alt={agent.id + " Profile Pic"}
+											/>
+										</div>
+									</div>
+								</td>
+								<td className="py-1 px-4">{agent.id}</td>
+								<td className="py-1 px-4">{agent.email}</td>
+								<td className="py-1 px-4">
+									<span className="inline-flex items-center gap-2">
+										<span
+											className={`w-3 h-3 rounded-full ${
+												agent.status === "Active"
+													? "bg-green-500"
+													: "bg-red-500"
+											}`}
+										/>
+										<span
+											className={`${
+												agent.status === "Active"
+													? "text-green-600"
+													: "text-red-600"
+											}`}
+										>
+											{agent.status}
+										</span>
+									</span>
+								</td>
+								<td className="py-1 px-4">
+									<div className="flex items-center justify-start space-x-4">
+										{/* All buttons do not navigate */}
+										<button
+											type="button"
+											className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+										>
+											<span>View Details</span>
+										</button>
+										<button
+											type="button"
+											className="flex items-center space-x-1 bg-[#D9D9D9] px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+										>
+											<span>Edit</span>
+											<img src={EditIcon} alt="Edit Icon" className="h-4" />
+										</button>
+										<button
+											type="button"
+											className="flex items-center space-x-1 bg-[#D00F24]/11 px-3 py-1 rounded-lg text-sm text-[#D00F24] hover:bg-red-200"
+										>
+											<span>Deactivate</span>
+											<img
+												src={DeactivateIcon}
+												alt="Deactivate Icon"
+												className="h-4"
+											/>
+										</button>
+										<button
+											type="button"
+											className="flex items-center space-x-1 px-3 py-1"
+										>
+											<img src={BinIcon} alt="Bin Icon" />
+										</button>
+										{/* All buttons do not navigate */}
+									</div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
-        </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-          Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
-        </button>
-      </div>
+			{/* Pagination */}
+			<div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
+				<button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
+					<img src={ArrowLeft} alt="Previous" className="h-4" />
+					Previous
+				</button>
+				<button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
+					1
+				</button>
+				<button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
+				<button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
+				<span className="text-gray-500 px-1">...</span>
+				<button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
+					Next
+					<img src={ArrowRight} alt="Next" className="h-4" />
+				</button>
+			</div>
 
-      {/* Modals */}
-      {showCreateAgentModal && (
-        <CreateAgentModal
-          onClose={() => setShowCreateAgentModal(false)}
-          onSubmit={handleAgentSubmit}
-        />
-      )}
-      {showConfirmAgentModal && (
-        <ConfirmAgentModal
-          onConfirm={handleConfirm}
-          onClose={() => setShowConfirmAgentModal(false)}
-        />
-      )}
-      {showSuccessModal && (
-        <CreateAgentSucessModal
-          onClose={handleSuccessClose}
-          id={newAgentId || ""}
-        />
-      )}
-    </div>
-  );
+			{/* Modals */}
+			{showCreateAgentModal && (
+				<CreateAgentModal
+					onClose={() => setShowCreateAgentModal(false)}
+					onSubmit={handleAgentSubmit}
+				/>
+			)}
+			{showConfirmAgentModal && (
+				<ConfirmAgentModal
+					onConfirm={handleConfirm}
+					onClose={() => setShowConfirmAgentModal(false)}
+				/>
+			)}
+			{showSuccessModal && (
+				<CreateAgentSucessModal
+					onClose={handleSuccessClose}
+					id={newAgentId || ""}
+				/>
+			)}
+		</div>
+	);
 };
 
 export default AgentsPage;
