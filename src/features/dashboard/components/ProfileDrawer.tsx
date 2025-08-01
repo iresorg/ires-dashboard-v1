@@ -34,11 +34,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             alt="User"
             className="w-20 h-20 rounded-full object-contain"
           />
-          <div className="absolute bottom-2 right-[135px] bg-white rounded-full p-1 text-xs">
+          <div className="absolute bottom-2 right-[135px]">
             <img
               src={PencilIcon}
               alt="edit"
-              className="w-4 h-4 object-contain"
+              className="w-4 h-4"
             />
           </div>
         </div>
