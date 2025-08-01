@@ -46,57 +46,57 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
         <div className="space-y-4 w-auto mx-5 border border-gray-100 px-5 pt-5 pb-12 rounded-xl mb-10">
           {/* First Name */}
           <div className="flex flex-row items-center space-x-1">
-            <label className="w-40 text-left text-md text-[#12096f]">
+            <label className="w-30 text-left text-md text-[#12096f]">
               First name
             </label>
             <input
               type="text"
               value="Craig"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
+              className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Last Name */}
-          <div className="flex flex-row items-center space-x-1">
-            <label className="w-40 text-left text-md text-[#12096f]">
+          <div className="flex flex-row items-center space-x-0">
+            <label className="w-30 text-left text-md text-[#12096f]">
               Last name
             </label>
             <input
               type="text"
               value="Davidson"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
+              className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Email */}
           <div className="flex flex-row items-center space-x-1">
-            <label className="w-40 text-left text-md text-[#12096f]">
+            <label className="w-30 text-left text-md text-[#12096f]">
               Email
             </label>
             <input
               type="email"
               value="craig.davidson@gmail.com"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
+              className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Role */}
-          <div className="flex flex-row items-center justify-start space-x-1 border-b-2 border-gray-200 pb-2 mb-2">
-            <label className="w-40 text-left text-md text-[#12096f]">
+          <div className="flex flex-row items-center justify-start space-x-1 border-b-1 border-gray-100 pb-2 mb-2">
+            <label className="w-30 text-left text-md text-[#12096f]">
               Role
             </label>
             <input
               type="text"
               value="Responder Admin"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
+              className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Security */}
           <div className="flex flex-row items-center justify-start space-x-1">
-            <label className="w-40 text-left text-md text-[#12096f]">
+            <label className="w-30 text-left text-md text-[#12096f]">
               Security
             </label>
             <input
               type="text"
               value="Change Password"
-              className="w-full mt-1 px-3 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
+              className="w-full mt-1 px-2 py-1 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
             />
           </div>
           {/* Logout Button */}
