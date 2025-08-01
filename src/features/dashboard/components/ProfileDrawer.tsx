@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import WilliamPic from "@/shared/assets/images/william.png";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
@@ -11,17 +11,10 @@ interface ProfileDrawerProps {
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-   useEffect(() => {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "auto";
-      };
-    }, []);
-
   return (
-    <div className="absolute top-86 bottom-0 -left-35 -right-15 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm inset-0">
+    <div className="absolute top-86 bottom-0 -left-35 -right-15 z-[60] flex items-center justify-center inset-0">
       <div className="max-w-xl bg-white rounded-xl">
-        {/** Header */}
+        {/* Header */}
         <div className="w-full flex justify-between items-center py-2 border-b-4 border-[#B27373] mb-6">
           <h2 className="bg-[#12096f] text-white px-12 py-1 rounded-xl ml-3">
             Profile
@@ -34,14 +27,14 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             />
           </button>
         </div>
-        {/** Profile Picture */}
+        {/* Profile Picture */}
         <div className="flex flex-col items-center mb-6 relative">
           <img
             src={WilliamPic}
             alt="User"
             className="w-20 h-20 rounded-full object-contain"
           />
-          <div className="absolute bottom-2 right-[170px] bg-white rounded-full p-1 text-xs">
+          <div className="absolute bottom-2 right-[135px] bg-white rounded-full p-1 text-xs">
             <img
               src={PencilIcon}
               alt="edit"
@@ -49,7 +42,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             />
           </div>
         </div>
-
+        {/* Content */}
         <div className="space-y-5 w-auto mx-5 border border-gray-100 px-5 py-12 rounded-xl mb-10">
           {/* First Name */}
           <div className="flex flex-row items-center space-x-1">
@@ -59,7 +52,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             <input
               type="text"
               value="Craig"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-xl"
+              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Last Name */}
@@ -70,7 +63,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             <input
               type="text"
               value="Davidson"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-xl"
+              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Email */}
@@ -81,7 +74,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             <input
               type="email"
               value="craig.davidson@gmail.com"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-xl"
+              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Role */}
@@ -92,7 +85,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             <input
               type="text"
               value="Responder Admin"
-              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-xl"
+              className="w-full px-3 py-1 bg-gray-300 text-gray-900 rounded-lg"
             />
           </div>
           {/* Security */}
@@ -103,7 +96,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             <input
               type="text"
               value="Change Password"
-              className="w-full mt-1 px-3 py-1 bg-gray-300 text-gray-500 rounded-xl cursor-not-allowed"
+              className="w-full mt-1 px-3 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
             />
           </div>
           {/* Logout Button */}
