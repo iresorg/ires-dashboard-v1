@@ -29,30 +29,30 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           </button>
         </div>
         {/* Content */}
-        <div className="space-y-5 w-auto mx-5 border border-gray-100 px-5 py-8 rounded-xl mb-10">
-          <h2 className="text-md font-semibold">You have 4 Notifications</h2>
+        <div className="space-y-3 w-auto mx-5 border border-gray-100 px-5 py-8 rounded-xl mb-10">
+          <h2 className="w-60 text-md font-semibold">You have 4 Notifications</h2>
           {/* First Name */}
           <div className="flex flex-row items-center space-x-1">
             <div className="w-full px-3 py-2 bg-gray-300 text-gray-900 rounded-lg">
-              Craig
+              New ticket assigned to you.
             </div>
           </div>
           {/* Last Name */}
           <div className="flex flex-row items-center space-x-1">
             <div className="w-full px-3 py-2 bg-gray-300 text-gray-900 rounded-lg">
-              Davidson
+              Password reset successful.
             </div>
           </div>
           {/* Email */}
           <div className="flex flex-row items-center space-x-1">
             <div className="w-full px-3 py-2 bg-gray-300 text-gray-900 rounded-lg">
-              craig.davidson@gmail.com
+              New responder added.
             </div>
           </div>
           {/* Role */}
           <div className="flex flex-row items-center justify-start space-x-1">
             <div className="w-full px-3 py-2 bg-gray-300 text-gray-900 rounded-lg">
-              Responder Admin
+              New agent added.
             </div>
           </div>
         </div>
