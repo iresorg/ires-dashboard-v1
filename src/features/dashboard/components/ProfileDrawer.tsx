@@ -12,7 +12,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-86 bottom-0 -left-35 -right-15 z-[60] flex items-center justify-center inset-0">
+    <div className="absolute top-83 bottom-0 -left-35 -right-15 z-[60] flex items-center justify-center inset-0">
       <div className="max-w-xl bg-white rounded-xl">
         {/* Header */}
         <div className="w-full flex justify-between items-center py-2 border-b-4 border-[#B27373] mb-6">
@@ -43,7 +43,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
         {/* Content */}
-        <div className="space-y-5 w-auto mx-5 border border-gray-100 px-5 py-12 rounded-xl mb-10">
+        <div className="space-y-4 w-auto mx-5 border border-gray-100 px-5 pt-5 pb-12 rounded-xl mb-10">
           {/* First Name */}
           <div className="flex flex-row items-center space-x-1">
             <label className="w-40 text-left text-md text-[#12096f]">
@@ -78,7 +78,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             />
           </div>
           {/* Role */}
-          <div className="flex flex-row items-center justify-start space-x-1">
+          <div className="flex flex-row items-center justify-start space-x-1 border-b-2 border-gray-200 pb-2 mb-2">
             <label className="w-40 text-left text-md text-[#12096f]">
               Role
             </label>
