@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
+import ImageClicker from "@/shared/assets/icons/Upload.svg"; 
+import Trash from "@/shared/assets/icons/delete.svg";
 
 interface CreateAgentModalProps {
   onClose: () => void;
-  onSubmit: (data: { firstName: string; lastName: string; email: string }) => void;
+  onSubmit: (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string; 
+  }) => void;
 }
 
 const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState<{ firstName?: string; lastName?: string; email?: string }>({});
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    avatar?: string;
+  }>({});
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -20,8 +34,30 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
     };
   }, []);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClearAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  };
+
   const validateForm = () => {
-    const newErrors: { firstName?: string; lastName?: string; email?: string } = {};
+    const newErrors: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      avatar?: string;
+    } = {};
     let isValid = true;
 
     if (!firstName.trim()) {
@@ -39,6 +75,16 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
       newErrors.email = "Valid email is required";
       isValid = false;
     }
+    if (avatarFile) {
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validTypes.includes(avatarFile.type)) {
+        newErrors.avatar = "Please upload a valid image (JPEG, PNG, or GIF)";
+        isValid = false;
+      } else if (avatarFile.size > 5 * 1024 * 1024) {
+        newErrors.avatar = "Image size must be less than 5MB";
+        isValid = false;
+      }
+    }
 
     setErrors(newErrors);
     return isValid;
@@ -47,11 +93,19 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit({ firstName, lastName, email });
+      onSubmit({
+        firstName,
+        lastName,
+        email,
+        avatar: avatarPreview || undefined,
+      });
       setFirstName("");
       setLastName("");
       setEmail("");
+      setAvatarFile(null);
+      setAvatarPreview(null);
       setErrors({});
+      onClose();
     }
   };
 
@@ -60,113 +114,107 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
       className="fixed inset-0 z-50 flex items-center justify-center"
       aria-modal="true"
       role="dialog"
-      aria-labelledby="create-agent-modal-title"
     >
       <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-xl shadow-lg px-8 py-10 w-[550px]"
+        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          type="button"
-          className="absolute top-4 right-4 cursor-pointer"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <img src={CloseIcon} alt="Close" className="h-4 w-4" />
-        </button>
-        <div className="flex items-center justify-center mb-8">
-          <h2
-            id="create-agent-modal-title"
-            className="text-2xl font-bold text-center"
-          >
-            Create Agent
-          </h2>
-          <img src={PencilIcon} alt="Add" className="w-5 h-5 ml-2" />
+        <div className="flex flex-row justify-center mb-6 space-x-1">
+          <h2 className="text-xl font-semibold text-center">Create Agent</h2>
+          <img src={PencilIcon} alt="Create Agent" className="w-5 h-6" />
         </div>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="flex items-center space-x-6">
-            <label className="w-32 text-right text-sm font-medium text-gray-700">
-              First Name
+        <div className="absolute top-2 right-2 cursor-pointer">
+          <img
+            src={CloseIcon}
+            alt="Close/Cancel"
+            onClick={onClose}
+            className="w-4 h-4"
+          />
+        </div>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div className="flex flex-col items-center space-y-5">
+            <div className="w-[70%]">
+              <input
+                type="text"
+                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  errors.firstName ? "border border-red-500" : ""
+                }`}
+                placeholder="First name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+              )}
+            </div>
+            <div className="w-[70%]">
+              <input
+                type="text"
+                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  errors.lastName ? "border border-red-500" : ""
+                }`}
+                placeholder="Last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+              )}
+            </div>
+            <div className="w-[70%] mb-2">
+              <input
+                type="email"
+                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  errors.email ? "border border-red-500" : ""
+                }`}
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+            </div>
+            
+                      <div className="w-[70%]">
+            <label htmlFor="avatar" className="block text-sm font-medium mb-1 text-[#000000]/70">
+              Upload agent avatar
             </label>
-            <input
-              type="text"
-              className="flex-1 rounded-lg bg-gray-200 px-4 py-2 focus:outline-none"
-              placeholder="Enter first name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
+            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+              <div className="relative flex">
+                <input
+                  type="file"
+                  id="avatar"
+                  accept="image/jpeg,image/png,image/gif"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={handleImageChange}
+                />
+                <button
+                  type="button"
+                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
+                    errors.avatar ? "border border-red-500" : ""
+                  }`}
+                >
+                  <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
+                  <p className="text-xs">Upload File</p>
+                </button>
+                <p className="text-xs">{avatarFile ? avatarFile.name : "No file choosen image.png"}</p>
+                <img src={Trash} className="h-4 w-4 mt-2"></img>
+              </div>
+            </div>
           </div>
-          {errors.firstName && (
-            <p
-              style={{
-                color: "red",
-                marginTop: "-1rem",
-                marginLeft: "9.5rem",
-                fontSize: "0.75rem",
-              }}
-            >
-              {errors.firstName}
-            </p>
-          )}
-          <div className="flex items-center space-x-6">
-            <label className="w-32 text-right text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <input
-              type="text"
-              className="flex-1 rounded-lg bg-gray-200 px-4 py-2 focus:outline-none"
-              placeholder="Enter last name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </div>
-          {errors.lastName && (
-            <p
-              style={{
-                color: "red",
-                marginTop: "-1rem",
-                marginLeft: "9.5rem",
-                fontSize: "0.75rem",
-              }}
-            >
-              {errors.lastName}
-            </p>
-          )}
-          <div className="flex items-center space-x-6">
-            <label className="w-32 text-right text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              className="flex-1 rounded-lg bg-gray-200 px-4 py-2 focus:outline-none"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          {errors.email && (
-            <p
-              style={{
-                color: "red",
-                marginTop: "-1rem",
-                marginLeft: "9.5rem",
-                fontSize: "0.75rem",
-              }}
-            >
-              {errors.email}
-            </p>
-          )}
-          <div className="flex justify-center pt-6">
-            <button
-              type="submit"
-              className="bg-[#0C0E5D] text-white px-8 py-2 rounded-full text-sm font-semibold hover:bg-[#06083a]"
-            >
-              Create Agent
-            </button>
+            <div className="flex items-center justify-center">
+              <button
+                type="submit"
+                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
+              >
+                Create Agent
+              </button>
+            </div>
           </div>
         </form>
       </div>
