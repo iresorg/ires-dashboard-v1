@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
-import ImageClicker from "@/shared/assets/icons/Upload.svg"; 
-import Trash from "@/shared/assets/icons/delete.svg";
+import ImageClicker from "@/shared/assets/icons/Upload.svg";
 
 interface CreateAgentModalProps {
   onClose: () => void;
@@ -10,11 +9,14 @@ interface CreateAgentModalProps {
     firstName: string;
     lastName: string;
     email: string;
-    avatar?: string; 
+    avatar?: string;
   }) => void;
 }
 
-const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }) => {
+const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
+  onClose,
+  onSubmit,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -135,6 +137,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
             className="w-4 h-4"
           />
         </div>
+
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center space-y-5">
             <div className="w-[70%]">
@@ -151,6 +154,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
                 <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
               )}
             </div>
+
             <div className="w-[70%]">
               <input
                 type="text"
@@ -165,6 +169,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
                 <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
               )}
             </div>
+
             <div className="w-[70%] mb-2">
               <input
                 type="email"
@@ -179,34 +184,70 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onSubmit }
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
-            
-                      <div className="w-[70%]">
-            <label htmlFor="avatar" className="block text-sm font-medium mb-1 text-[#000000]/70">
-              Upload agent avatar
-            </label>
-            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
-              <div className="relative flex">
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/jpeg,image/png,image/gif"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
+
+            {/* Avatar Upload */}
+            <div className="w-[70%]">
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium mb-1 text-[#000000]/70"
+              >
+                Upload agent avatar
+              </label>
+              <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+                <div className="relative flex items-center">
+                  <input
+                    type="file"
+                    id="avatar"
+                    accept="image/jpeg,image/png,image/gif"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleImageChange}
+                  />
+                  <button
+                    type="button"
+                    className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
+                      errors.avatar ? "border border-red-500" : ""
+                    }`}
+                  >
+                    <img
+                      src={ImageClicker}
+                      alt="Upload Icon"
+                      className="h-4 w-4 mr-3"
+                    />
+                    <p className="text-xs">Upload File</p>
+                  </button>
+                  <p className="text-xs ml-3">
+                    {avatarFile ? avatarFile.name : "No file chosen"}
+                  </p>
+                </div>
+              </div>
+              {errors.avatar && (
+                <p className="text-red-500 text-sm mt-1">{errors.avatar}</p>
+              )}
+            </div>
+
+            {/* Avatar Preview + Clear */}
+            {avatarPreview && (
+              <div className="w-[70%] flex flex-col items-center">
+                <img
+                  src={avatarPreview}
+                  alt="Avatar Preview"
+                  className="w-20 h-20 rounded-full object-cover mt-2"
                 />
                 <button
                   type="button"
-                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                    errors.avatar ? "border border-red-500" : ""
-                  }`}
+                  onClick={handleClearAvatar}
+                  className="mt-2 flex items-center text-red-600 text-sm hover:underline"
                 >
-                  <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
-                  <p className="text-xs">Upload File</p>
+                  <img
+                    src="/icons/delete.svg"
+                    alt="Delete Icon"
+                    className="w-4 h-4 mr-1"
+                  />
+                  Remove Avatar
                 </button>
-                <p className="text-xs">{avatarFile ? avatarFile.name : "No file choosen image.png"}</p>
-                <img src={Trash} className="h-4 w-4 mt-2"></img>
               </div>
-            </div>
-          </div>
+            )}
+
             <div className="flex items-center justify-center">
               <button
                 type="submit"

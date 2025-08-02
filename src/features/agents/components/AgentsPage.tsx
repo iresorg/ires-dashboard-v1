@@ -11,7 +11,6 @@ import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
-import ProfileImage from "@/shared/assets/images/profile.png";
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";

@@ -12,7 +12,7 @@ export interface User {
   email: string;
   role: string;
   status: string;
-  avatar?: string; 
+  avatar?: string;
 }
 
 interface Props {
@@ -22,9 +22,14 @@ interface Props {
 }
 
 const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
-  const [form, setForm] = useState<User>({ ...user, avatar: user.avatar || undefined });
+  const [form, setForm] = useState<User>({
+    ...user,
+    avatar: user.avatar || undefined,
+  });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user.avatar || null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    user.avatar || null
+  );
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
   useEffect(() => {
@@ -160,33 +165,65 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
+
+            {/* Avatar Upload */}
             <div className="w-[70%]">
-            <label htmlFor="avatar" className="block text-sm font-medium mb-1 text-[#000000]/70">
-              Upload agent avatar
-            </label>
-            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
-              <div className="relative flex">
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/jpeg,image/png,image/gif"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
-                />
-                <button
-                  type="button"
-                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                    errors.avatar ? "border border-red-500" : ""
-                  }`}
-                >
-                  <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
-                  <p className="text-xs">Upload File</p>
-                </button>
-                <p className="text-xs">{avatarFile ? avatarFile.name : "No file choosen image.png"}</p>
-                <img src={Trash} className="h-4 w-4 mt-2"></img>
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium mb-1 text-[#000000]/70"
+              >
+                Upload agent avatar
+              </label>
+              <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+                <div className="relative flex items-center space-x-2">
+                  <input
+                    type="file"
+                    id="avatar"
+                    accept="image/jpeg,image/png,image/gif"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleImageChange}
+                  />
+                  <button
+                    type="button"
+                    className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
+                      errors.avatar ? "border border-red-500" : ""
+                    }`}
+                  >
+                    <img
+                      src={ImageClicker}
+                      alt="Upload Icon"
+                      className="h-4 w-4 mr-3"
+                    />
+                    <p className="text-xs">Upload File</p>
+                  </button>
+                  <p className="text-xs">
+                    {avatarFile ? avatarFile.name : "No file chosen"}
+                  </p>
+                  {avatarFile && (
+                    <img
+                      src={Trash}
+                      alt="Remove"
+                      onClick={handleClearAvatar}
+                      className="h-4 w-4 cursor-pointer"
+                    />
+                  )}
+                </div>
               </div>
+              {errors.avatar && (
+                <p className="text-red-500 text-sm mt-1">{errors.avatar}</p>
+              )}
             </div>
-          </div>
+
+            {avatarPreview && (
+              <div className="w-[70%] flex flex-col items-center">
+                <img
+                  src={avatarPreview}
+                  alt="Avatar Preview"
+                  className="w-20 h-20 rounded-full object-cover mt-2"
+                />
+              </div>
+            )}
+
             <div className="relative w-[70%]">
               <select
                 name="role"
@@ -210,6 +247,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <p className="text-red-500 text-sm mt-1">{errors.role}</p>
               )}
             </div>
+
             <div className="flex items-center justify-center">
               <button
                 type="submit"

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import EditIcon from "@/shared/assets/icons/edit.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
-import ImageClicker from "@/shared/assets/icons/Upload.svg"; 
-import Trash from "@/shared/assets/icons/delete.svg";
+import ImageClicker from "@/shared/assets/icons/Upload.svg";
+import Trash from "@/shared/assets/icons/delete.svg"; // this is used in img `src`
 
 interface CreateResponderModalProps {
   onClose: () => void;
   onCreateResponder: (data: {
     firstName: string;
     lastName: string;
-    email: string; // Added email
+    email: string;
     tier: string;
     avatar?: string;
   }) => void;
@@ -23,7 +23,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "", // Added email
+    email: "",
     tier: "",
     avatar: undefined as string | undefined,
   });
@@ -90,13 +90,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onCreateResponder({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        tier: formData.tier,
-        avatar: formData.avatar,
-      });
+      onCreateResponder({ ...formData });
       setFormData({
         firstName: "",
         lastName: "",
@@ -126,7 +120,9 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Create Responder</h2>
+          <h2 className="text-xl font-semibold text-center">
+            Create Responder
+          </h2>
           <img src={EditIcon} alt="Create Responder" className="w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
@@ -137,6 +133,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
             className="w-4 h-4"
           />
         </div>
+
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center space-y-5">
             <div className="w-[70%]">
@@ -154,6 +151,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
               )}
             </div>
+
             <div className="w-[70%]">
               <input
                 type="text"
@@ -169,6 +167,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
               )}
             </div>
+
             <div className="w-[70%] mb-2">
               <input
                 type="email"
@@ -184,33 +183,71 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
-             <div className="w-[70%]">
-            <label htmlFor="avatar" className="block text-sm font-medium mb-1 text-[#000000]/70">
-              Upload agent avatar
-            </label>
-            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
-              <div className="relative flex">
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/jpeg,image/png,image/gif"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
+
+            {/* Avatar Upload */}
+            <div className="w-[70%]">
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium mb-1 text-[#000000]/70"
+              >
+                Upload avatar
+              </label>
+              <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+                <div className="relative flex items-center">
+                  <input
+                    type="file"
+                    id="avatar"
+                    accept="image/jpeg,image/png,image/gif"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleImageChange}
+                  />
+                  <button
+                    type="button"
+                    className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
+                      errors.avatar ? "border border-red-500" : ""
+                    }`}
+                  >
+                    <img
+                      src={ImageClicker}
+                      alt="Upload Icon"
+                      className="h-4 w-4 mr-3"
+                    />
+                    <p className="text-xs">Upload File</p>
+                  </button>
+                  <p className="text-xs ml-3">
+                    {avatarFile ? avatarFile.name : "No file chosen"}
+                  </p>
+                </div>
+              </div>
+              {errors.avatar && (
+                <p className="text-red-500 text-sm mt-1">{errors.avatar}</p>
+              )}
+            </div>
+
+            {/* Avatar Preview */}
+            {avatarPreview && (
+              <div className="w-[70%] flex flex-col items-center">
+                <img
+                  src={avatarPreview}
+                  alt="Avatar Preview"
+                  className="w-20 h-20 rounded-full object-cover mt-2"
                 />
                 <button
                   type="button"
-                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                    errors.avatar ? "border border-red-500" : ""
-                  }`}
+                  onClick={handleClearAvatar}
+                  className="mt-2 flex items-center text-red-600 text-sm hover:underline"
                 >
-                  <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
-                  <p className="text-xs">Upload File</p>
+                  <img
+                    src={Trash}
+                    alt="Remove Avatar"
+                    className="w-3 h-3 mr-1"
+                  />
+                  Remove Avatar
                 </button>
-                <p className="text-xs">{avatarFile ? avatarFile.name : "No file choosen image.png"}</p>
-                <img src={Trash} className="h-4 w-4 mt-2"></img>
               </div>
-            </div>
-          </div>
+            )}
+
+            {/* Tier Dropdown */}
             <div className="relative w-[70%]">
               <select
                 name="tier"
@@ -234,6 +271,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 <p className="text-red-500 text-sm mt-1">{errors.tier}</p>
               )}
             </div>
+
             <div className="flex items-center justify-center">
               <button
                 type="submit"
