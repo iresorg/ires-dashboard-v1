@@ -31,7 +31,7 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
       {/* Drawer content */}
       <div
-        className="absolute top-[70px] bottom-0 left-[40%] z-[60] flex items-start justify-end"
+        className="absolute top-[65px] bottom-0 left-[40%] z-[60] flex items-start justify-end"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-[#F9FAFB] rounded-xl shadow-xl w-[350px]">
