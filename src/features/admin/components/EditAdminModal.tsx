@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
-import ImageClicker from "@/shared/assets/icons/Upload.svg";
-import Trash from "@/shared/assets/icons/delete.svg";
+import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
+import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
+import type { CreatableUserRole } from "@/shared/types/roles";
 
 export interface User {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
+  role: CreatableUserRole;
   status: string;
   avatar?: string;
 }
@@ -26,10 +27,6 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     ...user,
     avatar: user.avatar || undefined,
   });
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user.avatar || null
-  );
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
   useEffect(() => {
@@ -46,23 +43,12 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-        setForm((prev) => ({ ...prev, avatar: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleAvatarUpload = (result: { secure_url: string }) => {
+    setForm((prev) => ({ ...prev, avatar: result.secure_url }));
   };
 
-  const handleClearAvatar = () => {
-    setAvatarFile(null);
-    setAvatarPreview(null);
-    setForm((prev) => ({ ...prev, avatar: undefined }));
+  const handleAvatarError = (error: string) => {
+    setErrors(prev => ({ ...prev, avatar: error }));
   };
 
   const validate = () => {
@@ -72,14 +58,6 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
       e.email = "Valid email required";
     if (!form.role.trim()) e.role = "Role required";
-    if (avatarFile) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!validTypes.includes(avatarFile.type)) {
-        e.avatar = "Please upload a valid image (JPEG, PNG, or GIF)";
-      } else if (avatarFile.size > 5 * 1024 * 1024) {
-        e.avatar = "Image size must be less than 5MB";
-      }
-    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -168,61 +146,20 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
 
             {/* Avatar Upload */}
             <div className="w-[70%]">
-              <label
-                htmlFor="avatar"
-                className="block text-sm font-medium mb-1 text-[#000000]/70"
-              >
-                Upload agent avatar
-              </label>
-              <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
-                <div className="relative flex items-center space-x-2">
-                  <input
-                    type="file"
-                    id="avatar"
-                    accept="image/jpeg,image/png,image/gif"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleImageChange}
-                  />
-                  <button
-                    type="button"
-                    className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                      errors.avatar ? "border border-red-500" : ""
-                    }`}
-                  >
-                    <img
-                      src={ImageClicker}
-                      alt="Upload Icon"
-                      className="h-4 w-4 mr-3"
-                    />
-                    <p className="text-xs">Upload File</p>
-                  </button>
-                  <p className="text-xs">
-                    {avatarFile ? avatarFile.name : "No file chosen"}
-                  </p>
-                  {avatarFile && (
-                    <img
-                      src={Trash}
-                      alt="Remove"
-                      onClick={handleClearAvatar}
-                      className="h-4 w-4 cursor-pointer"
-                    />
-                  )}
-                </div>
-              </div>
+              <SingleFileUpload
+                label="Upload agent avatar"
+                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                maxSize={5}
+                folder="admin-avatars"
+                onUploadComplete={handleAvatarUpload}
+                onUploadError={handleAvatarError}
+                placeholder="No file chosen"
+                showPreview={true}
+              />
               {errors.avatar && (
-                <p className="text-red-500 text-sm mt-1">{errors.avatar}</p>
+                <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
               )}
             </div>
-
-            {avatarPreview && (
-              <div className="w-[70%] flex flex-col items-center">
-                <img
-                  src={avatarPreview}
-                  alt="Avatar Preview"
-                  className="w-20 h-20 rounded-full object-cover mt-2"
-                />
-              </div>
-            )}
 
             <div className="relative w-[70%]">
               <select
@@ -236,9 +173,11 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <option value="" disabled className="hidden">
                   -Role-
                 </option>
-                <option className="bg-white">Super Admin</option>
-                <option className="bg-white">Agent Admin</option>
-                <option className="bg-white">Responder Admin</option>
+                {CREATABLE_USER_ROLES.map((roleOption) => (
+                  <option key={roleOption} value={roleOption} className="bg-white">
+                    {getRoleDisplayName(roleOption)}
+                  </option>
+                ))}
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />

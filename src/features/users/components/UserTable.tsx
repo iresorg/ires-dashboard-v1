@@ -4,6 +4,8 @@ import EditAdminModal from "@/features/admin/components/EditAdminModal";
 import ConfirmModal from "@/features/admin/components/ConfirmModal";
 import type { UserProfile } from "../services/userService";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
+import type { CreatableUserRole } from "@/shared/types/roles";
 
 import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import EmailIcon from "@/shared/assets/icons/icon.svg";
@@ -14,7 +16,6 @@ import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
-import ProfileImage from "@/shared/assets/images/profile.png";
 
 interface UserTableProps {
   users: UserProfile[];
@@ -117,7 +118,7 @@ const UserTable: React.FC<UserTableProps> = ({
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                role: user.role,
+                role: user.role as CreatableUserRole,
                 status: user.status,
               };
 
@@ -125,9 +126,17 @@ const UserTable: React.FC<UserTableProps> = ({
                 <tr key={user.id} className="border-t">
                   <td className="px-0 py-1">
                     <div className="flex items-center justify-start">
-                      <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
-                        <img src={ProfileImage}></img>
-                      </div>
+                      {user.avatar ? (
+                        <img 
+                          src={user.avatar} 
+                          alt={`${user.firstName} ${user.lastName}`}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className={`w-8 h-8 rounded-full ${getUserInitialsColor(user.firstName, user.lastName)} flex items-center justify-center text-white font-semibold text-xs`}>
+                          {getUserInitials(user.firstName, user.lastName)}
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="px-4 py-1">

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
-import ProfileImage from "@/shared/assets/images/profile.png";
 import ProfileDrawer from "./ProfileDrawer";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
 const ProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,17 +15,26 @@ const ProfileButton = () => {
     ? `${profile.firstName} ${profile.lastName}`
     : "Loading...";
 
+  const userInitials = getUserInitials(profile?.firstName, profile?.lastName);
+  const initialsColor = getUserInitialsColor(profile?.firstName, profile?.lastName);
+
   return (
     <div className="relative" ref={wrapperRef}>
       <button
         onClick={toggleDrawer}
         className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition"
       >
-        <img
-          src={ProfileImage}
-          alt="profile"
-          className="w-10 h-10 rounded-full object-cover"
-        />
+        {profile?.avatar ? (
+          <img
+            src={profile.avatar}
+            alt="profile"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className={`w-10 h-10 rounded-full ${initialsColor} flex items-center justify-center text-white font-semibold text-sm`}>
+            {userInitials}
+          </div>
+        )}
         <span className="text-sm font-medium text-gray-700">
           {displayName}
         </span>

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
-import ImageClicker from "@/shared/assets/icons/Upload.svg";
-import Trash from "@/shared/assets/icons/delete.svg";
+import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
+import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
+import type { CreatableUserRole } from "@/shared/types/roles";
 
 interface AddAdminModalProps {
   onClose: () => void;
@@ -11,8 +12,8 @@ interface AddAdminModalProps {
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
-    avatar?: string; // Add avatar to the interface
+    role: CreatableUserRole;
+    avatar?: string; // Cloudinary URL
   }) => void;
 }
 
@@ -20,9 +21,9 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [avatar, setAvatar] = useState<string | null>(null); // State for avatar (base64 string)
-  const [avatarFile, setAvatarFile] = useState<File | null>(null); // State for file object
+  const [role, setRole] = useState<CreatableUserRole | "">("");
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -49,52 +50,75 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
     if (!role) {
       newErrors.role = "Please select a role";
     }
-    if (avatarFile) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!validTypes.includes(avatarFile.type)) {
-        newErrors.avatar = "Please upload a valid image (JPEG, PNG, or GIF)";
-      } else if (avatarFile.size > 5 * 1024 * 1024) {
-        newErrors.avatar = "Image size must be less than 5MB";
-      }
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result as string); // Store base64 string for preview
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setAvatar(null);
-      setAvatarFile(null);
-    }
+  const handleAvatarSelect = (file: File) => {
+    setSelectedAvatarFile(file);
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.avatar;
+      return newErrors;
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAvatarRemove = () => {
+    setSelectedAvatarFile(null);
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.avatar;
+      return newErrors;
+    });
+  };
+
+  const handleAvatarError = (error: string) => {
+    setErrors(prev => ({ ...prev, avatar: error }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
+      setIsSubmitting(true);
+      
+      try {
+        let avatarUrl: string | undefined;
+        
+        // Upload to Cloudinary if a file is selected
+        if (selectedAvatarFile) {
+          const { uploadFileToCloudinary } = await import('@/shared/utils/cloudinaryUpload');
+          const result = await uploadFileToCloudinary(selectedAvatarFile, 'dashboard/admin-avatars');
+          if (result.success && result.url) {
+            avatarUrl = result.url;
+          } else {
+            throw new Error(result.error || 'Upload failed');
+          }
+        }
+
+        // Call the parent handler with the data
       onAddAdmin({
         firstName,
         lastName,
         email,
-        role,
-        avatar: avatar || undefined, // Pass avatar as base64 string or undefined
+          role: role as CreatableUserRole, // Type assertion since we validate role is not empty
+          avatar: avatarUrl,
       });
+
+        // Reset form
       setFirstName("");
       setLastName("");
       setEmail("");
       setRole("");
-      setAvatar(null);
-      setAvatarFile(null);
+        setSelectedAvatarFile(null);
       setErrors({});
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setErrors(prev => ({ ...prev, avatar: 'Failed to upload image' }));
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -169,31 +193,20 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             )}
           </div>
           <div className="w-[70%]">
-            <label htmlFor="avatar" className="block text-sm font-medium mb-1 text-[#000000]/70">
-              Upload agent avatar
-            </label>
-            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
-              <div className="relative flex">
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/jpeg,image/png,image/gif"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
-                />
-                <button
-                  type="button"
-                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                    errors.avatar ? "border border-red-500" : ""
-                  }`}
-                >
-                  <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
-                  <p className="text-xs">Upload File</p>
-                </button>
-                <p className="text-xs">{avatarFile ? avatarFile.name : "No file choosen image.png"}</p>
-                <img src={Trash} className="h-4 w-4 mt-2"></img>
-              </div>
-            </div>
+            <SingleFileUpload
+              label="Upload agent avatar"
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+              maxSize={5}
+              onFileSelect={handleAvatarSelect}
+              onFileRemove={handleAvatarRemove}
+              onUploadError={handleAvatarError}
+              placeholder="No file chosen"
+              showPreview={true}
+              selectedFile={selectedAvatarFile}
+            />
+            {errors.avatar && (
+              <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
+            )}
           </div>
           <div className="relative w-[70%]">
             <select
@@ -201,14 +214,16 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
                 errors.role ? "border border-red-500" : ""
               }`}
               value={role}
-              onChange={(e) => setRole(e.target.value)}
+                onChange={(e) => setRole(e.target.value as CreatableUserRole)}
             >
               <option value="" disabled className="hidden">
                 -Role-
               </option>
-              <option className="bg-white">Super Admin</option>
-              <option className="bg-white">Agent Admin</option>
-              <option className="bg-white">Responder Admin</option>
+                {CREATABLE_USER_ROLES.map((roleOption) => (
+                  <option key={roleOption} value={roleOption} className="bg-white">
+                    {getRoleDisplayName(roleOption)}
+                  </option>
+                ))}
             </select>
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
@@ -220,9 +235,10 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
+              disabled={isSubmitting}
+              className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add Admin
+              {isSubmitting ? 'Adding...' : 'Add Admin'}
             </button>
           </div>
           </div>

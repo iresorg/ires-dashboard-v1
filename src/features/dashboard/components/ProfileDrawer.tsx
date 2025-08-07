@@ -3,6 +3,7 @@ import CloseIcon from "@/shared/assets/icons/close.svg";
 import WilliamPic from "@/shared/assets/images/william.png";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -11,6 +12,9 @@ interface ProfileDrawerProps {
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
   const { profile, logout } = useAuth();
+  
+  const userInitials = getUserInitials(profile?.firstName, profile?.lastName);
+  const initialsColor = getUserInitialsColor(profile?.firstName, profile?.lastName);
 
   useEffect(() => {
     if (isOpen) {
@@ -58,11 +62,17 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
 
           {/* Profile Picture */}
           <div className="flex flex-col items-center mb-6 relative">
-            <img
-              src={profile?.avatar || WilliamPic}
-              alt="User"
-              className="w-20 h-20 rounded-full object-contain"
-            />
+            {profile?.avatar ? (
+              <img
+                src={profile.avatar}
+                alt="User"
+                className="w-20 h-20 rounded-full object-contain"
+              />
+            ) : (
+              <div className={`w-20 h-20 rounded-full ${initialsColor} flex items-center justify-center text-white font-bold text-2xl`}>
+                {userInitials}
+              </div>
+            )}
             <div className="absolute bottom-2 right-[135px]">
               <img src={PencilIcon} alt="edit" className="w-4 h-4" />
             </div>
