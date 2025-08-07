@@ -12,7 +12,7 @@ interface LoginInputs {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, fetchProfile } = useAuth();
   const {
     register,
     handleSubmit,
@@ -22,6 +22,12 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: LoginInputs) => {
     try {
       await login(data.email, data.password);
+      // Try to fetch profile but don't block navigation if it fails
+      try {
+        await fetchProfile();
+      } catch (profileError) {
+        console.warn('Profile fetch failed, but login was successful:', profileError);
+      }
       navigate("/dashboard");
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || "Login failed. Please try again.";

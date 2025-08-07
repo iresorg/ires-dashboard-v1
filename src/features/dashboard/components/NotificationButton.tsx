@@ -11,12 +11,9 @@ const NotificationButton = () => {
 
   return (
     <div className="relative" ref={wrapperRef}>
-      <button
-        onClick={toggleDrawer}
-        className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition"
-      >
-        <NotificationBell />
-      </button>
+      <div className="w-10 h-10 flex items-center justify-center rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition">
+        <NotificationBell onClick={toggleDrawer} />
+      </div>
 
       {isOpen && <NotificationDrawer isOpen={isOpen} onClose={closeDrawer} />}
     </div>
