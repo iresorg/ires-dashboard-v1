@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import WilliamPic from "@/shared/assets/images/william.png";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface ProfileDrawerProps {
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
+  const { profile, logout } = useAuth();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -17,6 +20,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -51,7 +59,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
           {/* Profile Picture */}
           <div className="flex flex-col items-center mb-6 relative">
             <img
-              src={WilliamPic}
+              src={profile?.avatar || WilliamPic}
               alt="User"
               className="w-20 h-20 rounded-full object-contain"
             />
@@ -68,7 +76,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="text"
-                value="Craig"
+                value={profile?.firstName || "Loading..."}
                 className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
                 readOnly
               />
@@ -80,7 +88,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="text"
-                value="Davidson"
+                value={profile?.lastName || "Loading..."}
                 className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
                 readOnly
               />
@@ -92,7 +100,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="email"
-                value="craig.davidson@gmail.com"
+                value={profile?.email || "Loading..."}
                 className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
                 readOnly
               />
@@ -104,7 +112,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="text"
-                value="Responder Admin"
+                value={profile?.role || "Loading..."}
                 className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
                 readOnly
               />
@@ -122,7 +130,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
-            <button className="bg-[#12096f] text-white px-10 py-1 rounded-tl-[35px] rounded-br-[35px] float-right">
+            <button 
+              onClick={handleLogout}
+              className="bg-[#12096f] text-white px-10 py-1 rounded-tl-[35px] rounded-br-[35px] float-right hover:bg-[#0d0755] transition-colors"
+            >
               Log Out
             </button>
           </div>

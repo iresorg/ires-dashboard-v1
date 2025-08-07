@@ -10,7 +10,6 @@ import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
 import TicketsPage from "@/features/tickets/components/TicketsPage";
 import SettingsPage from "@/features/settings/components/SettingsPage";
-import RegisterPage from "@/features/auth/components/RegisterPage";
 import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
 
 // Auth pages
@@ -20,10 +19,6 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.LOGIN,
     element: <LoginPage />,
-  },
-  {
-    path: ROUTES.REGISTER,
-    element: <RegisterPage />,
   },
   {
     path: ROUTES.DASHBOARD,

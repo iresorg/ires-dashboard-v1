@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import UserTable from "@/features/users/components/UserTable";
 import AddAdminModal from "@/features/admin/components/AddAdminModal";
 import AddAdminSuccessModal from "@/features/admin/components/AddAdminSuccessModal";
 import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
-import type { User } from "@/features/admin/components/EditAdminModal";
-import { useUserStore } from "../store/userStore";
+import { useUsers } from "../hooks";
 import Pagination from "@/shared/components/ui/Pagination";
 
 import AddIcon from "@/shared/assets/icons/add.svg";
@@ -13,70 +12,41 @@ import SearchIcon from "@/shared/assets/icons/lineicons_search-2.svg";
 import FilterIcon from "@/shared/assets/icons/uiw_filter.svg";
 
 const UsersPage: React.FC = () => {
-  const { users, pagination, isLoading, error, fetchUsers } = useUserStore();
-  const [search, setSearch] = useState("");
-  const [showAdd, setShowAdd] = useState(false);
-  const [showAddSuccess, setShowAddSuccess] = useState(false);
-  const [showEditSuccess, setShowEditSuccess] = useState(false);
-  const [submitted, setSubmitted] = useState<{
-    firstName: string;
-    lastName: string;
-    role: string;
-  } | null>(null);
+  const {
+    // State
+    pagination,
+    isLoading,
+    error,
+    search,
+    showAdd,
+    showAddSuccess,
+    showEditSuccess,
+    submitted,
+    
+    // Actions
+    setSearch,
+    setShowAdd,
+    setShowAddSuccess,
+    setShowEditSuccess,
+    
+    // User operations
+    fetchUsers,
+    createUser,
+    editUser,
+    deactivateUser,
+    deleteUser,
+    
+    // Computed
+    filteredUsers,
+  } = useUsers();
   
   const tableRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchUsers(1, 10);
-  }, [fetchUsers]);
 
   const handlePageChange = (page: number) => {
     fetchUsers(page, pagination.limit);
     // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const addAdmin = (newAdmin: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  }) => {
-    // TODO: Implement API call to add user
-    setSubmitted({
-      firstName: newAdmin.firstName,
-      lastName: newAdmin.lastName,
-      role: newAdmin.role,
-    });
-    setShowAdd(false);
-    setShowAddSuccess(true);
-  };
-
-  const editAdmin = (u: User) => {
-    // TODO: Implement API call to edit user
-    setSubmitted({
-      firstName: u.firstName,
-      lastName: u.lastName,
-      role: u.role,
-    });
-    setShowEditSuccess(true);
-  };
-
-  const deactivateAdmin = (id: number) => {
-    // TODO: Implement API call to deactivate user
-    console.log('Deactivate user:', id);
-  };
-
-  const deleteAdmin = (id: number) => {
-    // TODO: Implement API call to delete user
-    console.log('Delete user:', id);
-  };
-
-  const filtered = users.filter((u) =>
-    `${u.firstName} ${u.lastName} ${u.email}`
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
 
   if (error) {
     return (
@@ -120,10 +90,10 @@ const UsersPage: React.FC = () => {
       </div>
 
       <UserTable
-        users={filtered}
-        onEditUser={editAdmin}
-        onDeactivateUser={deactivateAdmin}
-        onDeleteUser={deleteAdmin}
+        users={filteredUsers}
+        onEditUser={editUser}
+        onDeactivateUser={deactivateUser}
+        onDeleteUser={deleteUser}
         isLoading={isLoading}
       />
 
@@ -137,7 +107,7 @@ const UsersPage: React.FC = () => {
       {showAdd && (
         <AddAdminModal
           onClose={() => setShowAdd(false)}
-          onAddAdmin={addAdmin}
+          onAddAdmin={createUser}
         />
       )}
       {showAddSuccess && submitted && (

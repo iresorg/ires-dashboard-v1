@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import PasswordInput from "./PasswordInput";
+import { ROUTES } from "@/shared/constants/routes";
 
 interface LoginInputs {
   email: string;
@@ -12,7 +13,7 @@ interface LoginInputs {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const { login, fetchProfile } = useAuth();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -22,13 +23,7 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: LoginInputs) => {
     try {
       await login(data.email, data.password);
-      // Try to fetch profile but don't block navigation if it fails
-      try {
-        await fetchProfile();
-      } catch (profileError) {
-        console.warn('Profile fetch failed, but login was successful:', profileError);
-      }
-      navigate("/dashboard");
+      navigate(ROUTES.DASHBOARD);
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || "Login failed. Please try again.";
       alert(message);

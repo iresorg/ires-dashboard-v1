@@ -1,7 +1,5 @@
 // Components
 export { default as LoginPage } from "./pages/LoginPage";
-export { default as RegisterPage } from "./components/RegisterPage";
-
 // Hooks
 export { useAuth } from "./hooks/useAuth";
 
