@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
-import WilliamPic from "@/shared/assets/images/william.png";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";

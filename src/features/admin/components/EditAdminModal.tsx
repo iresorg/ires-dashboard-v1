@@ -27,6 +27,8 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     ...user,
     avatar: user.avatar || undefined,
   });
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
   useEffect(() => {
@@ -43,8 +45,22 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAvatarUpload = (result: { secure_url: string }) => {
-    setForm((prev) => ({ ...prev, avatar: result.secure_url }));
+  const handleAvatarSelect = (file: File) => {
+    setSelectedAvatarFile(file);
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.avatar;
+      return newErrors;
+    });
+  };
+
+  const handleAvatarRemove = () => {
+    setSelectedAvatarFile(null);
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.avatar;
+      return newErrors;
+    });
   };
 
   const handleAvatarError = (error: string) => {
@@ -62,11 +78,39 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
+    
     if (validate()) {
-      onSave(form);
-      onClose();
+      setIsSubmitting(true);
+      
+      try {
+        let avatarUrl: string | undefined = form.avatar;
+        
+        // Upload to Cloudinary if a new file is selected
+        if (selectedAvatarFile) {
+          const { uploadFileToCloudinary } = await import('@/shared/utils/cloudinaryUpload');
+          const result = await uploadFileToCloudinary(selectedAvatarFile, 'dashboard/admin-avatars');
+          if (result.success && result.url) {
+            avatarUrl = result.url;
+          } else {
+            throw new Error(result.error || 'Upload failed');
+          }
+        }
+
+        // Call the parent handler with the updated data
+        onSave({
+          ...form,
+          avatar: avatarUrl,
+        });
+
+        onClose();
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setErrors(prev => ({ ...prev, avatar: 'Failed to upload image' }));
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -150,11 +194,12 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 label="Upload agent avatar"
                 accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                 maxSize={5}
-                folder="admin-avatars"
-                onUploadComplete={handleAvatarUpload}
+                onFileSelect={handleAvatarSelect}
+                onFileRemove={handleAvatarRemove}
                 onUploadError={handleAvatarError}
                 placeholder="No file chosen"
                 showPreview={true}
+                selectedFile={selectedAvatarFile}
               />
               {errors.avatar && (
                 <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
@@ -190,9 +235,10 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
+                disabled={isSubmitting}
+                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Save Changes
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>

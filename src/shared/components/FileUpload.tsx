@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from 'react';
 import { useCloudinary } from '../hooks/useCloudinary';
 import { Upload, X, CheckCircle, AlertCircle, Image as ImageIcon } from 'lucide-react';
@@ -48,19 +49,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     clearError,
   } = useCloudinary();
 
-  const validateFile = (file: File): string | null => {
-    // Check file size
-    if (file.size > maxSize * 1024 * 1024) {
-      return `File size must be less than ${maxSize}MB`;
-    }
-
-    // Check file type
-    if (accept !== '*/*' && !file.type.match(accept.replace('*', '.*'))) {
-      return `File type not allowed. Accepted types: ${accept}`;
-    }
-
-    return null;
-  };
 
   const createFilePreview = (file: File): string => {
     if (file.type.startsWith('image/')) {
