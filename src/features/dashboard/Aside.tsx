@@ -2,7 +2,6 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 import Logo from "@/features/auth/components/Logo";
-import Background from "@/shared/assets/images/Background.png";
 
 interface NavItem {
   label: string;
@@ -121,13 +120,9 @@ const navItems: NavItem[] = [
 
 const Aside: React.FC = () => {
   const location = useLocation();
- 
 
   return (
-    <aside
-      className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md"
-      style={{ backgroundImage: `url(${Background})` }}
-    >
+    <aside className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md bg-white">
       <div className="h-20 flex items-center px-6">
         <Logo />
       </div>
