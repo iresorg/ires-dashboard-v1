@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Settings from "@/shared/assets/icons/actions.svg";
-import Vector from "@/shared/assets/icons/respond.svg";
-import Update from "@/shared/assets/icons/update.svg";
+import TicketDrawer from "@/features/tickets/components/TicketDrawer";
+import TicketAction from "@/features/tickets/components/TicketAction";
 
 interface InternalTicket {
   id: string;
@@ -20,6 +20,26 @@ interface TicketsTableProps {
 }
 
 const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
+  const [showViewTicket, setShowViewTicket] = useState(false);
+  const [showActionsModal, setShowActionsModal] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<InternalTicket | null>(null);
+
+  const handleViewTicket = (ticket: InternalTicket) => {
+    console.log("View Ticket clicked for:", ticket);
+    setSelectedTicket(ticket);
+    setShowViewTicket(true);
+    console.log("State updated - showViewTicket:", true, "selectedTicket:", ticket);
+  };
+
+  const handleTicketActions = (ticket: InternalTicket) => {
+    console.log("Ticket Actions clicked for:", ticket);
+    setSelectedTicket(ticket);
+    setShowActionsModal(true);
+    console.log("State updated - showActionsModal:", true, "selectedTicket:", ticket);
+  };
+
+  console.log("TicketsTable rendering with tickets:", tickets);
+
   return (
     <div className="flex-1 overflow-auto mt-4">
       <table className="min-w-full table-fixed border-collapse text-sm">
@@ -62,7 +82,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
             </th>
             <th className="w-[200px] px-4 py-2 text-left">
               <div className="flex items-center space-x-2">
-                <img className="h-5 w-5" src={Settings}></img>
+                <img className="h-5 w-5" src={Settings} alt="Actions" />
                 <span>Actions</span>
               </div>
             </th>
@@ -74,13 +94,18 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
               <td className="px-4 py-4">{ticket.id}</td>
               <td className="px-4 py-4">{ticket.title}</td>
               <td className="px-4 py-4">
-                <span className={`text-[#000000] ${
-                    ticket.status === "Escalated" ? "bg-[#D00F24]" :
-                    ticket.status === "Analyzing" ? "bg-[#D9CEED]" :
-                    ticket.status === "Assigned" ? "bg-[#FF7143]" :
-                    "bg-gray-500"
-                }  px-2 py-1 rounded-xl`}>
-                    {ticket.status}
+                <span
+                  className={`text-[#000000] ${
+                    ticket.status === "Escalated"
+                      ? "bg-[#D00F24]"
+                      : ticket.status === "Analyzing"
+                      ? "bg-[#D9CEED]"
+                      : ticket.status === "Assigned"
+                      ? "bg-[#FF7143]"
+                      : "bg-gray-500"
+                  } px-2 py-1 rounded-xl`}
+                >
+                  {ticket.status}
                 </span>
               </td>
               <td className="px-4 py-4">{ticket.severity}</td>
@@ -90,23 +115,39 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
               <td className="px-4 py-4">
                 <div className="flex items-center space-x-4">
                   <button
-                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-2 rounded-sm -ml-5">
-                    <span className="text-xs whitespace-nowrap pr-0 mr-0 ">View Ticket</span>
+                    onClick={() => handleViewTicket(ticket)}
+                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-2 rounded-sm"
+                  >
+                    <span className="text-xs whitespace-nowrap pr-0 mr-0">
+                      View Ticket
+                    </span>
                   </button>
-                    <img
-                    src={Vector}
-                    className="h-4 w-4 cursor-pointer -ml-3 mr-1"
-                    />
-                    <img
-                    src={Update}
-                    className="h-4 w-4 cursor-pointer"
-                    />
+                  <button
+                    onClick={() => handleTicketActions(ticket)}
+                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-2 rounded-sm"
+                  >
+                    <span className="text-xs whitespace-nowrap pr-0 mr-0">
+                      Ticket Actions
+                    </span>
+                  </button>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {showViewTicket && selectedTicket && (
+        <TicketDrawer
+          ticket={selectedTicket}
+          onClose={() => setShowViewTicket(false)}
+        />
+      )}
+      {showActionsModal && selectedTicket && (
+        <TicketAction
+          ticket={selectedTicket}
+          onClose={() => setShowActionsModal(false)}
+        />
+      )}
     </div>
   );
 };
