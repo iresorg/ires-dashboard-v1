@@ -8,7 +8,7 @@ export const ROUTES = {
   AGENTS: "/dashboard/agents",
   USERS: "/dashboard/users",
   TICKETS: "/dashboard/tickets",
-  SETTINGS: "/dashboard/settings",
+
 } as const;
 
 export const PROTECTED_ROUTES = [
@@ -18,7 +18,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.AGENTS,
   ROUTES.USERS,
   ROUTES.TICKETS,
-  ROUTES.SETTINGS,
+
 ] as const;
 
 export const PUBLIC_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const;
