@@ -41,12 +41,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
 
       {/* Your original drawer stays exactly the same here */}
       <div
-        className="absolute top-[83px] bottom-0 left-[65%] z-[60] flex items-start justify-end"
+        className="absolute top-[83px] bottom-0 left-[40%] z-[60] flex items-start justify-end"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-white rounded-xl shadow-xl w-[350px]">
+        <div className="bg-[#F9FAFB] rounded-xl shadow-xl w-[400px]">
           {/* Header */}
-          <div className="w-full flex justify-between items-center py-2 border-b-4 border-[#B27373] mb-6">
+          <div className="w-full flex justify-between items-center py-2 border-b-3 !border-b-[#D9D9D9] mb-6">
             <h2 className="bg-[#12096f] text-white px-12 py-1 rounded-xl ml-3">
               Profile
             </h2>
@@ -78,7 +78,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Content */}
-          <div className="space-y-4 w-auto border border-gray-100 px-5 pt-5 pb-12 rounded-xl mb-10 mx-5">
+          <div className="space-y-4 w-auto border border-gray-100 px-5 pt-5 pb-12 rounded-xl mb-10 mx-10">
             <div className="flex flex-row items-center space-x-1">
               <label className="w-30 text-left text-md text-[#12096f]">
                 First name
