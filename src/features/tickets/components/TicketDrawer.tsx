@@ -73,12 +73,12 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center"
+      className="fixed inset-0 z-50 flex items-start justify-center pl-30"
       aria-modal="true"
       role="dialog"
     >
       <div
-        className="absolute inset-0 bg-black opacity-30"
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
@@ -122,7 +122,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
         </div>
         <div>
           <div
-            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 px-5 cursor-pointer"
+            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
             onClick={toggleDescription}
             role="button"
             aria-expanded={isDescriptionOpen}
@@ -133,11 +133,11 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
             <img
               src={Arrow}
               alt="Toggle Ticket Description"
-              className={`w-4 h-4 transition-transform duration-200 ${isDescriptionOpen ? "rotate-180" : ""}`}
+              className={`w-5 h-5 transition-transform duration-200 ${isDescriptionOpen ? "rotate-180" : ""}`}
             />
           </div>
           {isDescriptionOpen && (
-            <div className="space-y-2 border border-[#D4CDCD]/30 rounded-xl px-2 pt-1 pb-3">
+            <div className="space-y-2 border !border-[#D4CDCD] rounded-xl px-2 pt-1 pb-3">
               <div>
                 <p className="text-sm text-[#0C0E5D]">
                   🧾 Incident Summary (Agent's Notes):
@@ -161,7 +161,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
         </div>
         <div>
           <div
-            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer"
+            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
             onClick={toggleMaterials}
             role="button"
             aria-expanded={isMaterialsOpen}
@@ -172,37 +172,37 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
             <img
               src={Arrow}
               alt="Toggle Materials"
-              className={`w-4 h-4 transition-transform duration-200 ${isMaterialsOpen ? "rotate-180" : ""}`}
+              className={`w-5 h-5 transition-transform duration-200 ${isMaterialsOpen ? "rotate-180" : ""}`}
             />
           </div>
           {isMaterialsOpen && (
-            <div className="space-y-1 border border-[#D4CDCD]/30 rounded-xl px-2 pt-3 pb-3">
-              <div className="flex-col">
+            <div className="space-y-1 border !border-[#D4CDCD] rounded-xl px-2 pt-3 pb-3">
+              <div className="flex-col mb-2">
                 <p className="text-xs">📎 Files Uploaded:</p>
                 <p className="">
                   {ticket.description?.materials?.filesUploaded?.join(", ") || "None"}
                 </p>
               </div>
-              <div className="flex">
+              <div className="flex mb-2">
                 <p className="text-xs text-[#0C0E5D] mr-1">🔗 Phishing Link:</p>
                 <p className="text-xs text-[#16C066]">
                   {ticket.description?.materials?.phishingLink ||
                     "http://zenith-secureauth.verify-banking.com"}
                 </p>
               </div>
-              <div className="flex">
+              <div className="flex mb-2">
                 <p className="text-xs text-[#0C0E5D] mr-1">📅 Date Email Received:</p>
                 <p className="text-xs">
                   {ticket.description?.materials?.dateEmailReceived || "July 24, 2025"}
                 </p>
               </div>
-              <div className="flex">
+              <div className="flex mb-2">
                 <p className="text-xs text-[#0C0E5D] mr-1">🕐 Time Email Received:</p>
                 <p className="text-xs">
                   {ticket.description?.materials?.timeEmailReceived || "08:15 AM"}
                 </p>
               </div>
-              <div className="flex">
+              <div className="flex mb-2">
                 <p className="text-xs text-[#0C0E5D] mr-1">✉️ Sender Email:</p>
                 <p className="text-xs text-[#16C066]">
                   {ticket.description?.materials?.senderEmail || "zenithbank@secure-notify.com"}
@@ -225,7 +225,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
           )}
         </div>
         <div
-            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer"
+            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
             onClick={toggleReportedBy}
             role="button"
             aria-expanded={isReportedByOpen}
@@ -236,11 +236,11 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
             <img
               src={Arrow}
               alt="Toggle Materials"
-              className={`w-4 h-4 transition-transform duration-200 ${isReportedByOpen ? "rotate-180" : ""}`}
+              className={`w-5 h-5 transition-transform duration-200 ${isReportedByOpen ? "rotate-180" : ""}`}
             />
           </div>
           {isReportedByOpen && (
-          <div className="space-y-1 border border-[#D4CDCD]/30 rounded-xl px-2 pt-3 pb-3">
+          <div className="space-y-1 border !border-[#D4CDCD] rounded-xl px-2 pt-3 pb-3">
               <div className="flex">
                 <p className="text-xs text-[#0C0E5D] mr-1">Name:</p>
                 <p className="text-xs ">
@@ -269,12 +269,6 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
 )}
 </div>
         <div className="flex items-center justify-center mt-6">
-          <button
-            onClick={onClose}
-            className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
-          >
-            Close
-          </button>
         </div>
       </div>
   );
