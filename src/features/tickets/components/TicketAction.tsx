@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
+import Arrow from "@/shared/assets/icons/dropdown2.svg";
 
 interface InternalTicket {
   id: string;
@@ -11,6 +12,26 @@ interface InternalTicket {
   assignedto: string;
   updatedAt: string;
   actions: string;
+  createdAt?: string;
+  description?: {
+    incidentSummary?: string;
+    customerStatement?: string;
+    materials?: {
+      filesUploaded?: string[];
+      phishingLink?: string;
+      dateEmailReceived?: string;
+      timeEmailReceived?: string;
+      senderEmail?: string;
+      ipAddress?: string;
+      sensitiveInfoExposed?: string;
+    };
+  };
+  reportedBy?: {
+    name: string;
+    role: string;
+    dateLogged: string;
+    timeLogged: string;
+  };
 }
 
 interface TicketActionProps {
@@ -32,77 +53,104 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
     return null;
   }
 
-  const handleAction = (action: string) => {
-    console.log(`Action "${action}" clicked for ticket:`, ticket);
-    // Placeholder for action handling; can be extended with callback props
-    onClose();
-  };
-
   return (
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-start justify-center pl-30"
       aria-modal="true"
       role="dialog"
     >
       <div
-        className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-30"
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
-        className="relative bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-md"
+        className="relative bg-white rounded-lg shadow-md px-4 py-3 w-full max-w-xl h-full overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Ticket Actions</h2>
-        </div>
-        <div className="absolute top-2 right-2 cursor-pointer">
-          <img
-            src={CloseIcon}
-            alt="Close"
-            onClick={onClose}
-            className="w-4 h-4"
-          />
-        </div>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-700">
-            Actions for Ticket ID: {ticket.id} ({ticket.title})
-          </p>
-          <div className="flex flex-col space-y-2">
-            <button
-              onClick={() => handleAction("Edit")}
-              className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 text-left text-sm hover:bg-[#D9D9D9]"
-            >
-              Edit Ticket
-            </button>
-            <button
-              onClick={() => handleAction("Assign")}
-              className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 text-left text-sm hover:bg-[#D9D9D9]"
-            >
-              Assign Ticket
-            </button>
-            <button
-              onClick={() => handleAction("Escalate")}
-              className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 text-left text-sm hover:bg-[#D9D9D9]"
-            >
-              Escalate Ticket
-            </button>
-            <button
-              onClick={() => handleAction("Close")}
-              className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 text-left text-sm hover:bg-[#D9D9D9]"
-            >
-              Close Ticket
-            </button>
+        <div className="flex flex-row justify-between w-full">
+          <div>
+            <p className="text-lg font-semibold bg-[#0C0E5D] text-white px-4 rounded-xl">{ticket.ticket || "N/A"}</p>
+          </div>
+          <div>
+            <img
+              src={CloseIcon}
+              alt="Close"
+              onClick={onClose}
+              className="w-5 h-5 cursor-pointer"
+            />
           </div>
         </div>
-        <div className="flex items-center justify-center mt-6">
-          <button
-            onClick={onClose}
-            className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
-          >
-            Cancel
-          </button>
+        <div className="-mx-4">
+          <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3" />
+        </div>
+
+        <div className="space-y-4 flex justify-between mt-3">
+          <div className="flex">
+            <p className="block text-sm font-medium text-[#0C0E5D]">
+              Ticket Title :
+            </p>
+            <p className="block text-sm font-medium text-[#000000] ml-1">
+              {ticket.title || "N/A"}
+            </p>
+          </div>
+          <div className="flex">
+            <label className="block text-sm font-medium text-[#0C0E5D]">
+              Date & Time Created :
+            </label>
+            <p className="block text-sm font-medium text-[#000000] ml-1">
+              {ticket.createdAt || "2025-07-24 11:00 AM"}
+            </p>
+          </div>
+        </div>
+        <div>
+          <div
+            className="flex justify-between bg-[#EBEBEB] p-2 mb-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg">
+            <p className="block text-sm font-medium text-[#0C0E5D]">
+              Ticket Actions
+            </p>
+          </div>
+        <div className="flex-col border !border-[#D4CDCD] rounded-xl px-2 pt-4 pb-3">
+          <div className="flex">
+            <div className="flex flex-col text-xs text-[#0C0E5D] items-center ml-25 mr-5 font-Medium mt-0.5">
+              <p className="mb-5">Ticket Status</p>
+              <p className="mb-5">Severity</p>
+              <p className="mb-5">Tier</p>
+              <p className="mb-5">Assign Responder</p>
+              <p className="mb-5">Notes(Optional)</p>
+            </div>
+            <div className="flex-row justify-between text-xs">
+              <div className="flex justify-between bg-[#D9D9D9] w-50 px-3 rounded-sm mb-3.5 text-sm font-medium">
+                <p>Pending</p>
+                <img src={Arrow}/>
+              </div>
+              <div className="flex justify-between bg-[#D9D9D9] w-50 px-3 rounded-sm mb-3.5">
+                <p className="mt-0.5">-Select-</p>
+                <img src={Arrow}/>
+              </div>
+              <div className="flex justify-between bg-[#D9D9D9] w-50 px-3 rounded-sm mb-3.5">
+                <p className="mt-0.5">-Select-</p>
+                <img src={Arrow}/>
+              </div>
+              <div className="flex justify-between bg-[#D9D9D9] w-50 px-3 rounded-sm mb-3.5">
+                <p className="mt-0.5">-Select-</p>
+                <img src={Arrow}/>
+              </div>
+              <div>
+                <input
+                  placeholder="Type here....."
+                  className="border rounded-sm !border-[#D4CDCD] pl-3 pb-15 pr-15 pt-1 text-xs text-[#D4CDCD]/100"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="ml-80 mt-10 mb-5">
+            <button className="bg-[#0C0E5D] text-[#ffffff] px-8 rounded-tl-3xl rounded-br-3xl text-sm font-medium">Save</button>
+          </div>
+        
+          
         </div>
       </div>
+    </div>
     </div>
   );
 };
