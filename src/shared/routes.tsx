@@ -6,7 +6,7 @@ import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
 import DashboardPage from "@/features/dashboard/components/DashboardPage";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
-import AgentsPage from "@/features/agents/components/AgentTicket";
+import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
 import TicketsPage from "@/features/tickets/components/TicketsPage";
 

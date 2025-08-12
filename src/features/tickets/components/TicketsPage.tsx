@@ -24,7 +24,7 @@ const TicketsPage: React.FC = () => {
       id: "TKT-001",
       ticket: "TKT-001",
       title: "Phishing Mail",
-      status: "Escalated",
+      status: "Pending",
       severity: "High",
       tier: "Tier 2",
       assignedto: "Responder-07",

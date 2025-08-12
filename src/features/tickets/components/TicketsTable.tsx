@@ -22,20 +22,32 @@ interface TicketsTableProps {
 const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
   const [showViewTicket, setShowViewTicket] = useState(false);
   const [showActionsModal, setShowActionsModal] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<InternalTicket | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<InternalTicket | null>(
+    null
+  );
 
   const handleViewTicket = (ticket: InternalTicket) => {
     console.log("View Ticket clicked for:", ticket);
     setSelectedTicket(ticket);
     setShowViewTicket(true);
-    console.log("State updated - showViewTicket:", true, "selectedTicket:", ticket);
+    console.log(
+      "State updated - showViewTicket:",
+      true,
+      "selectedTicket:",
+      ticket
+    );
   };
 
   const handleTicketActions = (ticket: InternalTicket) => {
     console.log("Ticket Actions clicked for:", ticket);
     setSelectedTicket(ticket);
     setShowActionsModal(true);
-    console.log("State updated - showActionsModal:", true, "selectedTicket:", ticket);
+    console.log(
+      "State updated - showActionsModal:",
+      true,
+      "selectedTicket:",
+      ticket
+    );
   };
 
   console.log("TicketsTable rendering with tickets:", tickets);
@@ -96,8 +108,8 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
               <td className="px-4 py-4">
                 <span
                   className={`text-[#000000] ${
-                    ticket.status === "Escalated"
-                      ? "bg-[#D00F24]"
+                    ticket.status === "Pending"
+                      ? "bg-[#14AE5C]"
                       : ticket.status === "Analyzing"
                       ? "bg-[#D9CEED]"
                       : ticket.status === "Assigned"
