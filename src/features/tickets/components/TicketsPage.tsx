@@ -112,6 +112,7 @@ const TicketsPage: React.FC = () => {
       <TicketsTable tickets={filteredTickets} />
 
       <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
+      
         <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
           <img src={ArrowLeft} alt="Previous" className="h-4" />
           Previous

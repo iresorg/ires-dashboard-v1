@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactPaginate from 'react-paginate';
-import ArrowLeft from '@/shared/assets/icons/arrowleft.svg';
-import ArrowRight from '@/shared/assets/icons/arrowright.svg';
+import React from "react";
+import ReactPaginate from "react-paginate";
+import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
+import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 
 interface PaginationProps {
   currentPage: number;
@@ -14,7 +14,7 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  className = '',
+  className = "",
 }) => {
   const handlePageClick = (event: { selected: number }) => {
     const newPage = event.selected + 1;
@@ -26,7 +26,9 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className={`flex items-center justify-center space-x-2 text-sm text-gray-700 ${className}`}>
+    <div
+      className={`flex items-center justify-center space-x-2 text-sm text-gray-700 ${className}`}
+    >
       <ReactPaginate
         previousLabel={
           <div className="flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
@@ -62,4 +64,4 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-export default Pagination; 
+export default Pagination;
