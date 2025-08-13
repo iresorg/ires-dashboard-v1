@@ -128,17 +128,17 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={() => handleViewTicket(ticket)}
-                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-2 rounded-sm"
+                    className="flex items-center space-x-1 bg-[#D9D9D9]  rounded-sm"
                   >
-                    <span className="text-xs whitespace-nowrap pr-0 mr-0">
+                    <span className="text-xs whitespace-nowrap  py-1 px-2">
                       View Ticket
                     </span>
                   </button>
                   <button
                     onClick={() => handleTicketActions(ticket)}
-                    className="flex items-center space-x-1 bg-[#D9D9D9] pl-2 pr-2 rounded-sm"
+                    className="flex items-center space-x-1 bg-[#D9D9D9]  rounded-sm"
                   >
-                    <span className="text-xs whitespace-nowrap pr-0 mr-0">
+                    <span className="text-xs whitespace-nowrap py-1 px-2">
                       Ticket Actions
                     </span>
                   </button>
