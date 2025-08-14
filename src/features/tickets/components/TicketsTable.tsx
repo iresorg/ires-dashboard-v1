@@ -106,7 +106,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
               <td className="px-4 py-4">{ticket.id}</td>
               <td className="px-4 py-4">{ticket.title}</td>
               <td className="px-4 py-4">
-                <span
+                <span onClick={() => handleTicketActions(ticket)}
                   className={`text-[#000000] ${
                     ticket.status === "Pending"
                       ? "bg-[#14AE5C]"
