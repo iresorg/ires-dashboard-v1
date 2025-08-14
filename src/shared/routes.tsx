@@ -3,7 +3,7 @@ import { ROUTES } from "@/shared/constants/routes";
 
 // Layouts and Pages
 import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
-import DashboardPage from "@/features/dashboard/components/DashboardPage";
+import RoleBasedDashboard from "@/features/dashboard/components/RoleBasedDashboard";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <DashboardPage /> },
+      { index: true, element: <RoleBasedDashboard /> },
       { path: "incidents", element: <IncidentsPage /> },
       { path: "responders", element: <RespondersPage /> },
       { path: "agents", element: <AgentsPage /> },

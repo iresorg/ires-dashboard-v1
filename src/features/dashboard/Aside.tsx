@@ -2,11 +2,14 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 import Logo from "@/features/auth/components/Logo";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { Role } from "@/shared/types/roles";
 
 interface NavItem {
   label: string;
   path: string;
   icon: React.ReactNode;
+  roles?: string[];
 }
 
 const navItems: NavItem[] = [
@@ -48,6 +51,7 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, "SUPER_ADMIN", "ADMIN", "admin"],
   },
   {
     label: "Agents",
@@ -70,6 +74,7 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.AGENT_ADMIN, "SUPER_ADMIN", "ADMIN", "AGENT_ADMIN", "admin"],
   },
   {
     label: "Responders",
@@ -90,6 +95,7 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.RESPONDER_ADMIN, "SUPER_ADMIN", "ADMIN", "RESPONDER_ADMIN", "admin"],
   },
   {
     label: "Tickets",
@@ -120,6 +126,16 @@ const navItems: NavItem[] = [
 
 const Aside: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth();
+
+  // Filter navigation items based on user role
+  const filteredNavItems = navItems.filter((item) => {
+    if (!item.roles) return true; // Show all items without role restrictions
+    if (!user) return false; // Hide restricted items if no user
+    
+    const userRole = user.role;
+    return item.roles.some((role) => role === userRole);
+  });
 
   return (
     <aside className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md bg-white">
@@ -129,7 +145,7 @@ const Aside: React.FC = () => {
 
       <nav className="flex-1 pt-0 pb-0">
         <ul className="flex flex-col space-y-1">
-          {navItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const isActive = location.pathname === item.path;
 
             return (

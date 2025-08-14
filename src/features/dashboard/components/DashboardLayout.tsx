@@ -2,11 +2,13 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Aside from "@/features/dashboard/Aside";
 import Navbar from "@/features/dashboard/components/Navbar";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { Role } from "@/shared/types/roles";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
-
+  const { user } = useAuth();
 
   const pathToTitleMap: Record<string, string> = {
     "/dashboard": "Admin Dashboard",
@@ -38,7 +40,55 @@ const DashboardLayout: React.FC = () => {
     return `${formattedSegment} Dashboard`;
   };
 
-  const pageName = resolveTitle(pathname);
+  // Function to get role-based dashboard title
+  const getRoleBasedTitle = (): string => {
+    if (!user) return "Dashboard";
+    
+    const userRole = user.role;
+    
+    // Debug information (can be removed in production)
+    console.log("Getting title for user role:", userRole);
+    
+    if (
+      userRole === Role.SUPER_ADMIN || 
+      userRole === Role.ADMIN ||
+      userRole === "SUPER_ADMIN" ||
+      userRole === "ADMIN" ||
+      userRole === "admin"
+    ) {
+      console.log("Setting title to: Admin Dashboard");
+      return "Admin Dashboard";
+    }
+    
+    if (
+      userRole === Role.AGENT || 
+      userRole === Role.AGENT_ADMIN ||
+      userRole === "AGENT" ||
+      userRole === "AGENT_ADMIN" ||
+      userRole === "agent"
+    ) {
+      console.log("Setting title to: Agent Dashboard");
+      return "Agent Dashboard";
+    }
+    
+    if (
+      userRole === Role.RESPONDER_ADMIN ||
+      userRole === Role.RESPONDER_TIER_1 ||
+      userRole === Role.RESPONDER_TIER_2 ||
+      userRole === "RESPONDER_ADMIN" ||
+      userRole === "RESPONDER_TIER_1" ||
+      userRole === "RESPONDER_TIER_2" ||
+      userRole === "responder"
+    ) {
+      console.log("Setting title to: Responder Dashboard");
+      return "Responder Dashboard";
+    }
+    
+    console.log("Setting title to: Dashboard (fallback)");
+    return "Dashboard";
+  };
+
+  const pageName = pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
 
   return (
     <div className="h-screen flex bg-gray-100 overflow-hidden">
