@@ -45,7 +45,7 @@ const initialTickets: Ticket[] = [
   },
 ];
 
-const AgentTicket: React.FC = () => {
+const AgentTicketManagement: React.FC = () => {
   const [tickets] = useState<Ticket[]>(initialTickets);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -136,4 +136,4 @@ const AgentTicket: React.FC = () => {
   );
 };
 
-export default AgentTicket;
+export default AgentTicketManagement;
