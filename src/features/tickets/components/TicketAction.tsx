@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import Arrow from "@/shared/assets/icons/dropdown2.svg";
 
@@ -40,8 +40,10 @@ interface TicketActionProps {
 }
 
 const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
+  const [selectedStatus, setSelectedStatus] = useState(ticket?.status || "");
   useEffect(() => {
     console.log("TicketAction mounted with ticket:", ticket);
+    setSelectedStatus(ticket?.status || "");
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
@@ -92,7 +94,7 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
         </div>
         <div className="space-y-5 flex justify-center items-center">
           <div className="relative w-[70%]">
-            <select className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none" value={ticket.status}>
+            <select className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
                 {STATUS_OPTIONS.map((status) => (
               <option key={status} value={status} className="bg-white">
                 {status}
