@@ -5,8 +5,7 @@ import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
 import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.png";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
+import Pagination from "@/shared/components/ui/Pagination";
 import Email from "@/shared/assets/icons/icon.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg"; 
@@ -76,7 +75,7 @@ const RespondersPage: React.FC = () => {
     type: "deactivate" | "delete";
     responder: Responder;
   } | null>(null);
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
 
   const filteredResponders = responders.filter((responder) =>
@@ -85,12 +84,17 @@ const RespondersPage: React.FC = () => {
       .includes(searchQuery.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredResponders.length / respondersPerPage);
   const indexOfLastResponder = currentPage * respondersPerPage;
   const indexOfFirstResponder = indexOfLastResponder - respondersPerPage;
   const currentResponders = filteredResponders.slice(
     indexOfFirstResponder,
     indexOfLastResponder
   );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleCreateResponder = (data: {
     firstName: string;
@@ -113,6 +117,7 @@ const RespondersPage: React.FC = () => {
     });
     setShowCreateResponderModal(false);
     setShowCreateSuccessModal(true);
+    setCurrentPage(1); // Reset to first page when adding a new responder
   };
 
   const handleEditResponder = (updatedResponder: Responder) => {
@@ -134,6 +139,10 @@ const RespondersPage: React.FC = () => {
 
   const handleDeleteResponder = (id: string) => {
     setResponders((prev) => prev.filter((responder) => responder.id !== id));
+    // Adjust current page if necessary
+    if (currentResponders.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
@@ -178,7 +187,7 @@ const RespondersPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto mt-6">
+      <div className="overflow-auto mt-6 mb-5">
         <table className="w-full table-auto text-sm">
           <thead className="bg-gray-100 text-left">
             <tr>
@@ -219,7 +228,7 @@ const RespondersPage: React.FC = () => {
           </thead>
           <tbody>
             {currentResponders.map((responder) => (
-              <tr key={responder.id} className="border-t whitespace-nowrap">
+              <tr key={responder.id} className="border-t whitespace-nowrap ">
                 <td className="px-0 py-1">
                   <div className="flex items-center justify-start ">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
@@ -229,8 +238,7 @@ const RespondersPage: React.FC = () => {
                 </td>
                 <td className="px-4 py-1">
                   <span>{`${responder.firstName} ${responder.lastName}`}</span>
-                </td>
-                <td className="px-4 py-1">{responder.email}</td>
+                </td> <td className="px-4 py-1">{responder.email}</td>
                 <td className="px-4 py-1">
                   <span
                     className={`text-[#000000] px-2 py-1 rounded-lg ${
@@ -278,7 +286,7 @@ const RespondersPage: React.FC = () => {
                     </button>
                     <img
                       src={Trash}
-                      onClick={() => setConfirming({ type: "delete", responder })}
+                      onClick={() => setConfirming ({ type: "delete", responder })}
                       className="h-4 cursor-pointer"
                       alt="delete"
                     />
@@ -291,22 +299,11 @@ const RespondersPage: React.FC = () => {
       </div>
 
       {/* Pagination */}
-     <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
-        </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-          Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       {showCreateResponderModal && (
         <CreateResponderModal
