@@ -56,14 +56,14 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
   }
 
   const STATUS_OPTIONS = [
-  "Pending",
-  "Analyzing",
-  "Assigned",
-  "In Progress",
-  "Escalated",
-  "Reassigned",
-  "Resolved",
-];
+    "Pending",
+    "Analyzing",
+    "Assigned",
+    "In Progress",
+    "Escalated",
+    "Reassigned",
+    "Resolved",
+  ];
 
   return (
     <div
@@ -94,12 +94,16 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
         </div>
         <div className="space-y-5 flex justify-center items-center">
           <div className="relative w-[70%]">
-            <select className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
-                {STATUS_OPTIONS.map((status) => (
-              <option key={status} value={status} className="bg-white">
-                {status}
-              </option>
-            ))}
+            <select
+              className="w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              {STATUS_OPTIONS.map((status) => (
+                <option key={status} value={status} className="bg-white">
+                  {status}
+                </option>
+              ))}
             </select>
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <img src={Arrow} alt="dropdown" className="h-5 w-5" />
