@@ -17,7 +17,7 @@ const DashboardLayout: React.FC = () => {
     "/dashboard/agents/:agentId/tokens": "Agent Token Management",
     "/dashboard/responders": "Responder Management",
     "/dashboard/responders/:responderId/tokens": "Responder Token Management",
-    "/dashboard/tickets": "Ticket Management",
+    "/dashboard/tickets": "Ticket Management", // will override dynamically below
   };
 
   // Function to resolve dynamic route titles
@@ -26,6 +26,29 @@ const DashboardLayout: React.FC = () => {
       const regexPath = path.replace(/:[^/]+/g, "[^/]+"); // replace :params with regex
       const regex = new RegExp(`^${regexPath}$`);
       if (regex.test(pathname)) {
+        // Special handling for /dashboard/tickets
+        if (path === "/dashboard/tickets" && user) {
+          if (
+            user.role === Role.AGENT ||
+            user.role === Role.AGENT_ADMIN ||
+            user.role === "AGENT" ||
+            user.role === "AGENT_ADMIN" ||
+            user.role === "agent"
+          ) {
+            return "Agent Ticket Management";
+          }
+          if (
+            user.role === Role.RESPONDER_ADMIN ||
+            user.role === Role.RESPONDER_TIER_1 ||
+            user.role === Role.RESPONDER_TIER_2 ||
+            user.role === "RESPONDER_ADMIN" ||
+            user.role === "RESPONDER_TIER_1" ||
+            user.role === "RESPONDER_TIER_2" ||
+            user.role === "responder"
+          ) {
+            return "Responder Ticket Management";
+          }
+        }
         return pathToTitleMap[path];
       }
     }
@@ -40,37 +63,33 @@ const DashboardLayout: React.FC = () => {
     return `${formattedSegment} Dashboard`;
   };
 
-  // Function to get role-based dashboard title
+  // Function to get role-based dashboard title for main dashboard route
   const getRoleBasedTitle = (): string => {
     if (!user) return "Dashboard";
-    
+
     const userRole = user.role;
-    
-    // Debug information (can be removed in production)
     console.log("Getting title for user role:", userRole);
-    
+
     if (
-      userRole === Role.SUPER_ADMIN || 
+      userRole === Role.SUPER_ADMIN ||
       userRole === Role.ADMIN ||
       userRole === "SUPER_ADMIN" ||
       userRole === "ADMIN" ||
       userRole === "admin"
     ) {
-      console.log("Setting title to: Admin Dashboard");
       return "Admin Dashboard";
     }
-    
+
     if (
-      userRole === Role.AGENT || 
+      userRole === Role.AGENT ||
       userRole === Role.AGENT_ADMIN ||
       userRole === "AGENT" ||
       userRole === "AGENT_ADMIN" ||
       userRole === "agent"
     ) {
-      console.log("Setting title to: Agent Dashboard");
       return "Agent Dashboard";
     }
-    
+
     if (
       userRole === Role.RESPONDER_ADMIN ||
       userRole === Role.RESPONDER_TIER_1 ||
@@ -80,15 +99,14 @@ const DashboardLayout: React.FC = () => {
       userRole === "RESPONDER_TIER_2" ||
       userRole === "responder"
     ) {
-      console.log("Setting title to: Responder Dashboard");
       return "Responder Dashboard";
     }
-    
-    console.log("Setting title to: Dashboard (fallback)");
+
     return "Dashboard";
   };
 
-  const pageName = pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
+  const pageName =
+    pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
 
   return (
     <div className="h-screen flex bg-gray-100 overflow-hidden">

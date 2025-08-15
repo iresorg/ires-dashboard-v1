@@ -8,7 +8,7 @@ import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
-import TicketsPage from "@/features/tickets/components/TicketsPage";
+import RoleBasedTickets from "@/features/dashboard/components/RolesBasedTicket"; 
 
 import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
 
@@ -33,8 +33,7 @@ export const router = createBrowserRouter([
       { path: "responders", element: <RespondersPage /> },
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },
-      { path: "tickets", element: <TicketsPage /> },
-
+      { path: "tickets", element: <RoleBasedTickets /> }, 
     ],
   },
   {
