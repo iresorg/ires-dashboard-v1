@@ -3,8 +3,7 @@ import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import TicketsTable from "./TicketsTable";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
+import Pagination from "@/shared/components/ui/Pagination";
 
 interface InternalTicket {
   id: string;
@@ -57,6 +56,8 @@ const TicketsPage: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterTier, setFilterTier] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ticketsPerPage = 4;
 
   const filteredTickets = tickets.filter(
     (ticket) =>
@@ -66,8 +67,20 @@ const TicketsPage: React.FC = () => {
       (filterTier === "" || ticket.tier === filterTier)
   );
 
+  const totalPages = Math.ceil(filteredTickets.length / ticketsPerPage);
+  const indexOfLastTicket = currentPage * ticketsPerPage;
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+  const currentTickets = filteredTickets.slice(
+    indexOfFirstTicket,
+    indexOfLastTicket
+  );
+
   const handleCreateTicket = () => {
     console.log("Opening create ticket modal");
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -109,26 +122,14 @@ const TicketsPage: React.FC = () => {
         </div>
       </div>
 
-      <TicketsTable tickets={filteredTickets} />
+      <TicketsTable tickets={currentTickets} />
 
-      <div className="flex items-center justify-center space-x-2 mt-5 text-sm text-gray-700">
-      
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
-        </button>
-
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-          Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        className="mt-5"
+      />
 
       <div className="ml-3">
         <div>

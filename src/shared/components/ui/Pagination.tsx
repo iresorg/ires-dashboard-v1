@@ -21,23 +21,20 @@ const Pagination: React.FC<PaginationProps> = ({
     onPageChange(newPage);
   };
 
-  if (totalPages <= 1) {
-    return null;
-  }
-
   return (
     <div
       className={`flex items-center justify-center space-x-2 text-sm text-gray-700 ${className}`}
     >
       <ReactPaginate
         previousLabel={
-          <div className="flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
+          <div className="flex items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
             <img src={ArrowLeft} alt="Previous" className="h-4" />
             <span>Previous</span>
           </div>
         }
         nextLabel={
-          <div className="flex items-center gap-1 text-[var(--ires-dark-blue)] hover:underline transition-colors">
+          <div className="flex items-center gap-1 text-[var(--ires-dark-blue)] hover:cursor-pointer transition-colors">
+            {currentPage > 3 && currentPage < totalPages && <span className="px-1">...</span>}
             <span>Next</span>
             <img src={ArrowRight} alt="Next" className="h-4" />
           </div>
@@ -45,12 +42,12 @@ const Pagination: React.FC<PaginationProps> = ({
         breakLabel={<span className="text-gray-500 px-1">...</span>}
         pageCount={totalPages}
         marginPagesDisplayed={1}
-        pageRangeDisplayed={3}
+        pageRangeDisplayed={currentPage > 3 ? 1 : 3}
         onPageChange={handlePageClick}
         forcePage={currentPage - 1}
         containerClassName="flex items-center space-x-2"
-        pageClassName="hover:bg-gray-200 px-3 py-1 rounded-full transition-colors"
-        pageLinkClassName="text-gray-700 hover:text-gray-900"
+        pageClassName="hover:bg-gray-200 px-3 py-1 rounded-full transition-colors cursor-pointer"
+        pageLinkClassName="text-gray-700 hover:text-gray-900 w-full h-full flex items-center justify-center"
         activeClassName="bg-[var(--ires-dark-blue)] text-white px-3 py-1 rounded-sm"
         activeLinkClassName="text-white"
         previousClassName="hover:bg-gray-100 px-3 py-1 rounded transition-colors"

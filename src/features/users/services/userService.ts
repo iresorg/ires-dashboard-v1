@@ -1,3 +1,4 @@
+// src/services/userService.ts
 import api from '@shared/services/api';
 
 export interface UserProfile {
@@ -87,4 +88,4 @@ export const deactivateUser = async (id: string): Promise<DeleteUserResponse> =>
 export const deleteUser = async (id: string): Promise<DeleteUserResponse> => {
   const response = await api.delete<DeleteUserResponse>(`/users/${id}`);
   return response.data;
-}; 
+};

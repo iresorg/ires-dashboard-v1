@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import DashboardStats from "./DashboardStats";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
+import Pagination from "@/shared/components/ui/Pagination";
 import Person from "@shared/assets/icons/Vector.svg";
 import Role from "@shared/assets/icons/Shield.svg";
 import ActivityIcon from "@/shared/assets/icons/activity-icon.svg";
 import TimeIcon from "@/shared/assets/icons/time-icon.svg";
 
+interface Activity {
+  user: string;
+  role: string;
+  activity: string;
+  timestamp: string;
+}
 
-const recentActivity = [
+const recentActivity: Activity[] = [
   {
     user: "Guy Hawkins",
     role: "Agent Admin",
@@ -24,6 +29,21 @@ const recentActivity = [
 ];
 
 const DashboardPage: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const activitiesPerPage = 4;
+
+  const totalPages = Math.ceil(recentActivity.length / activitiesPerPage);
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = recentActivity.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="flex flex-col space-y-10 min-h-full">
       {/* Stats Section */}
@@ -65,7 +85,7 @@ const DashboardPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {recentActivity.map((item, index) => (
+              {currentActivities.map((item, index) => (
                 <tr key={index} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-4">{item.user}</td>
                   <td className="py-3 px-4">{item.role}</td>
@@ -78,22 +98,12 @@ const DashboardPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-center space-x-2 mt-6 text-sm text-gray-700">
-          <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-            <img src={ArrowLeft} alt="Previous" className="h-4" />
-            Previous
-          </button>
-          <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-            1
-          </button>
-          <button className="hover:bg-gray-200 px-3 py-1 rounded-sm">2</button>
-          <button className="hover:bg-gray-200 px-3 py-1 rounded-sm">3</button>
-          <span className="text-gray-500 px-1">...</span>
-          <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-            Next
-            <img src={ArrowRight} alt="Next" className="h-4" />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          className="mt-6"
+        />
       </div>
     </div>
   );

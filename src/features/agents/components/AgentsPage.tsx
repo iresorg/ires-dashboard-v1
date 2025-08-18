@@ -6,8 +6,7 @@ import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import EmailIcon from "@/shared/assets/icons/icon.svg";
 import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
+import Pagination from "@/shared/components/ui/Pagination";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
@@ -74,11 +73,21 @@ const AgentsPage: React.FC = () => {
     type: "deactivate" | "delete";
     agent: Agent;
   } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const agentsPerPage = 4;
 
   const filteredAgents = agents.filter((agent) =>
     `${agent.firstName} ${agent.lastName} ${agent.email}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredAgents.length / agentsPerPage);
+  const indexOfLastAgent = currentPage * agentsPerPage;
+  const indexOfFirstAgent = indexOfLastAgent - agentsPerPage;
+  const currentAgents = filteredAgents.slice(
+    indexOfFirstAgent,
+    indexOfLastAgent
   );
 
   const generateAgentId = () => {
@@ -102,6 +111,7 @@ const AgentsPage: React.FC = () => {
     setPendingAgent(newAgentData);
     setShowCreateAgentModal(false);
     setShowConfirmAgentModal(true);
+    setCurrentPage(1); // Reset to first page to show new agent
   };
 
   const handleConfirm = () => {
@@ -134,6 +144,13 @@ const AgentsPage: React.FC = () => {
 
   const handleDeleteAgent = (id: string) => {
     setAgents((prev) => prev.filter((agent) => agent.id !== id));
+    if (currentAgents.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1); // Adjust page if last agent on page is deleted
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -162,7 +179,7 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-y-auto mt-6 max-h-[500px]">
+      <div className="overflow-y-auto mt-6 max-h-[500px] mb-5">
         <table className="w-full table-auto text-sm">
           <thead className="bg-gray-100 text-left sticky top-0">
             <tr>
@@ -197,14 +214,15 @@ const AgentsPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAgents.map((agent) => (
+            {currentAgents.map((agent) => (
               <tr key={agent.id} className="border-t">
                 <td className="px-0 py-1">
                   <div className="flex items-center justify-start">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
                       <img
-                      src={agent.firstName === "Lexis" ? ProfileImage1 : ProfileImage2}
-                    />
+                        src={agent.firstName === "Lexis" ? ProfileImage1 : ProfileImage2}
+                        alt={`${agent.firstName} ${agent.lastName}`}
+                      />
                     </div>
                   </div>
                 </td>
@@ -257,22 +275,11 @@ const AgentsPage: React.FC = () => {
           </tbody>
         </table>
       </div>
-     <div className="flex items-center justify-center space-x-2 mt-20 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
-        </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-          Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       {/* Modals */}
       {showCreateAgentModal && (
         <CreateAgentModal
