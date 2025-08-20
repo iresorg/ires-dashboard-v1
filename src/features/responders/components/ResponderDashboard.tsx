@@ -1,9 +1,15 @@
-import React from "react";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
+import React, { useState } from "react";
+import Pagination from "@/shared/components/ui/Pagination";
 import TicketIcon from "@/shared/assets/images/ticket.png";
 import TimeIcon from "@/shared/assets/icons/time-icon.svg";
 import ColoredTicket from "@/shared/assets/images/coloredTicket.png";
+
+interface Activity {
+  id: string;
+  title: string;
+  status: string;
+  timestamp: string;
+}
 
 const stats = [
   {
@@ -32,7 +38,7 @@ const stats = [
   },
 ];
 
-const recentActivities = [
+const recentActivities: Activity[] = [
   {
     id: "TKT-007",
     title: "Network Intrusion",
@@ -72,6 +78,21 @@ const recentActivities = [
 ];
 
 const ResponderDashboard: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const activitiesPerPage = 4;
+
+  const totalPages = Math.ceil(recentActivities.length / activitiesPerPage);
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = recentActivities.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="flex flex-col space-y-8 h-full overflow-hidden">
       {/* Stats Section */}
@@ -94,7 +115,7 @@ const ResponderDashboard: React.FC = () => {
       <div className="flex flex-col flex-1 overflow-hidden p-6">
         <h3 className="text-lg font-bold mb-4 text-black">Recent Activities</h3>
 
-        {/* Table*/}
+        {/* Table */}
         <div className="flex-1 overflow-auto">
           <table className="w-full text-sm text-left min-w-[600px] text-black">
             <thead className="font-bold">
@@ -112,7 +133,7 @@ const ResponderDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {recentActivities.map((item, index) => (
+              {currentActivities.map((item, index) => (
                 <tr key={index} className="border-b">
                   <td className="py-3 px-4">{item.id}</td>
                   <td className="py-3 px-4">{item.title}</td>
@@ -125,25 +146,15 @@ const ResponderDashboard: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-center space-x-2 mt-6 text-sm text-gray-700">
-          <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-            <img src={ArrowLeft} alt="Previous" className="h-4" />
-            Previous
-          </button>
-          <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-            1
-          </button>
-          <button className="hover:bg-gray-200 px-3 py-1 rounded-sm">2</button>
-          <button className="hover:bg-gray-200 px-3 py-1 rounded-sm">3</button>
-          <span className="text-gray-500 px-1">...</span>
-          <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-            Next
-            <img src={ArrowRight} alt="Next" className="h-4" />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          className="mt-6"
+        />
       </div>
     </div>
   );
 };
-export default ResponderDashboard;
 
+export default ResponderDashboard;

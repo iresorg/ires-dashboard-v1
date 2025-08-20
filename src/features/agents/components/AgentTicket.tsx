@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
-import ArrowLeft from "@/shared/assets/icons/arrowleft.svg";
-import ArrowRight from "@/shared/assets/icons/arrowright.svg";
 import Settings from "@/shared/assets/icons/actions.svg";
+import Pagination from "@/shared/components/ui/Pagination";
 
 interface Ticket {
   id: string;
@@ -48,10 +47,24 @@ const initialTickets: Ticket[] = [
 const AgentTicketManagement: React.FC = () => {
   const [tickets] = useState<Ticket[]>(initialTickets);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ticketsPerPage = 4;
 
   const filteredTickets = tickets.filter((ticket) =>
     ticket.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredTickets.length / ticketsPerPage);
+  const indexOfLastTicket = currentPage * ticketsPerPage;
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+  const currentTickets = filteredTickets.slice(
+    indexOfFirstTicket,
+    indexOfLastTicket
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="p-4">
@@ -60,7 +73,6 @@ const AgentTicketManagement: React.FC = () => {
         <button
           type="button"
           className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
-          
         >
           <img src={AddIcon} alt="Add Ticket" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Ticket</span>
@@ -69,7 +81,7 @@ const AgentTicketManagement: React.FC = () => {
           <img src={Search} className="h-5 mr-2" alt="Search" />
           <input
             type="text"
-            placeholder="Search  ID"
+            placeholder="Search ID"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
@@ -86,16 +98,16 @@ const AgentTicketManagement: React.FC = () => {
               <th className="px-4 py-2">Title</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Created at</th>
-             <th className="w-[200px] px-4 py-2 text-left">
-                          <div className="flex items-center space-x-2">
-                            <img className="h-5 w-5" src={Settings} alt="Actions" />
-                            <span>Actions</span>
-                          </div>
-                        </th>
+              <th className="w-[200px] px-4 py-2 text-left">
+                <div className="flex items-center space-x-2">
+                  <img className="h-5 w-5" src={Settings} alt="Actions" />
+                  <span>Actions</span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => (
+            {currentTickets.map((ticket) => (
               <tr key={ticket.id} className="border-t">
                 <td className="px-4 py-2">{ticket.id}</td>
                 <td className="px-4 py-2">{ticket.title}</td>
@@ -116,22 +128,12 @@ const AgentTicketManagement: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 mt-6 text-sm text-gray-700">
-        <button className="flex items-center gap-1 text-gray-400 cursor-not-allowed px-3 py-1">
-          <img src={ArrowLeft} alt="Previous" className="h-4" />
-          Previous
-        </button>
-        <button className="bg-[#0C0E5D] text-white px-3 py-1 rounded-sm">
-          1
-        </button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">2</button>
-        <button className="hover:bg-gray-200 px-3 py-1 rounded-full">3</button>
-        <span className="text-gray-500 px-1">...</span>
-        <button className="flex items-center gap-1 text-[#0C0E5D] px-3 py-1 font-medium hover:underline">
-          Next
-          <img src={ArrowRight} alt="Next" className="h-4" />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        className="mt-6"
+      />
     </div>
   );
 };
