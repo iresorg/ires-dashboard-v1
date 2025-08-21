@@ -3,6 +3,7 @@ import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Settings from "@/shared/assets/icons/actions.svg";
 import Pagination from "@/shared/components/ui/Pagination";
+import AgentTicketModal from "./AgentTicketModal";
 
 interface Ticket {
   id: string;
@@ -48,6 +49,7 @@ const AgentTicketManagement: React.FC = () => {
   const [tickets] = useState<Ticket[]>(initialTickets);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const ticketsPerPage = 4;
 
   const filteredTickets = tickets.filter((ticket) =>
@@ -64,6 +66,14 @@ const AgentTicketManagement: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleViewTicket = (ticket: Ticket) => {
+    setSelectedTicket(ticket);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTicket(null);
   };
 
   return (
@@ -117,6 +127,7 @@ const AgentTicketManagement: React.FC = () => {
                   <button
                     type="button"
                     className="px-3 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300 font-medium"
+                    onClick={() => handleViewTicket(ticket)}
                   >
                     View Ticket
                   </button>
@@ -134,6 +145,9 @@ const AgentTicketManagement: React.FC = () => {
         onPageChange={handlePageChange}
         className="mt-6"
       />
+
+      {/* Modal */}
+      <AgentTicketModal ticket={selectedTicket} onClose={handleCloseModal} />
     </div>
   );
 };
