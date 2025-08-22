@@ -49,6 +49,7 @@ const AgentTicketManagement: React.FC = () => {
   const [tickets] = useState<Ticket[]>(initialTickets);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const ticketsPerPage = 4;
 
@@ -68,11 +69,13 @@ const AgentTicketManagement: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const handleViewTicket = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
+  const handleCreateTicket = () => {
+    setSelectedTicket(null);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    setIsModalOpen(false);
     setSelectedTicket(null);
   };
 
@@ -83,6 +86,7 @@ const AgentTicketManagement: React.FC = () => {
         <button
           type="button"
           className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          onClick={handleCreateTicket}
         >
           <img src={AddIcon} alt="Add Ticket" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Ticket</span>
@@ -127,7 +131,6 @@ const AgentTicketManagement: React.FC = () => {
                   <button
                     type="button"
                     className="px-3 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300 font-medium"
-                    onClick={() => handleViewTicket(ticket)}
                   >
                     View Ticket
                   </button>
@@ -147,7 +150,11 @@ const AgentTicketManagement: React.FC = () => {
       />
 
       {/* Modal */}
-      <AgentTicketModal ticket={selectedTicket} onClose={handleCloseModal} />
+      <AgentTicketModal
+        ticket={selectedTicket}
+        onClose={handleCloseModal}
+        isOpen={isModalOpen}
+      />
     </div>
   );
 };
