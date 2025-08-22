@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
 import TicketsTable from "./TicketsTable";
@@ -24,10 +23,10 @@ const TicketsPage: React.FC = () => {
       ticket: "TKT-001",
       title: "Phishing Mail",
       status: "Pending",
-      severity: "High",
-      tier: "Tier 2",
-      assignedto: "Responder-07",
-      updatedAt: "2025-07-10",
+      severity: "---",
+      tier: "---",
+      assignedto: "---",
+      updatedAt: "---",
       actions: "View Ticket",
     },
     {
@@ -36,8 +35,8 @@ const TicketsPage: React.FC = () => {
       title: "Ransomware",
       status: "Analyzing",
       severity: "Medium",
-      tier: "Tier 1",
-      assignedto: "Responder-04",
+      tier: "---",
+      assignedto: "---",
       updatedAt: "2025-07-13",
       actions: "View Ticket",
     },
@@ -46,9 +45,9 @@ const TicketsPage: React.FC = () => {
       ticket: "TKT-003",
       title: "DDOS Alert",
       status: "Assigned",
-      severity: "Low",
+      severity: "High",
       tier: "Tier 2",
-      assignedto: "Responder-02",
+      assignedto: "Lexis Colenial",
       updatedAt: "2025-06-25",
       actions: "View Ticket",
     },
@@ -75,9 +74,9 @@ const TicketsPage: React.FC = () => {
     indexOfLastTicket
   );
 
-  const handleCreateTicket = () => {
+  /*const handleCreateTicket = () => {
     console.log("Opening create ticket modal");
-  };
+  }; */
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -85,16 +84,7 @@ const TicketsPage: React.FC = () => {
 
   return (
     <div className="">
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        <button
-          type="button"
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
-          onClick={handleCreateTicket}
-        >
-          <img src={AddIcon} alt="Add Ticket" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create New Ticket</span>
-        </button>
-
+      <div className="flex flex-wrap items-center justify-end mb-6 gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
             <img src={Search} className="h-5 mr-2" alt="Search" />
