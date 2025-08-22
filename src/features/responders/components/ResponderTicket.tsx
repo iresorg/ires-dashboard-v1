@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Settings from "@/shared/assets/icons/actions.svg";
 import Pagination from "@/shared/components/ui/Pagination";
@@ -67,15 +66,14 @@ const ResponderTicketManagement: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
         <button
           type="button"
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)]"
+          className="flex flex-col items-center justify-center px-7 py-1 bg-[var(--ires-red)]/32 text-black rounded-lg hover:bg-[var(--ires-navy-blue)]"
         >
-          <img src={AddIcon} alt="Add Ticket" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create Ticket</span>
+          <p>Tier 2</p>
         </button>
         <div className="flex items-center bg-[#D9D9D9] rounded-md px-4 h-12 w-64">
           <img src={Search} className="h-5 mr-2" alt="Search" />
