@@ -1,11 +1,12 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
 import UserTable from "@/features/users/components/UserTable";
 import AddAdminModal from "@/features/admin/components/AddAdminModal";
 import AddAdminSuccessModal from "@/features/admin/components/AddAdminSuccessModal";
 import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
 import { useUsers } from "../hooks";
 import Pagination from "@/shared/components/ui/Pagination";
+import type { PaginationRef } from "@/shared/components/ui/Pagination";
 
 import AddIcon from "@/shared/assets/icons/add.svg";
 import SearchIcon from "@/shared/assets/icons/lineicons_search-2.svg";
@@ -31,9 +32,11 @@ const UsersPage: React.FC = () => {
     
     // User operations
     fetchUsers,
+    getUserById,
     createUser,
     editUser,
     deactivateUser,
+    activateUser,
     deleteUser,
     
     // Computed
@@ -41,12 +44,14 @@ const UsersPage: React.FC = () => {
   } = useUsers();
   
   const tableRef = useRef<HTMLDivElement>(null);
+  const paginationRef = useRef<PaginationRef>(null);
 
-  const handlePageChange = (page: number) => {
+  // Memoize handlePageChange to prevent unnecessary re-renders
+  const handlePageChange = useCallback((page: number) => {
     fetchUsers(page, pagination.limit);
     // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [fetchUsers, pagination.limit]);
 
   if (error) {
     return (
@@ -93,16 +98,25 @@ const UsersPage: React.FC = () => {
         users={filteredUsers}
         onEditUser={editUser}
         onDeactivateUser={deactivateUser}
+        onActivateUser={activateUser}
         onDeleteUser={deleteUser}
+        getUserById={getUserById}
         isLoading={isLoading}
       />
 
-      <Pagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
-        onPageChange={handlePageChange}
-        className="mt-8"
-      />
+      {pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+          className="mt-8"
+          onRef={(ref) => {
+            if (ref) {
+              paginationRef.current = ref;
+            }
+          }}
+        />
+      )}
 
       {showAdd && (
         <AddAdminModal

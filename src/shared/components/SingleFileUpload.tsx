@@ -14,6 +14,7 @@ interface SingleFileUploadProps {
     showPreview?: boolean;
     placeholder?: string;
     selectedFile?: File | null;
+    existingImage?: string | null; // Add this prop for existing images
 }
 
 export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
@@ -28,6 +29,7 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
     showPreview = true,
     placeholder = 'No file chosen',
     selectedFile = null,
+    existingImage = null, // Add this prop
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
@@ -122,6 +124,9 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
     // Use selectedFile prop if provided, otherwise use local state
     const currentFile = selectedFile;
     const currentPreview = preview;
+    
+    // Show existing image if no new file is selected
+    const displayPreview = currentPreview || (existingImage && !currentFile) ? existingImage : null;
 
     return (
         <div className={`w-full ${className}`}>
@@ -190,11 +195,11 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
             )}
 
             {/* File Preview */}
-            {showPreview && currentPreview && (
+            {showPreview && displayPreview && (
                 <div className="mt-3">
                     <div className="relative inline-block">
                         <img
-                            src={currentPreview}
+                            src={displayPreview}
                             alt={currentFile?.name || 'Preview'}
                             className="w-20 h-20 object-cover rounded-lg border border-gray-200"
                         />

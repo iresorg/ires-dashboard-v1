@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import close from "@/shared/assets/icons/close.svg";
 
 interface ConfirmModalProps {
-  type: "deactivate" | "delete";
+  type: "deactivate" | "activate" | "delete";
   userName: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   onClose: () => void;
 }
 
@@ -14,6 +14,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onClose,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -21,10 +23,60 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     };
   }, []);
 
+  const handleConfirm = async () => {
+    try {
+      setIsLoading(true);
+      await onConfirm();
+      // Modal will be closed by parent component after successful action
+    } catch (error) {
+      console.error('Action failed:', error);
+      setIsLoading(false);
+      // Keep modal open to show error state
+    }
+  };
+
+  const getMessage = () => {
+    switch (type) {
+      case "delete":
+        return `Do you want to delete ${userName} permanently?`;
+      case "deactivate":
+        return `Are you sure you want to deactivate ${userName}?`;
+      case "activate":
+        return `Are you sure you want to activate ${userName}?`;
+      default:
+        return `Are you sure you want to ${type} ${userName}?`;
+    }
+  };
+
+  const getButtonStyle = () => {
+    switch (type) {
+      case "delete":
+        return "bg-red-600 hover:bg-red-700";
+      case "deactivate":
+        return "bg-yellow-600 hover:bg-yellow-700";
+      case "activate":
+        return "bg-green-600 hover:bg-green-700";
+      default:
+        return "bg-[#0C0E5D] hover:bg-yellow-600";
+    }
+  };
+
+  const getLoadingText = () => {
+    switch (type) {
+      case "delete":
+        return "Deleting...";
+      case "deactivate":
+        return "Deactivating...";
+      case "activate":
+        return "Activating...";
+      default:
+        return "Processing...";
+    }
+  };
+
+  const message = getMessage();
+  const buttonStyle = getButtonStyle();
   const isDelete = type === "delete";
-  const message = isDelete
-    ? `Do you want to delete ${userName} permanently?`
-    : `Are you sure you want to ${type} ${userName}?`;
 
   return (
     <div
@@ -42,11 +94,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="absolute top-3 right-3"
+          className="absolute top-3 right-3 cursor-pointer"
           onClick={onClose}
+          disabled={isLoading}
           aria-label="Close modal"
         >
-          <img src={close} alt="Close" className="h-6 w-6 hover:opacity-50" />
+          <img src={close} alt="Close" className={`h-6 w-6 ${isLoading ? 'opacity-50' : 'hover:opacity-50'}`} />
         </button>
         <div className="text-center mx-5">
           <h3
@@ -63,18 +116,19 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         </div>
         <div className="flex justify-center space-x-4 mt-6">
           <button
-            onClick={onConfirm}
-            className={`px-6 py-2 rounded-tr-lg text-white mr-5 ${
-              isDelete
-                ? "bg-red-600 hover:bg-red-700"
-                : "bg-[#0C0E5D] hover:bg-yellow-600"
-            }`}
+            onClick={handleConfirm}
+            disabled={isLoading}
+            className={`px-6 py-2 rounded-tr-lg text-white mr-5 ${buttonStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer`}
           >
-            Confirm
+            {isLoading && (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            )}
+            {isLoading ? getLoadingText() : 'Confirm'}
           </button>
           <button
             onClick={onClose}
-            className="px-6 py-2 rounded-tl-lg bg-[#D9C5C7] text-gray-700 hover:bg-gray-100 ml-5"
+            disabled={isLoading}
+            className="px-6 py-2 rounded-tl-lg bg-[#D9C5C7] text-gray-700 hover:bg-gray-100 ml-5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             Cancel
           </button>

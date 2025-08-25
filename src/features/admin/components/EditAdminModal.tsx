@@ -7,7 +7,7 @@ import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
 import type { CreatableUserRole } from "@/shared/types/roles";
 
 export interface User {
-  id: number;
+  id: string; // Changed from number to string to support UUIDs
   firstName: string;
   lastName: string;
   email: string;
@@ -29,12 +29,20 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
   });
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    
+    // Simulate loading state for better UX
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+    
     return () => {
       document.body.style.overflow = "auto";
+      clearTimeout(timer);
     };
   }, []);
 
@@ -141,7 +149,31 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
-          <div className="flex flex-col items-center space-y-5">
+          {isLoading ? (
+            // Loading state with skeletons
+            <div className="flex flex-col items-center space-y-5">
+              <div className="w-[70%]">
+                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+              </div>
+              <div className="w-[70%]">
+                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+              </div>
+              <div className="w-[70%]">
+                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+              </div>
+              <div className="w-[70%]">
+                <div className="h-20 bg-gray-200 rounded-xl animate-pulse"></div>
+              </div>
+              <div className="w-[70%]">
+                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+              </div>
+              <div className="w-20">
+                <div className="h-10 bg-gray-200 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          ) : (
+            // Actual form content
+            <div className="flex flex-col items-center space-y-5">
             <div className="w-[70%]">
               <input
                 type="text"
@@ -200,6 +232,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 placeholder="No file chosen"
                 showPreview={true}
                 selectedFile={selectedAvatarFile}
+                existingImage={user.avatar} // Pass existing avatar for preview
               />
               {errors.avatar && (
                 <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
@@ -236,12 +269,13 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>
+          )}
         </form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import type { UserProfile } from "../services/userService";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 import type { CreatableUserRole } from "@/shared/types/roles";
+import { useToast } from "@/shared/components/ui/useToast";
 
 import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import EmailIcon from "@/shared/assets/icons/icon.svg";
@@ -20,8 +21,10 @@ import Trash from "@/shared/assets/icons/delete.svg";
 interface UserTableProps {
   users: UserProfile[];
   onEditUser: (u: User) => void;
-  onDeactivateUser: (id: number) => void;
-  onDeleteUser: (id: number) => void;
+  onDeactivateUser: (id: string) => void;
+  onActivateUser: (id: string) => void;
+  onDeleteUser: (id: string) => void;
+  getUserById: (userId: string) => Promise<UserProfile>;
   isLoading?: boolean;
   skeletonRows?: number;
 }
@@ -30,15 +33,19 @@ const UserTable: React.FC<UserTableProps> = ({
   users,
   onEditUser,
   onDeactivateUser,
+  onActivateUser,
   onDeleteUser,
+  getUserById,
   isLoading = false,
   skeletonRows = 10,
 }) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [confirming, setConfirming] = useState<{
-    type: "deactivate" | "delete";
+    type: "deactivate" | "activate" | "delete";
     user: User;
   } | null>(null);
+  
+  const { showSuccess, showError } = useToast();
 
   const EmptyState = () => (
     <tr>
@@ -114,7 +121,7 @@ const UserTable: React.FC<UserTableProps> = ({
             users.map((user) => {
               // Convert UserProfile to User format for compatibility
               const userForEdit: User = {
-                id: parseInt(user.id),
+                id: user.id, // Use UUID string directly, don't parse as int
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
@@ -151,23 +158,59 @@ const UserTable: React.FC<UserTableProps> = ({
                         className="h-3"
                         alt={user.status}
                       />
-                      {user.status}
+                      <span className={user.status === "active" ? "text-green-600" : "text-red-600"}>
+                        {user.status}
+                      </span>
                     </div>
                   </td>
                   <td className="px-4 py-1">
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => setEditingUser(userForEdit)}
-                        className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
+                        onClick={async () => {
+                          // Open modal immediately with existing data for instant feedback
+                          setEditingUser(userForEdit);
+                          
+                          try {
+                            const fetchedUser = await getUserById(user.id);
+                            
+                            const updatedUserForEdit = {
+                              id: user.id, // Use UUID string directly
+                              firstName: fetchedUser.firstName,
+                              lastName: fetchedUser.lastName,
+                              email: fetchedUser.email,
+                              role: fetchedUser.role as CreatableUserRole,
+                              status: fetchedUser.status,
+                              avatar: fetchedUser.avatar || undefined, // Convert null to undefined
+                            };
+                            
+                            setEditingUser(updatedUserForEdit);
+                          } catch (error) {
+                            console.error('Failed to fetch user data:', error);
+                            // Keep existing data if fetch fails
+                          }
+                        }}
+                        className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs cursor-pointer"
                       >
                         Edit <img src={Pen} className="h-3" alt="edit" />
                       </button>
-                      <button
-                        onClick={() => setConfirming({ type: "deactivate", user: userForEdit })}
-                        className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
-                      >
-                        Deactivate <img src={Scissors} className="h-3" alt="deactivate" />
-                      </button>
+                      
+                      {/* Show Activate/Deactivate button based on status */}
+                      {user.status === 'active' ? (
+                        <button
+                          onClick={() => setConfirming({ type: "deactivate", user: userForEdit })}
+                          className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs cursor-pointer"
+                        >
+                          Deactivate <img src={Scissors} className="h-3" alt="deactivate" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setConfirming({ type: "activate", user: userForEdit })}
+                          className="flex items-center gap-1 bg-green-100 rounded px-2 py-1 text-xs cursor-pointer"
+                        >
+                          Activate <img src={GreenDot} className="h-3" alt="activate" />
+                        </button>
+                      )}
+                      
                       <img
                         src={Trash}
                         onClick={() => setConfirming({ type: "delete", user: userForEdit })}
@@ -198,13 +241,35 @@ const UserTable: React.FC<UserTableProps> = ({
         <ConfirmModal
           type={confirming.type}
           userName={`${confirming.user.firstName} ${confirming.user.lastName}`}
-          onConfirm={() => {
-            if (confirming.type === "deactivate") {
-              onDeactivateUser(confirming.user.id);
-            } else {
-              onDeleteUser(confirming.user.id);
+          onConfirm={async () => {
+            let success = false;
+            let message = "";
+            try {
+              console.log('Confirming action for user:', confirming.user);
+              console.log('User ID being used:', confirming.user.id, 'Type:', typeof confirming.user.id);
+              
+              if (confirming.type === "deactivate") {
+                await onDeactivateUser(confirming.user.id);
+                message = "User deactivated successfully!";
+              } else if (confirming.type === "activate") {
+                await onActivateUser(confirming.user.id);
+                message = "User activated successfully!";
+              } else {
+                await onDeleteUser(confirming.user.id);
+                message = "User deleted successfully!";
+              }
+              success = true;
+            } catch (error) {
+              console.error('Failed to perform action:', error);
+              message = "Failed to perform action.";
+            } finally {
+              setConfirming(null);
+              if (success) {
+                showSuccess(message);
+              } else {
+                showError(message);
+              }
             }
-            setConfirming(null);
           }}
           onClose={() => setConfirming(null)}
         />
