@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAgentStore } from "@/features/agents/store/agentStore";
+import type { AgentProfile } from "@/features/agents/services/agentService";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import ActionIcon from "@/shared/assets/icons/actions.svg";
@@ -14,67 +16,36 @@ import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 import EditAgentModal from "@/features/agents/components/EditAgentModal";
-import ProfileImage1 from "@/shared/assets/images/lexis.png";
-import ProfileImage2 from "@/shared/assets/images/william.png";
-
-interface Agent {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  status: "Active" | "Inactive";
-}
 
 const AgentsPage: React.FC = () => {
-  const [agents, setAgents] = useState<Agent[]>([
-    {
-      id: "AGNT117J",
-      firstName: "Lexis",
-      lastName: "Coloniel",
-      email: "lexis.cole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      id: "AGNT224Z",
-      firstName: "Esther",
-      lastName: "Howard",
-      email: "esther.howard@gmail.com",
-      status: "Active",
-    },
-    {
-      id: "AGNT339B",
-      firstName: "William",
-      lastName: "Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-    {
-      id: "AGNT118B",
-      firstName: "Lexis",
-      lastName: "Coloniel",
-      email: "lexis.cole@gmail.com",
-      status: "Inactive",
-    },
-    {
-      id: "AGNT338F",
-      firstName: "William",
-      lastName: "Ash",
-      email: "william.ash@gmail.com",
-      status: "Active",
-    },
-  ]);
+  const {
+    agents,
+    pagination,
+    isLoading,
+    fetchAgents,
+    createAgent,
+    updateAgent,
+    deactivateAgent,
+    deleteAgent,
+  } = useAgentStore();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [pendingAgent, setPendingAgent] = useState<Agent | null>(null);
-  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [pendingAgent, setPendingAgent] = useState<Pick<
+    AgentProfile,
+    "firstName" | "lastName" | "email"
+  > | null>(null);
+  const [editingAgent, setEditingAgent] = useState<AgentProfile | null>(null);
   const [confirming, setConfirming] = useState<{
     type: "deactivate" | "delete";
-    agent: Agent;
+    agent: AgentProfile;
   } | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const agentsPerPage = 4;
+
+  useEffect(() => {
+    fetchAgents(1, 10);
+  }, [fetchAgents]);
 
   const filteredAgents = agents.filter((agent) =>
     `${agent.firstName} ${agent.lastName} ${agent.email}`
@@ -82,75 +53,44 @@ const AgentsPage: React.FC = () => {
       .includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredAgents.length / agentsPerPage);
-  const indexOfLastAgent = currentPage * agentsPerPage;
-  const indexOfFirstAgent = indexOfLastAgent - agentsPerPage;
-  const currentAgents = filteredAgents.slice(
-    indexOfFirstAgent,
-    indexOfLastAgent
-  );
-
-  const generateAgentId = () => {
-    return `AGNT${Math.floor(1000 + Math.random() * 9000)}${String.fromCharCode(
-      65 + Math.floor(Math.random() * 26)
-    )}`;
-  };
-
   const handleAgentSubmit = (data: {
     firstName: string;
     lastName: string;
     email: string;
   }) => {
-    const newAgentData: Agent = {
-      id: generateAgentId(),
+    const newAgentData = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      status: "Active",
     };
     setPendingAgent(newAgentData);
     setShowCreateAgentModal(false);
     setShowConfirmAgentModal(true);
-    setCurrentPage(1); // Reset to first page to show new agent
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (pendingAgent) {
-      setAgents((prev) => [pendingAgent, ...prev]);
+      await createAgent(pendingAgent);
       setShowConfirmAgentModal(false);
       setShowSuccessModal(true);
     }
   };
 
-  const handleSuccessClose = () => {
-    setShowSuccessModal(false);
-    setPendingAgent(null);
-  };
-
-  const handleEditAgent = (updatedAgent: Agent) => {
-    setAgents((prev) =>
-      prev.map((agent) => (agent.id === updatedAgent.id ? updatedAgent : agent))
-    );
+  const handleEditAgent = async (updatedAgent: AgentProfile) => {
+    await updateAgent(updatedAgent.id, updatedAgent);
     setEditingAgent(null);
   };
 
-  const handleDeactivateAgent = (id: string) => {
-    setAgents((prev) =>
-      prev.map((agent) =>
-        agent.id === id ? { ...agent, status: "Inactive" } : agent
-      )
-    );
+  const handleDeactivateAgent = async (id: string) => {
+    await deactivateAgent(id);
   };
 
-  const handleDeleteAgent = (id: string) => {
-    setAgents((prev) => prev.filter((agent) => agent.id !== id));
-    if (currentAgents.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1); // Adjust page if last agent on page is deleted
-    }
+  const handleDeleteAgent = async (id: string) => {
+    await deleteAgent(id);
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    fetchAgents(page, pagination.limit);
   };
 
   return (
@@ -188,23 +128,14 @@ const AgentsPage: React.FC = () => {
                   <img src={PersonIcon} className="h-4" alt="Person" />
                 </div>
               </th>
-              <th className="px-4 py-1 min-w-[150px]">
-                <div className="flex items-center gap-1">
-                  <span>Full Name</span>
-                </div>
-              </th>
+              <th className="px-4 py-1 min-w-[150px]">Full Name</th>
               <th className="px-0 py-1 min-w-[200px]">
                 <div className="flex items-center gap-1">
                   <img src={EmailIcon} className="h-4" alt="Email" />
                   <span>Email</span>
                 </div>
               </th>
-              <th className="px-0 py-1 min-w-[100px]">
-                <div className="flex items-center gap-1">
-                  <img src={GreenDot} className="h-3" alt="Status" />
-                  <span>Status</span>
-                </div>
-              </th>
+              <th className="px-0 py-1 min-w-[100px]">Status</th>
               <th className="px-4 py-1 min-w-[250px]">
                 <div className="flex items-center gap-1">
                   <img src={ActionIcon} className="h-4" alt="Actions" />
@@ -214,72 +145,78 @@ const AgentsPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {currentAgents.map((agent) => (
-              <tr key={agent.id} className="border-t">
-                <td className="px-0 py-1">
-                  <div className="flex items-center justify-start">
-                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
-                      <img
-                        src={agent.firstName === "Lexis" ? ProfileImage1 : ProfileImage2}
-                        alt={`${agent.firstName} ${agent.lastName}`}
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-1 min-w-[150px]">
-                  <span>{`${agent.firstName} ${agent.lastName}`}</span>
-                </td>
-                <td className="px-0 py-1 min-w-[200px]">{agent.email}</td>
-                <td className="px-0 py-1 min-w-[100px]">
-                  <div className="flex items-center gap-1">
-                    <img
-                      src={agent.status === "Active" ? GreenDot : RedDot}
-                      className="h-3"
-                      alt={agent.status}
-                    />
-                    {agent.status}
-                  </div>
-                </td>
-                <td className="px-4 py-1 min-w-[250px]">
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
-                    >
-                      View Details
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEditingAgent(agent)}
-                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
-                    >
-                      Edit <img src={Pen} className="h-3" alt="Edit" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setConfirming({ type: "deactivate", agent })}
-                      className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
-                    >
-                      Deactivate <img src={Scissors} className="h-3" alt="Deactivate" />
-                    </button>
-                    <img
-                      src={Trash}
-                      onClick={() => setConfirming({ type: "delete", agent })}
-                      className="h-4 cursor-pointer"
-                      alt="Delete"
-                    />
-                  </div>
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="text-center py-4">
+                  Loading...
                 </td>
               </tr>
-            ))}
+            ) : filteredAgents.length > 0 ? (
+              filteredAgents.map((agent) => (
+                <tr key={agent.id} className="border-t">
+                  <td className="px-0 py-1">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
+                      {agent.firstName[0]}
+                    </div>
+                  </td>
+                  <td className="px-4 py-1">{`${agent.firstName} ${agent.lastName}`}</td>
+                  <td className="px-0 py-1">{agent.email}</td>
+                  <td className="px-0 py-1">
+                    <div className="flex items-center gap-1">
+                      <img
+                        src={agent.status === "Active" ? GreenDot : RedDot}
+                        className="h-3"
+                        alt={agent.status}
+                      />
+                      {agent.status}
+                    </div>
+                  </td>
+                  <td className="px-4 py-1">
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setEditingAgent(agent)}
+                        className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
+                      >
+                        Edit <img src={Pen} className="h-3" alt="Edit" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setConfirming({ type: "deactivate", agent })
+                        }
+                        className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
+                      >
+                        Deactivate{" "}
+                        <img src={Scissors} className="h-3" alt="Deactivate" />
+                      </button>
+                      <img
+                        src={Trash}
+                        onClick={() => setConfirming({ type: "delete", agent })}
+                        className="h-4 cursor-pointer"
+                        alt="Delete"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="text-center py-4">
+                  No agents found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
+
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
         onPageChange={handlePageChange}
       />
+
       {/* Modals */}
       {showCreateAgentModal && (
         <CreateAgentModal
@@ -298,10 +235,10 @@ const AgentsPage: React.FC = () => {
           }}
         />
       )}
-      {showSuccessModal && pendingAgent && (
+      {showSuccessModal && (
         <CreateAgentSucessModal
-          onClose={handleSuccessClose}
-          id={pendingAgent.id}
+          onClose={() => setShowSuccessModal(false)}
+          id="new"
         />
       )}
       {editingAgent && (
