@@ -66,7 +66,7 @@ const UsersPage: React.FC = () => {
       <div className="flex justify-between">
         <button
           onClick={() => setShowAdd(true)}
-          className="flex flex-col items-center bg-[var(--ires-dark-blue)] text-white px-4 py-3 rounded-lg -mt-5"
+          className="flex flex-col items-center bg-[var(--ires-dark-blue)] text-white px-4 py-3 rounded-lg -mt-5 cursor-pointer"
         >
           <img src={AddIcon} className="h-5 mb-1" />
           <span className="text-sm">Add New Admin</span>

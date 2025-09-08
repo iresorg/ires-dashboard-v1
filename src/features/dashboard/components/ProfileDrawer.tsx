@@ -63,7 +63,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center mb-6 relative">
             {profile?.avatar ? (
               <img
-                src={profile.avatar}
+                src={typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url}
                 alt="User"
                 className="w-20 h-20 rounded-full object-contain"
               />

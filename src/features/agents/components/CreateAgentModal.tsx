@@ -236,7 +236,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
                 <button
                   type="button"
                   onClick={handleClearAvatar}
-                  className="mt-2 flex items-center text-red-600 text-sm hover:underline"
+                  className="mt-2 flex items-center text-red-600 text-sm hover:underline cursor-pointer"
                 >
                   <img
                     src="/icons/delete.svg"
@@ -251,7 +251,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
+                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] cursor-pointer"
               >
                 Create Agent
               </button>

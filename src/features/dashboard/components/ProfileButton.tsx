@@ -26,7 +26,7 @@ const ProfileButton = () => {
       >
         {profile?.avatar ? (
           <img
-            src={profile.avatar}
+            src={typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url}
             alt="profile"
             className="w-10 h-10 rounded-full object-cover"
           />

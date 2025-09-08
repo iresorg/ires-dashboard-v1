@@ -5,12 +5,12 @@ import close from "@/shared/assets/icons/close.svg";
 
 interface CreateAgentSucessModalProps {
   onClose: () => void;
-  id: string;
+  agentName: string;
 }
 
 const CreateAgentSucessModal: React.FC<CreateAgentSucessModalProps> = ({
   onClose,
-  id,
+  agentName,
 }) => {
   return (
     <div
@@ -44,7 +44,7 @@ const CreateAgentSucessModal: React.FC<CreateAgentSucessModalProps> = ({
             </div>
             <div className="flex flex-col">
               <p className="text-[#0C0E5D] font-bold mb-9">
-                Agent ID: <span className="text-[#000000] font-normal">{id}</span>
+                Agent Name: <span className="text-[#000000] font-normal">{agentName}</span>
               </p>
             </div>
           </div>

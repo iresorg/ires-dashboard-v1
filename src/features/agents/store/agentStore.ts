@@ -14,14 +14,17 @@ interface AgentState {
   };
   isLoading: boolean;
   error: string | null;
+  search: string;
 
   fetchProfile: (id: string) => Promise<void>;
-  fetchAgents: (page?: number, limit?: number) => Promise<void>;
+  fetchAgents: (page?: number, limit?: number, search?: string) => Promise<void>;
+  setSearch: (search: string) => void;
   createAgent: (
     data: Pick<AgentProfile, "firstName" | "lastName" | "email">
   ) => Promise<void>;
-  updateAgent: (id: string, data: Partial<AgentProfile>) => Promise<void>;
+  updateAgent: (id: string, data: { firstName?: string; lastName?: string; email?: string; avatarFile?: File | null }) => Promise<void>;
   deactivateAgent: (id: string) => Promise<void>;
+  activateAgent: (id: string) => Promise<void>;
   deleteAgent: (id: string) => Promise<void>;
   clearProfile: () => void;
   clearAgents: () => void;
@@ -39,6 +42,7 @@ export const useAgentStore = create<AgentState>((set) => ({
   },
   isLoading: false,
   error: null,
+  search: "",
 
   fetchProfile: async (id: string) => {
     set({ isLoading: true, error: null });
@@ -56,21 +60,27 @@ export const useAgentStore = create<AgentState>((set) => ({
     }
   },
 
-  fetchAgents: async (page = 1, limit = 10) => {
+  fetchAgents: async (page = 1, limit = 10, search?: string) => {
     set({ isLoading: true, error: null });
     try {
       const response: AgentsResponse = await agentService.getAgents(
         page,
-        limit
+        limit,
+        search
       );
+      const total = Number(response.total) || 0;
+      const responseLimit = Number(response.limit) || 10;
+      const responsePage = Number(response.page) || 1;
+      const totalPages = Number(response.totalPages) || Math.ceil(total / responseLimit) || 0;
+      
       set({
         agents: response.data,
         pagination: {
-          total: response.total,
-          limit: response.limit,
-          page: response.page,
-          totalPages: response.totalPages,
-          nextPage: response.nextPage,
+          total,
+          limit: responseLimit,
+          page: responsePage,
+          totalPages,
+          nextPage: response.nextPage ? Number(response.nextPage) : null,
         },
         isLoading: false,
       });
@@ -81,6 +91,10 @@ export const useAgentStore = create<AgentState>((set) => ({
         isLoading: false,
       });
     }
+  },
+
+  setSearch: (search: string) => {
+    set({ search });
   },
 
   createAgent: async (data) => {
@@ -114,13 +128,29 @@ export const useAgentStore = create<AgentState>((set) => ({
       await agentService.deactivateAgent(id);
       set((state) => ({
         agents: state.agents.map((a) =>
-          a.id === id ? { ...a, status: "Inactive" } : a
+          a.id === id ? { ...a, status: "deactivated" } : a
         ),
       }));
     } catch (error: unknown) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to deactivate agent",
+      });
+    }
+  },
+
+  activateAgent: async (id) => {
+    try {
+      await agentService.activateAgent(id);
+      set((state) => ({
+        agents: state.agents.map((a) =>
+          a.id === id ? { ...a, status: "active" } : a
+        ),
+      }));
+    } catch (error: unknown) {
+      set({
+        error:
+          error instanceof Error ? error.message : "Failed to activate agent",
       });
     }
   },

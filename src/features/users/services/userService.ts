@@ -8,7 +8,7 @@ export interface UserProfile {
   email: string;
   role: string;
   status: string;
-  avatar?: string | null;
+  avatar?: string | { url: string; publicId?: string } | null; // Accept string or object
   createdAt: string;
   updatedAt: string;
   lastLogin?: string | null;
@@ -33,6 +33,7 @@ export interface CreateUserPayload {
   lastName: string;
   email: string;
   role: string;
+  avatarFile?: File | null; // New: optional avatar file
 }
 
 export interface CreateUserResponse {
@@ -44,6 +45,7 @@ export interface UpdateUserPayload {
   lastName?: string;
   email?: string;
   role?: string;
+  avatarFile?: File | null; // New: optional avatar file
 }
 
 export interface UpdateUserResponse {
@@ -71,12 +73,32 @@ export const getUsers = async (page: number = 1, limit: number = 10): Promise<Us
 };
 
 export const createUser = async (userData: CreateUserPayload): Promise<CreateUserResponse> => {
-  const response = await api.post<CreateUserResponse>('/users', userData);
+  const form = new FormData();
+  form.append('firstName', userData.firstName);
+  form.append('lastName', userData.lastName);
+  form.append('email', userData.email);
+  form.append('role', userData.role);
+  if (userData.avatarFile) {
+    form.append('avatar', userData.avatarFile);
+  }
+  const response = await api.post<CreateUserResponse>('/users', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return response.data;
 };
 
 export const updateUser = async (id: string, userData: UpdateUserPayload): Promise<UpdateUserResponse> => {
-  const response = await api.put<UpdateUserResponse>(`/users/${id}`, userData);
+  const form = new FormData();
+  if (userData.firstName !== undefined) form.append('firstName', String(userData.firstName));
+  if (userData.lastName !== undefined) form.append('lastName', String(userData.lastName));
+  if (userData.email !== undefined) form.append('email', String(userData.email));
+  if (userData.role !== undefined) form.append('role', String(userData.role));
+  if (userData.avatarFile) {
+    form.append('avatar', userData.avatarFile);
+  }
+  const response = await api.put<UpdateUserResponse>(`/users/${id}`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return response.data;
 };
 

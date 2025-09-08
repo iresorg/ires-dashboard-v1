@@ -5,16 +5,11 @@ import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
 import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
 import type { CreatableUserRole } from "@/shared/types/roles";
+import type { CreateUserPayload } from "@/features/users/services/userService";
 
 interface AddAdminModalProps {
   onClose: () => void;
-  onAddAdmin: (newAdmin: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: CreatableUserRole;
-    avatar?: string; // Cloudinary URL
-  }) => void;
+  onAddAdmin: (newAdmin: CreateUserPayload) => void;
 }
 
 const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) => {
@@ -82,40 +77,22 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
 
     if (validateForm()) {
       setIsSubmitting(true);
-      
       try {
-        let avatarUrl: string | undefined;
-        
-        // Upload to Cloudinary if a file is selected
-        if (selectedAvatarFile) {
-          const { uploadFileToCloudinary } = await import('@/shared/utils/cloudinaryUpload');
-          const result = await uploadFileToCloudinary(selectedAvatarFile, 'dashboard/admin-avatars');
-          if (result.success && result.url) {
-            avatarUrl = result.url;
-          } else {
-            throw new Error(result.error || 'Upload failed');
-          }
-        }
-
-        // Call the parent handler with the data
-      onAddAdmin({
-        firstName,
-        lastName,
-        email,
-          role: role as CreatableUserRole, // Type assertion since we validate role is not empty
-          avatar: avatarUrl,
-      });
+        onAddAdmin({
+          firstName,
+          lastName,
+          email,
+          role: role as CreatableUserRole,
+          avatarFile: selectedAvatarFile ?? undefined,
+        });
 
         // Reset form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setRole("");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setRole("");
         setSelectedAvatarFile(null);
-      setErrors({});
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        setErrors(prev => ({ ...prev, avatar: 'Failed to upload image' }));
+        setErrors({});
       } finally {
         setIsSubmitting(false);
       }
@@ -150,97 +127,97 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="space-y-5 flex flex-col justify-center items-center">
-          <div className="w-[70%]">
-            <input
-              type="text"
-              className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                errors.firstName ? "border border-red-500" : ""
-              }`}
-              placeholder="First name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-            )}
-          </div>
-          <div className="w-[70%]">
-            <input
-              type="text"
-             className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                errors.lastName ? "border border-red-500" : ""
-              }`}
-              placeholder="Last name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
-            )}
-          </div>
-          <div className="w-[70%] mb-2">
-            <input
-              type="email"
-              className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                errors.email ? "border border-red-500" : ""
-              }`}
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
-          <div className="w-[70%]">
-            <SingleFileUpload
-              label="Upload agent avatar"
-              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-              maxSize={5}
-              onFileSelect={handleAvatarSelect}
-              onFileRemove={handleAvatarRemove}
-              onUploadError={handleAvatarError}
-              placeholder="No file chosen"
-              showPreview={true}
-              selectedFile={selectedAvatarFile}
-            />
-            {errors.avatar && (
-              <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
-            )}
-          </div>
-          <div className="relative w-[70%]">
-            <select
-              className={`w-full rounded-xl bg-[#D9D9D9]/70  px-4 py-2 pr-8 focus:outline-none appearance-none ${
-                errors.role ? "border border-red-500" : ""
-              }`}
-              value={role}
+            <div className="w-[70%]">
+              <input
+                type="text"
+                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
+                  errors.firstName ? "border border-red-500" : ""
+                }`}
+                placeholder="First name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+              )}
+            </div>
+            <div className="w-[70%]">
+              <input
+                type="text"
+                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
+                  errors.lastName ? "border border-red-500" : ""
+                }`}
+                placeholder="Last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+              )}
+            </div>
+            <div className="w-[70%] mb-2">
+              <input
+                type="email"
+                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
+                  errors.email ? "border border-red-500" : ""
+                }`}
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+            </div>
+            <div className="w-[70%]">
+              <SingleFileUpload
+                label="Upload agent avatar"
+                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                maxSize={5}
+                onFileSelect={handleAvatarSelect}
+                onFileRemove={handleAvatarRemove}
+                onUploadError={handleAvatarError}
+                placeholder="No file chosen"
+                showPreview={true}
+                selectedFile={selectedAvatarFile}
+              />
+              {errors.avatar && (
+                <p className="text-red-500 text-sm mt-1 break-words">{errors.avatar}</p>
+              )}
+            </div>
+            <div className="relative w-[70%]">
+              <select
+                className={`w-full rounded-xl bg-[#D9D9D9]/70  px-4 py-2 pr-8 focus:outline-none appearance-none ${
+                  errors.role ? "border border-red-500" : ""
+                }`}
+                value={role}
                 onChange={(e) => setRole(e.target.value as CreatableUserRole)}
-            >
-              <option value="" disabled className="hidden">
-                -Role-
-              </option>
+              >
+                <option value="" disabled className="hidden">
+                  -Role-
+                </option>
                 {CREATABLE_USER_ROLES.map((roleOption) => (
                   <option key={roleOption} value={roleOption} className="bg-white">
                     {getRoleDisplayName(roleOption)}
                   </option>
                 ))}
-            </select>
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+              </select>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+              </div>
+              {errors.role && (
+                <p className="text-red-500 text-sm mt-1">{errors.role}</p>
+              )}
             </div>
-            {errors.role && (
-              <p className="text-red-500 text-sm mt-1">{errors.role}</p>
-            )}
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Adding...' : 'Add Admin'}
-            </button>
-          </div>
+            <div className="flex items-center justify-center">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {isSubmitting ? 'Adding...' : 'Add Admin'}
+              </button>
+            </div>
           </div>
         </form>
       </div>

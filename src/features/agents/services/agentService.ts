@@ -5,7 +5,15 @@ export interface AgentProfile {
   firstName: string;
   lastName: string;
   email: string;
-  status: "Active" | "Inactive";
+  role: string;
+  status: string;
+  avatar?: {
+    url: string;
+    publicId: string;
+  } | null;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin: string | null;
 }
 
 export interface AgentsResponse {
@@ -19,9 +27,20 @@ export interface AgentsResponse {
 
 export const getAgents = async (
   page = 1,
-  limit = 10
+  limit = 10,
+  search?: string
 ): Promise<AgentsResponse> => {
-  const response = await api.get(`/agents?page=${page}&limit=${limit}`);
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  if (search && search.trim()) {
+    params.append('search', search.trim());
+  }
+  
+  const url = `/agents?${params.toString()}`;
+  const response = await api.get(url);
   return response.data;
 };
 
@@ -31,22 +50,43 @@ export const getAgentProfile = async (id: string): Promise<AgentProfile> => {
 };
 
 export const createAgent = async (
-  data: Omit<AgentProfile, "id" | "status">
+  data: Pick<AgentProfile, "firstName" | "lastName" | "email">
 ): Promise<AgentProfile> => {
   const response = await api.post("/agents", data);
   return response.data;
 };
 
+export interface UpdateAgentPayload {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  avatarFile?: File | null;
+}
+
 export const updateAgent = async (
   id: string,
-  data: Partial<AgentProfile>
+  data: UpdateAgentPayload
 ): Promise<AgentProfile> => {
-  const response = await api.put(`/agents/${id}`, data);
+  const form = new FormData();
+  if (data.firstName !== undefined) form.append('firstName', String(data.firstName));
+  if (data.lastName !== undefined) form.append('lastName', String(data.lastName));
+  if (data.email !== undefined) form.append('email', String(data.email));
+  if (data.avatarFile) {
+    form.append('avatar', data.avatarFile);
+  }
+  
+  const response = await api.put(`/agents/${id}`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return response.data;
 };
 
 export const deactivateAgent = async (id: string): Promise<void> => {
   await api.patch(`/agents/${id}/deactivate`);
+};
+
+export const activateAgent = async (id: string): Promise<void> => {
+  await api.patch(`/agents/${id}/activate`);
 };
 
 export const deleteAgent = async (id: string): Promise<void> => {

@@ -133,17 +133,20 @@ const UserTable: React.FC<UserTableProps> = ({
                 <tr key={user.id} className="border-t">
                   <td className="px-0 py-1">
                     <div className="flex items-center justify-start">
-                      {user.avatar ? (
-                        <img 
-                          src={user.avatar} 
-                          alt={`${user.firstName} ${user.lastName}`}
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className={`w-8 h-8 rounded-full ${getUserInitialsColor(user.firstName, user.lastName)} flex items-center justify-center text-white font-semibold text-xs`}>
-                          {getUserInitials(user.firstName, user.lastName)}
-                        </div>
-                      )}
+                      {(() => {
+                        const avatarUrl = typeof user.avatar === 'string' ? user.avatar : user.avatar?.url;
+                        return avatarUrl ? (
+                          <img 
+                            src={avatarUrl}
+                            alt={`${user.firstName} ${user.lastName}`}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className={`w-8 h-8 rounded-full ${getUserInitialsColor(user.firstName, user.lastName)} flex items-center justify-center text-white font-semibold text-xs`}>
+                            {getUserInitials(user.firstName, user.lastName)}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </td>
                   <td className="px-4 py-1">
@@ -172,6 +175,7 @@ const UserTable: React.FC<UserTableProps> = ({
                           
                           try {
                             const fetchedUser = await getUserById(user.id);
+                            const avatarUrl = typeof fetchedUser.avatar === 'string' ? fetchedUser.avatar : fetchedUser.avatar?.url;
                             
                             const updatedUserForEdit = {
                               id: user.id, // Use UUID string directly
@@ -180,7 +184,7 @@ const UserTable: React.FC<UserTableProps> = ({
                               email: fetchedUser.email,
                               role: fetchedUser.role as CreatableUserRole,
                               status: fetchedUser.status,
-                              avatar: fetchedUser.avatar || undefined, // Convert null to undefined
+                              avatar: avatarUrl || undefined,
                             };
                             
                             setEditingUser(updatedUserForEdit);
