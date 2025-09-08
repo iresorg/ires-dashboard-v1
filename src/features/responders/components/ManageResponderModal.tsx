@@ -34,7 +34,6 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("Modal rendered with responderId:", responderId, "token:", token);
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
@@ -42,7 +41,6 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
   }, [responderId, token]);
 
   const handleRevokeToken = async () => {
-    console.log("Revoking token for responderId:", responderId, "tokenId:", token.id);
     try {
       await axios.post(`/api/responders/${responderId}/tokens/${token.id}/revoke`);
       setIsRevoked(true);
@@ -59,12 +57,11 @@ const ManageResponderModal: React.FC<ManageResponderModalProps> = ({
   };
 
   const handleGenerateToken = async () => {
-    console.log("Generating token for responderId:", responderId);
     try {
       const response = await axios.post(`/api/responders/${responderId}/tokens/generate`);
       console.log("Generate token response:", response.data);
-      onGenerateToken?.(); // Notify parent to refresh tokens
-      onClose(); // Close modal after generation
+      onGenerateToken?.();
+      onClose()
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || "Failed to generate token");

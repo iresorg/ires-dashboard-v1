@@ -68,7 +68,6 @@ const DashboardLayout: React.FC = () => {
     if (!user) return "Dashboard";
 
     const userRole = user.role;
-    console.log("Getting title for user role:", userRole);
 
     if (
       userRole === Role.SUPER_ADMIN ||

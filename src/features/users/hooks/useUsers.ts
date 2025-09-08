@@ -154,137 +154,84 @@ export const useUsers = (): UseUsersReturn => {
   // Memoize user operations to prevent unnecessary re-renders
   const createUser = useCallback(async (userData: CreateUserPayload) => {
     try {
-
-      const response = await userService.createUser(userData);
-
-      console.log('User created successfully:', response);
-
-      
+      await userService.createUser(userData);
 
       setSubmitted({
-
         firstName: userData.firstName,
-
         lastName: userData.lastName,
-
         role: userData.role,
-
       });
 
       setShowAdd(false);
-
       setShowAddSuccess(true);
-
-      
 
       // Refresh users list using the store function directly
       await fetchUsersFromStore(pagination.page, pagination.limit);
 
     } catch (error: unknown) {
-
       console.error('Failed to create user:', error);
-
       throw error;
-
     }
-
   }, [fetchUsersFromStore, pagination.page, pagination.limit]);
 
 
   const editUser = useCallback(async (user: User) => {
     try {
-
-      const response = await userService.updateUser(user.id.toString(), {
-
+      await userService.updateUser(user.id.toString(), {
         firstName: user.firstName,
-
         lastName: user.lastName,
-
         email: user.email,
-
         role: user.role,
-
       });
 
-      console.log('User updated successfully:', response);
-
-      
-
       setSubmitted({
-
         firstName: user.firstName,
-
         lastName: user.lastName,
-
         role: user.role,
-
       });
 
       setShowEditSuccess(true);
-
-      
 
       // Refresh users list using the store function directly
       await fetchUsersFromStore(pagination.page, pagination.limit);
 
     } catch (error: unknown) {
-
       console.error('Failed to edit user:', error);
-
       throw error;
-
     }
-
   }, [fetchUsersFromStore, pagination.page, pagination.limit]);
 
 
   const deactivateUser = useCallback(async (id: string) => {
     try {
-
-      console.log('Deactivating user with ID:', id, 'Type:', typeof id);
-      const response = await userService.deactivateUser(id);
-      console.log('User deactivated successfully:', response);
-
-      
+      await userService.deactivateUser(id);
 
       // Refresh users list using the store function directly
       await fetchUsersFromStore(pagination.page, pagination.limit);
 
     } catch (error: unknown) {
-
       console.error('Failed to deactivate user:', error);
-
       throw error; // Re-throw to let parent component handle
     }
-
   }, [fetchUsersFromStore, pagination.page, pagination.limit]);
 
 
   const deleteUser = useCallback(async (id: string) => {
     try {
-
-      console.log('Deleting user with ID:', id, 'Type:', typeof id);
-      const response = await userService.deleteUser(id);
-      console.log('User deleted successfully:', response);
-
-      
+      await userService.deleteUser(id);
 
       // Refresh users list using the store function directly
       await fetchUsersFromStore(pagination.page, pagination.limit);
 
     } catch (error: unknown) {
-
       console.error('Failed to delete user:', error);
-
       throw error; // Re-throw to let parent component handle
     }
   }, [fetchUsersFromStore, pagination.page, pagination.limit]);
 
   const activateUser = useCallback(async (id: string) => {
     try {
-      console.log('Activating user with ID:', id, 'Type:', typeof id);
-      const response = await userService.activateUser(id);
-      console.log('User activated successfully:', response);
+      await userService.activateUser(id);
       
       // Refresh users list using the store function directly
       await fetchUsersFromStore(pagination.page, pagination.limit);

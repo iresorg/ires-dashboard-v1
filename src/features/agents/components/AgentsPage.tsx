@@ -213,8 +213,6 @@ const AgentsPage: React.FC = () => {
               </>
             ) : agents && agents.length > 0 ? (
               agents.map((agent) => {
-                // Debug: Log agent data to see structure
-                console.log('Agent data:', agent);
                 return (
                   <tr key={agent.id} className="border-t">
                     <td className="px-0 py-1">

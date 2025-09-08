@@ -15,9 +15,6 @@ const RoleBasedDashboard: React.FC = () => {
 
   const userRole = user.role;
 
-  // Debug information (can be removed in production)
-  console.log("Current user role:", userRole);
-  console.log("Available roles:", Object.values(Role));
 
   // Super Admin and Admin see the main dashboard
   if (
@@ -27,7 +24,6 @@ const RoleBasedDashboard: React.FC = () => {
     userRole === "ADMIN" ||
     userRole === "admin"
   ) {
-    console.log("Showing Admin Dashboard");
     return <DashboardPage />;
   }
 
@@ -39,7 +35,6 @@ const RoleBasedDashboard: React.FC = () => {
     userRole === "AGENT_ADMIN" ||
     userRole === "agent"
   ) {
-    console.log("Showing Agent Dashboard");
     return <AgentDashboard />;
   }
 
@@ -53,12 +48,9 @@ const RoleBasedDashboard: React.FC = () => {
     userRole === "RESPONDER_TIER_2" ||
     userRole === "responder"
   ) {
-    console.log("Showing Responder Dashboard");
     return <ResponderDashboard />;
   }
 
-  // Fallback to main dashboard
-  console.log("Fallback to Admin Dashboard");
   return <DashboardPage />;
 };
 
