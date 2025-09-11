@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import Filter from "@/shared/assets/icons/uiw_filter.svg";
@@ -9,29 +9,60 @@ import Pagination from "@/shared/components/ui/Pagination";
 import Email from "@/shared/assets/icons/icon.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
-import ResponderIcon from "@/shared/assets/icons/respondericon.svg";
+import Responder from "@/shared/assets/icons/respondericon.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import ProfileImage from "@/shared/assets/images/profile.png";
-
 import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
 import CreateResponderSucessModal from "@/features/responders/components/CreateResponderSucessModal";
 import EditResponderModal from "@/features/responders/components/EditResponderModal";
 import ConfirmResponderModal from "@/features/responders/components/ConfirmResponderModal";
-import { useRespondersStore } from "@/features/responders/store/respondersStore";
-import type { Responder } from "@/features/responders/services/respondersService";
+
+interface Responder {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  tier: "Tier1" | "Tier2";
+  status: "Active" | "Inactive";
+}
+
+const initialResponders: Responder[] = [
+  {
+    id: "TIRSP2117J",
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com",
+    tier: "Tier2",
+    status: "Active",
+  },
+  {
+    id: "TIRSP2123H",
+    firstName: "Jane",
+    lastName: "Smith",
+    email: "jane.smith@example.com",
+    tier: "Tier1",
+    status: "Inactive",
+  },
+  {
+    id: "TIRSP2145G",
+    firstName: "Alice",
+    lastName: "Johnson",
+    email: "alice.johnson@example.com",
+    tier: "Tier1",
+    status: "Active",
+  },
+  {
+    id: "TIRSP2109R",
+    firstName: "Bob",
+    lastName: "Williams",
+    email: "bob.williams@example.com",
+    tier: "Tier2",
+    status: "Active",
+  },
+];
 
 const RespondersPage: React.FC = () => {
-  const {
-    responders,
-    addResponder,
-    fetchResponders,
-    updateResponder,
-    deleteResponder,
-    loading,
-    error,
-  } = useRespondersStore();
-
-  // local UI state
+  const [responders, setResponders] = useState<Responder[]>(initialResponders);
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateResponderModal, setShowCreateResponderModal] =
     useState(false);
@@ -47,27 +78,16 @@ const RespondersPage: React.FC = () => {
     type: "deactivate" | "delete";
     responder: Responder;
   } | null>(null);
-
-  // pagination 
   const [currentPage, setCurrentPage] = useState(1);
   const respondersPerPage = 4;
 
-  // fetch list on mount
-  useEffect(() => {
-    fetchResponders();
-  }, [fetchResponders]);
-
-  // filtering & pagination
   const filteredResponders = responders.filter((responder) =>
     `${responder.firstName} ${responder.lastName} ${responder.email}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredResponders.length / respondersPerPage)
-  );
+  const totalPages = Math.ceil(filteredResponders.length / respondersPerPage);
   const indexOfLastResponder = currentPage * respondersPerPage;
   const indexOfFirstResponder = indexOfLastResponder - respondersPerPage;
   const currentResponders = filteredResponders.slice(
@@ -79,60 +99,52 @@ const RespondersPage: React.FC = () => {
     setCurrentPage(page);
   };
 
-  // ---------- Create ----------
-  const handleCreateResponder = async (data: {
+  const handleCreateResponder = (data: {
     firstName: string;
     lastName: string;
-    email: string;
     tier: string;
-    avatar?: string;
   }) => {
-    try {
-      await addResponder({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        tier: data.tier as "Tier1" | "Tier2",
-        status: "Active",
-        avatarUrl: data.avatar,
-      });
-      // store.addResponder doesn't return id; show temp success info
-      setSubmittedResponder({ id: "new", tier: data.tier });
-      setShowCreateResponderModal(false);
-      setShowCreateSuccessModal(true);
-      setCurrentPage(1);
-    } catch (err) {
-      console.error("Failed to create responder:", err);
-      // optionally show toast / error UI
-    }
+    const newId = `TIRSP${Math.floor(Math.random() * 9000) + 1000}`;
+    const newResponder: Responder = {
+      id: newId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: `${data.firstName.toLowerCase()}.${data.lastName.toLowerCase()}@example.com`,
+      tier: data.tier as "Tier1" | "Tier2",
+      status: "Active",
+    };
+    setResponders((prev) => [newResponder, ...prev]);
+    setSubmittedResponder({
+      id: newId,
+      tier: data.tier,
+    });
+    setShowCreateResponderModal(false);
+    setShowCreateSuccessModal(true);
+    setCurrentPage(1); // Reset to first page when adding a new responder
   };
 
-  // ---------- Edit / Deactivate / Delete ----------
-  const handleEditResponder = async (updated: Responder) => {
-    try {
-      await updateResponder(updated.id, updated);
-      setEditingResponder(null);
-    } catch (err) {
-      console.error("Failed to update responder:", err);
-    }
+  const handleEditResponder = (updatedResponder: Responder) => {
+    setResponders((prev) =>
+      prev.map((responder) =>
+        responder.id === updatedResponder.id ? updatedResponder : responder
+      )
+    );
+    setEditingResponder(null);
   };
 
-  const handleDeactivateResponder = async (id: string) => {
-    try {
-      await updateResponder(id, { status: "Inactive" });
-    } catch (err) {
-      console.error("Failed to deactivate responder:", err);
-    }
+  const handleDeactivateResponder = (id: string) => {
+    setResponders((prev) =>
+      prev.map((responder) =>
+        responder.id === id ? { ...responder, status: "Inactive" } : responder
+      )
+    );
   };
 
-  const handleDeleteResponder = async (id: string) => {
-    try {
-      await deleteResponder(id);
-      if (currentResponders.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    } catch (err) {
-      console.error("Failed to delete responder:", err);
+  const handleDeleteResponder = (id: string) => {
+    setResponders((prev) => prev.filter((responder) => responder.id !== id));
+    // Adjust current page if necessary
+    if (currentResponders.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
@@ -156,10 +168,7 @@ const RespondersPage: React.FC = () => {
               type="text"
               placeholder="Search Name/Email"
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
             />
           </div>
@@ -182,193 +191,132 @@ const RespondersPage: React.FC = () => {
 
       {/* Table */}
       <div className="overflow-auto mt-6 mb-5">
-        {loading && (
-          // skeleton rows while loading
-          <table className="w-full table-auto text-sm">
-            <thead className="bg-gray-100 text-left">
-              <tr>
-                <th className="px-0 py-1">
-                  <div className="flex items-center gap-2">
-                    <img src={ResponderIcon} className="w-6 h-6" alt="person" />
+        <table className="w-full table-auto text-sm">
+          <thead className="bg-gray-100 text-left">
+            <tr>
+              <th className="px-0 py-1">
+                <div className="flex items-center gap-2">
+                  <img src={Responder} className="w-6 h-6 " alt="person" />
+                </div>
+              </th>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <span>Full Name</span>
+                </div>
+              </th>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={Email} className="h-4" alt="email" />
+                  <span>Email</span>
+                </div>
+              </th>
+              <th className="px-4 py-1 pl-6">
+                <div className="flex items-center gap-1">
+                  <span>Tier</span>
+                </div>
+              </th>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={GreenButton} className="h-3" alt="status" />
+                  <span>Status</span>
+                </div>
+              </th>
+              <th className="px-4 py-1">
+                <div className="flex items-center gap-1">
+                  <img src={ActionIcon} className="h-4" alt="actions" />
+                  <span>Actions</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentResponders.map((responder) => (
+              <tr key={responder.id} className="border-t whitespace-nowrap ">
+                <td className="px-0 py-1">
+                  <div className="flex items-center justify-start ">
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white">
+                      <img
+                        src={ProfileImage}
+                        alt={`${responder.firstName} ${responder.lastName}`}
+                      />
+                    </div>
                   </div>
-                </th>
-                <th className="px-4 py-1">Full Name</th>
-                <th className="px-4 py-1">
+                </td>
+                <td className="px-4 py-1">
+                  <span>{`${responder.firstName} ${responder.lastName}`}</span>
+                </td>{" "}
+                <td className="px-4 py-1">{responder.email}</td>
+                <td className="px-4 py-1">
+                  <span
+                    className={`text-[#000000] px-2 py-1 rounded-lg ${
+                      responder.tier === "Tier2"
+                        ? "bg-[#D00F24]/32"
+                        : responder.tier === "Tier1"
+                        ? "bg-[#0C0E5D]/30"
+                        : "bg-gray-500"
+                    }`}
+                  >
+                    {responder.tier}
+                  </span>
+                </td>
+                <td className="px-4 py-1">
                   <div className="flex items-center gap-1">
-                    <img src={Email} className="h-4" alt="email" />
-                    <span>Email</span>
+                    <img
+                      src={responder.status === "Active" ? GreenButton : RedDot}
+                      className="h-3"
+                      alt={responder.status}
+                    />
+                    {responder.status}
                   </div>
-                </th>
-                <th className="px-4 py-1 pl-6">Tier</th>
-                <th className="px-4 py-1">Status</th>
-                <th className="px-4 py-1">Actions</th>
+                </td>
+                <td className="px-4 py-1 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
+                    >
+                      View Details
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingResponder(responder)}
+                      className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
+                    >
+                      Edit <img src={Pen} className="h-3" alt="Edit" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfirming({ type: "deactivate", responder })
+                      }
+                      className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
+                    >
+                      Deactivate{" "}
+                      <img src={Scissors} className="h-3" alt="Deactivate" />
+                    </button>
+                    <img
+                      src={Trash}
+                      onClick={() =>
+                        setConfirming({ type: "delete", responder })
+                      }
+                      className="h-4 cursor-pointer"
+                      alt="delete"
+                    />
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <tr key={idx} className="border-t animate-pulse">
-                  <td className="px-0 py-2">
-                    <div className="w-8 h-8 rounded-full bg-gray-300" />
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="h-4 w-24 bg-gray-300 rounded" />
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="h-4 w-32 bg-gray-300 rounded" />
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="h-4 w-20 bg-gray-300 rounded" />
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="h-4 w-12 bg-gray-300 rounded" />
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="h-4 w-20 bg-gray-300 rounded" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        {!loading && (
-          <table className="w-full table-auto text-sm">
-            <thead className="bg-gray-100 text-left">
-              <tr>
-                <th className="px-0 py-1">
-                  <div className="flex items-center gap-2">
-                    <img src={ResponderIcon} className="w-6 h-6" alt="person" />
-                  </div>
-                </th>
-                <th className="px-4 py-1">Full Name</th>
-                <th className="px-4 py-1">
-                  <div className="flex items-center gap-1">
-                    <img src={Email} className="h-4" alt="email" />
-                    <span>Email</span>
-                  </div>
-                </th>
-                <th className="px-4 py-1 pl-6">Tier</th>
-                <th className="px-4 py-1">Status</th>
-                <th className="px-4 py-1">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error ? (
-                <tr>
-                  <td colSpan={6} className="py-6 text-center text-red-500">
-                    {error}
-                  </td>
-                </tr>
-              ) : currentResponders.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-6 text-center text-gray-600">
-                    No responders found
-                  </td>
-                </tr>
-              ) : (
-                currentResponders.map((responder) => (
-                  <tr key={responder.id} className="border-t whitespace-nowrap">
-                    <td className="px-0 py-1">
-                      <div className="flex items-center justify-start">
-                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white overflow-hidden">
-                          <img
-                            src={ProfileImage}
-                            alt={`${responder.firstName} ${responder.lastName}`}
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-1">
-                      {responder.firstName} {responder.lastName}
-                    </td>
-                    <td className="px-4 py-1">{responder.email}</td>
-                    <td className="px-4 py-1">
-                      <span
-                        className={`text-[#000000] px-2 py-1 rounded-lg ${
-                          responder.tier === "Tier2"
-                            ? "bg-[#D00F24]/32"
-                            : responder.tier === "Tier1"
-                            ? "bg-[#0C0E5D]/30"
-                            : "bg-gray-500"
-                        }`}
-                      >
-                        {responder.tier}
-                      </span>
-                    </td>
-                    <td className="px-4 py-1">
-                      <div className="flex items-center gap-1">
-                        <img
-                          src={
-                            responder.status === "Active" ? GreenButton : RedDot
-                          }
-                          className="h-3"
-                          alt={responder.status}
-                        />
-                        {responder.status}
-                      </div>
-                    </td>
-                    <td className="px-4 py-1 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
-                        >
-                          <img
-                            src={ActionIcon}
-                            alt="View Details"
-                            className="h-4"
-                          />
-                          View Details
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setEditingResponder(responder)}
-                          className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs"
-                        >
-                          Edit <img src={Pen} className="h-3" alt="Edit" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setConfirming({ type: "deactivate", responder })
-                          }
-                          className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs"
-                        >
-                          Deactivate{" "}
-                          <img
-                            src={Scissors}
-                            className="h-3"
-                            alt="Deactivate"
-                          />
-                        </button>
-                        <img
-                          src={Trash}
-                          onClick={() =>
-                            setConfirming({ type: "delete", responder })
-                          }
-                          className="h-4 cursor-pointer"
-                          alt="delete"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination */}
-      {!loading && !error && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
-      {/* Modals */}
       {showCreateResponderModal && (
         <CreateResponderModal
           onClose={() => setShowCreateResponderModal(false)}
@@ -388,19 +336,20 @@ const RespondersPage: React.FC = () => {
         <EditResponderModal
           responder={editingResponder}
           onClose={() => setEditingResponder(null)}
-          onSave={handleEditResponder}
+          onSave={(updatedResponder) => {
+            handleEditResponder(updatedResponder);
+          }}
         />
       )}
-
       {confirming && (
         <ConfirmResponderModal
           type={confirming.type}
           responderName={`${confirming.responder.firstName} ${confirming.responder.lastName}`}
-          onConfirm={async () => {
+          onConfirm={() => {
             if (confirming.type === "deactivate") {
-              await handleDeactivateResponder(confirming.responder.id);
+              handleDeactivateResponder(confirming.responder.id);
             } else {
-              await handleDeleteResponder(confirming.responder.id);
+              handleDeleteResponder(confirming.responder.id);
             }
             setConfirming(null);
           }}
