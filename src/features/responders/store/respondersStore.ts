@@ -4,6 +4,8 @@ import * as responderService from "../services/respondersService";
 import type {
   ResponderProfile,
   RespondersResponse,
+  CreateResponderData,
+  UpdateResponderData,
 } from "../services/respondersService";
 import { AxiosError } from "axios";
 
@@ -18,15 +20,18 @@ interface ResponderState {
   };
   isLoading: boolean;
   error: string | null;
+  search: string;
 
-  fetchResponders: (page?: number, limit?: number) => Promise<void>;
+  fetchResponders: (page?: number, limit?: number, search?: string, role?: "RESPONDER_TIER_1" | "RESPONDER_TIER_2") => Promise<void>;
+  setSearch: (search: string) => void;
   createResponder: (
-    data: Omit<ResponderProfile, "id" | "status" | "createdAt" | "updatedAt">
+    data: CreateResponderData
   ) => Promise<void>;
   updateResponder: (
     id: string,
-    data: Partial<ResponderProfile>
+    data: UpdateResponderData
   ) => Promise<void>;
+  activateResponder: (id: string) => Promise<void>;
   deactivateResponder: (id: string) => Promise<void>;
   deleteResponder: (id: string) => Promise<void>;
 }
@@ -41,7 +46,7 @@ const getErrorMessage = (err: unknown): string => {
   return "An unexpected error occurred";
 };
 
-export const useResponderStore = create<ResponderState>((set, get) => ({
+export const useResponderStore = create<ResponderState>((set) => ({
   responders: [],
   pagination: {
     total: 0,
@@ -52,13 +57,16 @@ export const useResponderStore = create<ResponderState>((set, get) => ({
   },
   isLoading: false,
   error: null,
+  search: "",
 
-  fetchResponders: async (page = 1, limit = 10) => {
+  fetchResponders: async (page = 1, limit = 10, search?: string, role?: "RESPONDER_TIER_1" | "RESPONDER_TIER_2") => {
     set({ isLoading: true, error: null });
     try {
       const response: RespondersResponse = await responderService.getResponders(
         page,
-        limit
+        limit,
+        search,
+        role
       );
       set({
         responders: response.data,
@@ -79,34 +87,47 @@ export const useResponderStore = create<ResponderState>((set, get) => ({
     }
   },
 
+  setSearch: (search: string) => {
+    set({ search });
+  },
+
   createResponder: async (data) => {
-    set({ isLoading: true, error: null });
     try {
       const newResponder = await responderService.createResponder(data);
-      set({
-        responders: [newResponder, ...get().responders],
-        isLoading: false,
-      });
+      set((state) => ({
+        responders: [newResponder, ...state.responders],
+      }));
     } catch (err) {
       set({
         error: getErrorMessage(err),
-        isLoading: false,
       });
     }
   },
 
   updateResponder: async (id, data) => {
-    set({ isLoading: true, error: null });
     try {
       const updated = await responderService.updateResponder(id, data);
-      set({
-        responders: get().responders.map((r) => (r.id === id ? updated : r)),
-        isLoading: false,
-      });
+      set((state) => ({
+        responders: state.responders.map((r) => (r.id === id ? updated : r)),
+      }));
     } catch (err) {
       set({
         error: getErrorMessage(err),
-        isLoading: false,
+      });
+    }
+  },
+
+  activateResponder: async (id) => {
+    try {
+      await responderService.activateResponder(id);
+      set((state) => ({
+        responders: state.responders.map((r) =>
+          r.id === id ? { ...r, status: "active" } : r
+        ),
+      }));
+    } catch (err) {
+      set({
+        error: getErrorMessage(err),
       });
     }
   },
@@ -114,11 +135,11 @@ export const useResponderStore = create<ResponderState>((set, get) => ({
   deactivateResponder: async (id) => {
     try {
       await responderService.deactivateResponder(id);
-      set({
-        responders: get().responders.map((r) =>
-          r.id === id ? { ...r, status: "Inactive" } : r
+      set((state) => ({
+        responders: state.responders.map((r) =>
+          r.id === id ? { ...r, status: "inactive" } : r
         ),
-      });
+      }));
     } catch (err) {
       set({
         error: getErrorMessage(err),
@@ -129,9 +150,9 @@ export const useResponderStore = create<ResponderState>((set, get) => ({
   deleteResponder: async (id) => {
     try {
       await responderService.deleteResponder(id);
-      set({
-        responders: get().responders.filter((r) => r.id !== id),
-      });
+      set((state) => ({
+        responders: state.responders.filter((r) => r.id !== id),
+      }));
     } catch (err) {
       set({
         error: getErrorMessage(err),

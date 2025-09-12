@@ -6,13 +6,13 @@ import close from "@/shared/assets/icons/close.svg";
 interface CreateResponderSucessModalProps {
   onClose: () => void;
   id: string; 
-  tier: string;
+  role: string;
 }
 
 const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
   onClose,
   id,
-  tier,
+  role,
 }) => {
   return (
     <div
@@ -55,8 +55,10 @@ const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
           </div>
           <div>
             <p className="text-[#0C0E5D] font-bold">
-              Tier:{" "}
-              <span className="text-[#000000] font-extralight">{tier}</span>
+              Role:{" "}
+              <span className="text-[#000000] font-extralight">
+                {role === "RESPONDER_TIER_1" ? "Tier 1" : "Tier 2"}
+              </span>
             </p>
           </div>
         </div>

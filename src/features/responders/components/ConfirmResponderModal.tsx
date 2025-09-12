@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 
 interface Props {
-  type: "deactivate" | "delete";
+  type: "activate" | "deactivate" | "delete";
   responderName: string;
   onConfirm: () => void;
   onClose: () => void;

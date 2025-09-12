@@ -5,11 +5,15 @@ export interface ResponderProfile {
   firstName: string;
   lastName: string;
   email: string;
-  tier: "Tier1" | "Tier2";
-  status: "Active" | "Inactive";
-  avatar?: string | null;
+  role: "RESPONDER_TIER_1" | "RESPONDER_TIER_2";
+  status: "active" | "inactive";
+  avatar?: {
+    url: string;
+    publicId: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
+  lastLogin: string | null;
 }
 
 export interface RespondersResponse {
@@ -24,21 +28,49 @@ export interface RespondersResponse {
 // --- GET ---
 export const getResponders = async (
   page = 1,
-  limit = 10
+  limit = 10,
+  search?: string,
+  role?: "RESPONDER_TIER_1" | "RESPONDER_TIER_2"
 ): Promise<RespondersResponse> => {
-  const response = await api.get<RespondersResponse>(
-    `/responders?page=${page}&limit=${limit}`
-  );
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  if (search && search.trim()) {
+    params.append('search', search.trim());
+  }
+  
+  if (role) {
+    params.append('role', role);
+  }
+  
+  const url = `/responders?${params.toString()}`;
+  const response = await api.get<RespondersResponse>(url);
   return response.data;
 };
 
 // --- CREATE ---
+export interface CreateResponderData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "RESPONDER_TIER_1" | "RESPONDER_TIER_2";
+  avatar?: File;
+}
+
 export const createResponder = async (
-  data: Omit<ResponderProfile, "id" | "status" | "createdAt" | "updatedAt">
+  data: CreateResponderData
 ): Promise<ResponderProfile> => {
   const formData = new FormData();
   Object.entries(data).forEach(([key, value]) => {
-    if (value) formData.append(key, value as string | Blob);
+    if (value !== undefined && value !== null) {
+      if (key === 'avatar' && value instanceof File) {
+        formData.append(key, value);
+      } else if (key !== 'avatar') {
+        formData.append(key, value as string);
+      }
+    }
   });
 
   const response = await api.post<ResponderProfile>("/responders", formData, {
@@ -48,13 +80,27 @@ export const createResponder = async (
 };
 
 // --- UPDATE ---
+export interface UpdateResponderData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: "RESPONDER_TIER_1" | "RESPONDER_TIER_2";
+  avatarFile?: File | null;
+}
+
 export const updateResponder = async (
   id: string,
-  data: Partial<ResponderProfile>
+  data: UpdateResponderData
 ): Promise<ResponderProfile> => {
   const formData = new FormData();
   Object.entries(data).forEach(([key, value]) => {
-    if (value) formData.append(key, value as string | Blob);
+    if (value !== undefined && value !== null) {
+      if (key === 'avatarFile' && value instanceof File) {
+        formData.append('avatar', value);
+      } else if (key !== 'avatarFile') {
+        formData.append(key, value as string);
+      }
+    }
   });
 
   const response = await api.put<ResponderProfile>(
@@ -63,6 +109,11 @@ export const updateResponder = async (
     { headers: { "Content-Type": "multipart/form-data" } }
   );
   return response.data;
+};
+
+// --- ACTIVATE ---
+export const activateResponder = async (id: string): Promise<void> => {
+  await api.patch(`/responders/${id}/activate`);
 };
 
 // --- DEACTIVATE ---
