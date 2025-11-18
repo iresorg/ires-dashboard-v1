@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 import Logo from "@/features/auth/components/Logo";
@@ -51,6 +51,25 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
+    roles: [Role.SUPER_ADMIN, Role.ADMIN],
+  },
+  {
+    label: "Agents",
+    path: ROUTES.AGENTS,
+    icon: (
+      <svg
+        width="20"
+        height="16"
+        viewBox="0 0 26 19"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M14.3375 8.01248C15.0968 6.95156 15.5051 5.67963 15.5051 4.37498C15.5051 3.07034 15.0968 1.79841 14.3375 0.737485C15.0485 0.253149 15.8897 -0.00401646 16.75 -1.50395e-05C17.9103 -1.50395e-05 19.0231 0.460921 19.8436 1.28139C20.6641 2.10186 21.125 3.21466 21.125 4.37498C21.125 5.53531 20.6641 6.64811 19.8436 7.46858C19.0231 8.28905 17.9103 8.74998 16.75 8.74998C15.8897 8.75399 15.0485 8.49682 14.3375 8.01248ZM4.875 4.37498C4.875 3.50969 5.13159 2.66383 5.61232 1.94437C6.09305 1.2249 6.77633 0.664146 7.57576 0.333012C8.37519 0.00187884 9.25485 -0.0847608 10.1035 0.0840496C10.9522 0.25286 11.7317 0.669538 12.3436 1.28139C12.9554 1.89325 13.3721 2.6728 13.5409 3.52146C13.7097 4.37013 13.6231 5.2498 13.292 6.04922C12.9608 6.84865 12.4001 7.53193 11.6806 8.01266C10.9612 8.4934 10.1153 8.74998 9.25 8.74998C8.08968 8.74998 6.97688 8.28905 6.15641 7.46858C5.33594 6.64811 4.875 5.53531 4.875 4.37498Z"
+          fill="currentColor"
+        />
+      </svg>
+    ),
     roles: [Role.SUPER_ADMIN, Role.ADMIN, "SUPER_ADMIN", "ADMIN", "admin"],
   },
   {
@@ -74,7 +93,7 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.AGENT_ADMIN, "SUPER_ADMIN", "ADMIN", "AGENT_ADMIN", "admin"],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.AGENT_ADMIN],
   },
   {
     label: "Responders",
@@ -95,7 +114,7 @@ const navItems: NavItem[] = [
         />
       </svg>
     ),
-    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.RESPONDER_ADMIN, "SUPER_ADMIN", "ADMIN", "RESPONDER_ADMIN", "admin"],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.RESPONDER_ADMIN],
   },
   {
     label: "Tickets",
@@ -124,21 +143,35 @@ const navItems: NavItem[] = [
   },
 ];
 
+const externalCTA = {
+  label: "External CTA",
+  roles: [Role.SUPER_ADMIN, Role.ADMIN],
+  children: [
+    { label: "Users", path: ROUTES.CTA_USERS },
+    { label: "Subscribers", path: ROUTES.CTA_SUBSCRIBERS },
+  ],
+};
+
 const Aside: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  // Filter navigation items based on user role
+  const [ctaOpen, setCtaOpen] = useState(false);
+
+const canSeeCTA = useMemo(() => {
+  if (!user || !user.role) return false;
+  return externalCTA.roles.some((role) => role === user.role);
+}, [user]);
+;
+
   const filteredNavItems = navItems.filter((item) => {
-    if (!item.roles) return true; // Show all items without role restrictions
-    if (!user) return false; // Hide restricted items if no user
-    
-    const userRole = user.role;
-    return item.roles.some((role) => role === userRole);
+    if (!item.roles) return true;
+    if (!user) return false;
+    return item.roles.includes(user.role);
   });
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 bg-cover bg-center rounded-br-[40px] z-50 flex flex-col shadow-md bg-white">
+    <aside className="fixed top-0 left-0 h-screen w-64 bg-white rounded-br-[40px] shadow-md flex flex-col">
       <div className="h-20 flex items-center px-6">
         <Logo />
       </div>
@@ -152,13 +185,13 @@ const Aside: React.FC = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`flex items-center gap-4 px-6 py-3 text-sm font-medium transition-all rounded-r-full ${
+                  className={`flex items-center gap-4 px-6 py-3 transition-all rounded-r-full ${
                     isActive
                       ? "text-black font-semibold"
                       : "text-gray-500 hover:bg-[#F5F7FA] hover:text-[#0C0E5D]"
                   }`}
                 >
-                  <div className="w-6 h-6 text-inherit">{item.icon}</div>
+                  <div className="w-6 h-6">{item.icon}</div>
                   <span>{item.label}</span>
                 </Link>
               </li>
@@ -166,6 +199,71 @@ const Aside: React.FC = () => {
           })}
         </ul>
       </nav>
+
+      {canSeeCTA && (
+        <div className=" px-4 py-20">
+          <button
+            onClick={() => setCtaOpen(!ctaOpen)}
+            className="w-full flex items-center justify-between text-gray-700 hover:text-black font-medium px-2"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-5 h-5">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 25 25"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.75 3.75c2.7625 0 5 2.2375 5 5 0 1.875-1 3.4625-2.5 4.325v-1.525c.7625-.6875 1.25-1.6875 1.25-2.8 0-2.075-1.675-3.75-3.75-3.75s-3.75 1.675-3.75 3.75c0 1.1125.4875 2.1125 1.25 2.8v1.525c-1.5-.8625-2.5-2.45-2.5-4.325 0-2.7625 2.2375-5 5-5zm8.75 19.375c-.0375 1.025-.85 1.8375-1.875 1.875h-6.875c-.475 0-.925-.1875-1.25-.5375l-5-5.25 0.925-.9625c.2375-.2625.575-.4.95-.4h.25l2.875 2.15V8.75c0-.6875.5625-1.25 1.25-1.25s1.25.5625 1.25 1.25v5.5875l1.5125.1625 4.925 2.7375c.6625.3 1.0625.9625 1.0625 1.6875v4.2zm0-23.125H2.5C1.125 0 0 1.125 0 2.5v10c0 .6625.2634 1.298.7322 1.7678.4688.4688 1.1047.7322 1.7678.7322H7.5V12.5H2.5V2.5H22.5V12.5H20V15h2.5v-.05l.05.05c1.3625 0 2.45-1.1375 2.45-2.5V2.5c0-.662-.2634-1.298-.7322-1.7678C23.7989.2634 23.163 0 22.5 0z"
+                    fill="black"
+                  />
+                </svg>
+              </span>
+              {externalCTA.label}
+            </div>
+
+            <svg
+              className={`transition-transform duration-300 ${
+                ctaOpen ? "rotate-180" : "rotate-0"
+              }`}
+              width="16"
+              height="16"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M5 7l5 5 5-5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+              />
+            </svg>
+          </button>
+
+          {ctaOpen && (
+            <ul className="mt-3 ml-6 space-y-2">
+              {externalCTA.children.map((child) => {
+                const active = location.pathname === child.path;
+
+                return (
+                  <li key={child.path}>
+                    <Link
+                      to={child.path}
+                      className={`block px-2 py-2 text-sm rounded-md ${
+                        active
+                          ? "text-black font-semibold"
+                          : "text-gray-600 hover:text-[#0C0E5D]"
+                      }`}
+                    >
+                      {child.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      )}
     </aside>
   );
 };
