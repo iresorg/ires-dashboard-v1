@@ -108,14 +108,20 @@ const DashboardLayout: React.FC = () => {
     pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
 
   return (
-    <div className="h-screen flex bg-gray-100 overflow-hidden">
+    <div className="h-screen w-screen flex bg-gray-100 overflow-hidden">
+      {/* Sidebar - Fixed position */}
       <Aside />
 
-      <div className="ml-64 flex flex-col w-full h-full">
+      {/* Main Content Area - Flex column to properly contain navbar and content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden ml-64 xl:ml-64 lg:ml-56">
+        {/* Navbar - Fixed height, prevents overflow */}
         <Navbar pageName={pageName} />
 
-        <main className="flex-1 overflow-y-auto px-6 py-6 space-y-10 max-h-[calc(100vh-80px)]">
-          <Outlet />
+        {/* Content Area - Scrollable, properly constrained */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+          <div className="h-full px-6 py-6">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

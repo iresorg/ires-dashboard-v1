@@ -7,3 +7,4 @@ export { default as UserTableSkeletonRow } from './UserTableSkeletonRow';
 export { default as Button } from './Button';
 export { default as Pagination } from './Pagination';
 export { default as Reset } from './Reset';
+export { default as Dropdown } from './Dropdown';

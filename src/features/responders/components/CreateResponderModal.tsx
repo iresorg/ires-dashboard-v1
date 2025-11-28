@@ -11,8 +11,8 @@ interface CreateResponderModalProps {
     firstName: string;
     lastName: string;
     email: string;
-    tier: string;
-    avatar?: string;
+    role: string;
+    avatar?: File;
   }) => void;
 }
 
@@ -24,8 +24,8 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     firstName: "",
     lastName: "",
     email: "",
-    tier: "",
-    avatar: undefined as string | undefined,
+    role: "",
+    avatar: undefined as File | undefined,
   });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -53,7 +53,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
       reader.onloadend = () => {
         const base64String = reader.result as string;
         setAvatarPreview(base64String);
-        setFormData((prev) => ({ ...prev, avatar: base64String }));
+        setFormData((prev) => ({ ...prev, avatar: file }));
       };
       reader.readAsDataURL(file);
     }
@@ -74,7 +74,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       e.email = "Valid email required";
     }
-    if (!formData.tier.trim()) e.tier = "Tier required";
+    if (!formData.role.trim()) e.role = "Role required";
     if (avatarFile) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!validTypes.includes(avatarFile.type)) {
@@ -95,7 +95,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
         firstName: "",
         lastName: "",
         email: "",
-        tier: "",
+        role: "",
         avatar: undefined,
       });
       setAvatarFile(null);
@@ -247,28 +247,27 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
               </div>
             )}
 
-            {/* Tier Dropdown */}
+            {/* Role Dropdown */}
             <div className="relative w-[70%]">
               <select
-                name="tier"
+                name="role"
                 className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none ${
-                  errors.tier ? "border border-red-500" : ""
+                  errors.role ? "border border-red-500" : ""
                 }`}
-                value={formData.tier}
+                value={formData.role}
                 onChange={handleInputChange}
               >
                 <option value="" disabled className="hidden">
-                  -Tier-
+                  -Role-
                 </option>
-                <option className="bg-white">Tier 1</option>
-                <option className="bg-white">Tier 2</option>
-                <option className="bg-white">Tier 3</option>
+                <option value="RESPONDER_TIER_1" className="bg-white">Tier 1</option>
+                <option value="RESPONDER_TIER_2" className="bg-white">Tier 2</option>
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
               </div>
-              {errors.tier && (
-                <p className="text-red-500 text-sm mt-1">{errors.tier}</p>
+              {errors.role && (
+                <p className="text-red-500 text-sm mt-1">{errors.role}</p>
               )}
             </div>
 
