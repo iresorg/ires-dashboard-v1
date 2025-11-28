@@ -55,7 +55,7 @@ export const useResponderStore = create<ResponderState>((set) => ({
     totalPages: 0,
     nextPage: null,
   },
-  isLoading: false,
+  isLoading: true,
   error: null,
   search: "",
 

@@ -40,7 +40,7 @@ export const useAgentStore = create<AgentState>((set) => ({
     totalPages: 0,
     nextPage: null,
   },
-  isLoading: false,
+  isLoading: true,
   error: null,
   search: "",
 
