@@ -97,31 +97,31 @@ const navItems: NavItem[] = [
     ),
     roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.RESPONDER_ADMIN],
   },
-  {
-    label: "Tickets",
-    path: ROUTES.TICKETS,
-    icon: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 30 30"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M21.88 23.76V6.24a.94.94 0 0 0-1.56-.68l-1.59 1.06a1.25 1.25 0 0 1-1.58-.09l-1.93-1.54a.94.94 0 0 0-1.18 0l-1.93 1.54a1.25 1.25 0 0 1-1.58.09L9.68 5.56a.94.94 0 0 0-1.56.68v17.52c0 .34.18.66.47.84a.94.94 0 0 0 1.09-.06l1.59-1.06a1.25 1.25 0 0 1 1.58.09l1.93 1.54a.94.94 0 0 0 1.18 0l1.93-1.54a1.25 1.25 0 0 1 1.58-.09l1.59 1.06a.94.94 0 0 0 1.56-.68Z"
-          stroke="currentColor"
-          strokeWidth="1.25"
-        />
-        <path
-          d="M11.88 11.88h6.25M11.88 15h6.25M11.88 18.12h6.25"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
+  // {
+  //   label: "Tickets",
+  //   path: ROUTES.TICKETS,
+  //   icon: (
+  //     <svg
+  //       width="24"
+  //       height="24"
+  //       viewBox="0 0 30 30"
+  //       fill="none"
+  //       xmlns="http://www.w3.org/2000/svg"
+  //     >
+  //       <path
+  //         d="M21.88 23.76V6.24a.94.94 0 0 0-1.56-.68l-1.59 1.06a1.25 1.25 0 0 1-1.58-.09l-1.93-1.54a.94.94 0 0 0-1.18 0l-1.93 1.54a1.25 1.25 0 0 1-1.58.09L9.68 5.56a.94.94 0 0 0-1.56.68v17.52c0 .34.18.66.47.84a.94.94 0 0 0 1.09-.06l1.59-1.06a1.25 1.25 0 0 1 1.58.09l1.93 1.54a.94.94 0 0 0 1.18 0l1.93-1.54a1.25 1.25 0 0 1 1.58-.09l1.59 1.06a.94.94 0 0 0 1.56-.68Z"
+  //         stroke="currentColor"
+  //         strokeWidth="1.25"
+  //       />
+  //       <path
+  //         d="M11.88 11.88h6.25M11.88 15h6.25M11.88 18.12h6.25"
+  //         stroke="currentColor"
+  //         strokeWidth="1.25"
+  //         strokeLinecap="round"
+  //       />
+  //     </svg>
+  //   ),
+  // },
 ];
 
 const externalCTA = {
