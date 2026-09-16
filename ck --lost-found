@@ -1,0 +1,21 @@
+* [33m172576b[m[33m ([m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdev[m[33m)[m feat(ui) : created all modal pages
+* [33m1903f74[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/responderdashboard[m[33m, [m[1;31morigin/feature/responderdashboard[m[33m)[m feat(ui) : created modals
+* [33mf73853b[m feat(ui): fixed user dashboard, agent dashboard
+* [33m6cf9099[m feat(ui): updated userdashboar and agent dashboard
+*   [33m6a21d60[m Merge branch 'feat/agentdashboard' of https://github.com/iresorg/ires-dashboard-v1 into feature/responderdashboard
+[32m|[m[33m\[m  
+[32m|[m * [33ma9155b0[m[33m ([m[1;31morigin/feat/agentdashboard[m[33m)[m pagination updated
+[32m|[m *   [33med50eba[m Merge branch 'dev' into feat/agentdashboard
+[32m|[m [34m|[m[35m\[m  
+[32m|[m * [35m|[m [33mba95554[m search icon and pagination
+[32m|[m * [35m|[m [33m40ebcf3[m fix
+[32m|[m * [35m|[m [33m18778d8[m fix
+[32m|[m * [35m|[m [33md1f5334[m Add agents table to AgentsPage component
+[32m|[m * [35m|[m [33mf649e4f[m Add agent management UI and Uploaded SVG icons
+* [35m|[m [35m|[m   [33m71f62d4[m Merge branch 'feat/userdashboard' of https://github.com/iresorg/ires-dashboard-v1 into feature/responderdashboard
+[35m|[m[1;31m\[m [35m\[m [35m\[m  
+[35m|[m [1;31m|[m[35m_[m[35m|[m[35m/[m  
+[35m|[m[35m/[m[1;31m|[m [35m|[m   
+[35m|[m * [35m|[m [33m5c0cfe7[m[33m ([m[1;31morigin/feat/userdashboard[m[33m)[m user dashboard code
+* [1;31m|[m [35m|[m   [33ma3dca96[m[33m ([m[1;31morigin/feat/login[m[33m, [m[1;32mfeat/login[m[33m)[m Merge remote-tracking branch 'origin/dev' into feat/login
+[1;32m|[m[1;33m\[m [1;31m\[m [35m\[m  

@@ -10,19 +10,31 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.14.3",
+    "@cloudinary/url-gen": "^1.21.0",
+    "@headlessui/react": "^2.2.7",
+    "@heroicons/react": "^2.2.0",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.9.0",
-    "chart.js": "^4.4.9",
+    "chart.js": "^4.5.0",
+    "date-fns": "^4.1.0",
+    "ires-dashboard-v1": "file:",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.57.0",
+    "react-paginate": "^8.3.0",
     "react-router-dom": "^7.6.1",
-    "zustand": "^5.0.5"
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.7",
+    "@types/date-fns": "^2.6.3",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -35,6 +47,6 @@
     "tailwindcss": "^4.1.7",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite-plugin-svgr": "^4.3.0"
   }
 }
