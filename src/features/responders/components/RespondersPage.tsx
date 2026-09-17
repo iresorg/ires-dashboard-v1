@@ -4,13 +4,10 @@ import type { ResponderProfile, CreateResponderData, UpdateResponderData } from 
 import { useDebounce } from "@/shared/hooks";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
-import ActionIcon from "@/shared/assets/icons/actions.svg";
 import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.png";
 import Pagination from "@/shared/components/ui/Pagination";
-import Email from "@/shared/assets/icons/icon.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
-import Scissors from "@/shared/assets/icons/scissors.svg";
 import Responder from "@/shared/assets/icons/respondericon.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import CreateResponderModal from "@/features/responders/components/CreateResponderModal";
@@ -133,22 +130,21 @@ const RespondersPage: React.FC = () => {
   return (
     <div className="page-container">
       {/* Top Bar */}
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+      <div className="ui-toolbar">
         <button
           type="button"
           onClick={() => setShowCreateResponderModal(true)}
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)] cursor-pointer"
+          className="ui-btn-primary"
         >
-          <img src={AddIcon} alt="Add Responder" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create Responder</span>
+          <img src={AddIcon} alt="" className="h-4" />
+          Create responder
         </button>
 
-          <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-            <img src={Search} className="h-5 mr-2" alt="Search" />
-            <input
-              type="text"
-            className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
-              placeholder="Search Name/Email"
+        <div className="ui-search">
+          <img src={Search} className="h-4 mr-2 opacity-60" alt="" />
+          <input
+            type="text"
+            placeholder="Search name or email"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -156,30 +152,16 @@ const RespondersPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-y-auto mt-6 max-h-[500px] mb-5">
-        <table className="w-full table-auto text-sm">
-          <thead className="bg-gray-100 text-left sticky top-0">
+      <div className="ui-table-wrap">
+        <table className="ui-table">
+          <thead>
             <tr>
-              <th className="px-2 py-1">
-                <div className="flex items-center gap-0">
-                  <img src={Responder} className="h-4" alt="Person" />
-                </div>
-              </th>
-              <th className="px-4 py-1 min-w-[150px]">Full Name</th>
-              <th className="px-0 py-1 min-w-[200px]">
-                <div className="flex items-center gap-1">
-                  <img src={Email} className="h-4" alt="Email" />
-                  <span>Email</span>
-                </div>
-              </th>
-              <th className="px-0 py-1 min-w-[100px]">Role</th>
-              <th className="px-0 py-1 min-w-[100px]">Status</th>
-              <th className="px-4 py-1 min-w-[250px]">
-                <div className="flex items-center gap-1">
-                  <img src={ActionIcon} className="h-4" alt="Actions" />
-                  <span>Actions</span>
-                </div>
-              </th>
+              <th></th>
+              <th>Full name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -191,9 +173,9 @@ const RespondersPage: React.FC = () => {
               </>
             ) : responders && responders.length > 0 ? (
               responders.map((responder: ResponderProfile) => (
-                <tr key={responder.id} className="border-t">
-                <td className="px-0 py-1">
-                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white overflow-hidden">
+                <tr key={responder.id}>
+                <td>
+                    <div className="w-8 h-8 rounded-full bg-[var(--cool-blue-tint)] flex items-center justify-center text-sm font-medium text-[var(--ires-navy-blue)] overflow-hidden">
                       {responder.avatar?.url ? (
                       <img
                           src={responder.avatar.url}
@@ -205,23 +187,21 @@ const RespondersPage: React.FC = () => {
                       )}
                   </div>
                 </td>
-                  <td className="px-4 py-1">{`${responder.firstName || ''} ${responder.lastName || ''}`}</td>
-                  <td className="px-0 py-1">{responder.email || ''}</td>
-                  <td className="px-0 py-1">
+                  <td className="font-medium">{`${responder.firstName || ''} ${responder.lastName || ''}`}</td>
+                  <td className="text-[var(--muted)]">{responder.email || ''}</td>
+                  <td>
                   <span
-                    className={`text-[#000000] px-2 py-1 rounded-lg ${
+                    className={`ui-chip ${
                         responder.role === "RESPONDER_TIER_2"
-                        ? "bg-[#D00F24]/32"
-                          : responder.role === "RESPONDER_TIER_1"
-                        ? "bg-[#0C0E5D]/30"
-                        : "bg-gray-500"
+                        ? "bg-[color-mix(in_srgb,var(--ires-red)_12%,white)] text-[var(--ires-red)]"
+                          : "bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]"
                     }`}
                   >
                       {responder.role === "RESPONDER_TIER_1" ? "Tier 1" : "Tier 2"}
                   </span>
                 </td>
-                  <td className="px-0 py-1">
-                  <div className="flex items-center gap-1">
+                  <td>
+                  <div className="flex items-center gap-2">
                     <img
                         src={responder.status?.toLowerCase() === "active" ? GreenButton : RedDot}
                       className="h-3"
@@ -230,12 +210,12 @@ const RespondersPage: React.FC = () => {
                       {responder.status || 'Unknown'}
                   </div>
                 </td>
-                  <td className="px-4 py-1">
-                  <div className="flex items-center gap-3">
+                  <td>
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setEditingResponder(responder)}
-                        className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs cursor-pointer"
+                        className="ui-action-btn"
                     >
                       Edit <img src={Pen} className="h-3" alt="Edit" />
                     </button>
@@ -247,21 +227,21 @@ const RespondersPage: React.FC = () => {
                             responder 
                           })
                         }
-                        className={`flex items-center gap-1 rounded px-2 py-1 text-xs cursor-pointer ${
+                        className={`ui-action-btn ${
                           responder.status?.toLowerCase() === "active" 
-                            ? "bg-red-100" 
-                            : "bg-green-100"
+                            ? "ui-action-danger" 
+                            : "ui-action-success"
                         }`}
                       >
-                        {responder.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}{" "}
-                        <img src={Scissors} className="h-3" alt={responder.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"} />
+                        {responder.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setConfirming({ type: "delete", responder })}
-                        className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs cursor-pointer"
+                        className="ui-icon-btn !w-8 !h-8"
+                        aria-label="Delete responder"
                       >
-                        <img src={Trash} className="h-3" alt="Delete" />
+                        <img src={Trash} className="h-3.5" alt="Delete" />
                       </button>
                     </div>
                   </td>

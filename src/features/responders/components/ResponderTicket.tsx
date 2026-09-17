@@ -75,7 +75,7 @@ const ResponderTicketManagement: React.FC = () => {
         >
           <p>Tier 2</p>
         </button>
-        <div className="flex items-center bg-[#D9D9D9] rounded-md px-4 h-12 w-64">
+        <div className="flex items-center bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 h-12 w-64">
           <img src={Search} className="h-5 mr-2" alt="Search" />
           <input
             type="text"

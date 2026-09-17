@@ -13,20 +13,21 @@ const DashboardLayout: React.FC = () => {
   const pathToTitleMap: Record<string, string> = {
     "/dashboard": "Admin Dashboard",
     "/dashboard/users": "User Management",
+    "/dashboard/subscription-plans": "Subscription Plans",
     "/dashboard/agents": "Agent Management",
     "/dashboard/agents/:agentId/tokens": "Agent Token Management",
     "/dashboard/responders": "Responder Management",
     "/dashboard/responders/:responderId/tokens": "Responder Token Management",
-    "/dashboard/tickets": "Ticket Management", // will override dynamically below
+    "/dashboard/tickets": "Ticket Management",
+    "/dashboard/external-cta/users": "External Users",
+    "/dashboard/external-cta/subscribers": "Subscribers",
   };
 
-  // Function to resolve dynamic route titles
   const resolveTitle = (pathname: string): string => {
     for (const path in pathToTitleMap) {
-      const regexPath = path.replace(/:[^/]+/g, "[^/]+"); // replace :params with regex
+      const regexPath = path.replace(/:[^/]+/g, "[^/]+");
       const regex = new RegExp(`^${regexPath}$`);
       if (regex.test(pathname)) {
-        // Special handling for /dashboard/tickets
         if (path === "/dashboard/tickets" && user) {
           if (
             user.role === Role.AGENT ||
@@ -53,7 +54,6 @@ const DashboardLayout: React.FC = () => {
       }
     }
 
-    // Default fallback: use last segment formatted
     const lastSegment = pathname.split("/").pop();
     const formattedSegment =
       lastSegment
@@ -63,7 +63,6 @@ const DashboardLayout: React.FC = () => {
     return `${formattedSegment} Dashboard`;
   };
 
-  // Function to get role-based dashboard title for main dashboard route
   const getRoleBasedTitle = (): string => {
     if (!user) return "Dashboard";
 
@@ -108,18 +107,14 @@ const DashboardLayout: React.FC = () => {
     pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
 
   return (
-    <div className="h-screen w-screen flex bg-gray-100 overflow-hidden">
-      {/* Sidebar - Fixed position */}
+    <div className="h-screen w-screen flex bg-[var(--background)] overflow-hidden">
       <Aside />
 
-      {/* Main Content Area - Flex column to properly contain navbar and content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden ml-64 xl:ml-64 lg:ml-56">
-        {/* Navbar - Fixed height, prevents overflow */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden ml-64 lg:ml-60">
         <Navbar pageName={pageName} />
 
-        {/* Content Area - Scrollable, properly constrained */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-          <div className="h-full px-6 py-6">
+          <div className="h-full px-6 py-6 lg:px-8">
             <Outlet />
           </div>
         </main>

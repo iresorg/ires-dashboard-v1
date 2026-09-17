@@ -62,30 +62,29 @@ const UsersPage: React.FC = () => {
   }
 
   return (
-    <div className="h-full flex flex-col pt-5" ref={tableRef}>
-      <div className="flex justify-between">
+    <div className="h-full flex flex-col gap-4" ref={tableRef}>
+      <div className="ui-toolbar">
         <button
           onClick={() => setShowAdd(true)}
-          className="flex flex-col items-center bg-[var(--ires-dark-blue)] text-white px-4 py-3 rounded-lg -mt-5 cursor-pointer"
+          className="ui-btn-primary"
         >
-          <img src={AddIcon} className="h-5 mb-1" />
-          <span className="text-sm">Add New Admin</span>
+          <img src={AddIcon} className="h-4" />
+          Add admin
         </button>
 
-        <div className="flex gap-4">
-          <div className="flex items-center bg-gray-200 rounded h-10 pl-5">
-            <img src={SearchIcon} className="h-4 mr-2" />
+        <div className="flex gap-3">
+          <div className="ui-search">
+            <img src={SearchIcon} className="h-4 mr-2 opacity-60" />
             <input
-              className="bg-transparent outline-none text-sm"
-              placeholder="Search Name/Email"
+              placeholder="Search name or email"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex items-center bg-gray-200 rounded h-10 pl-5 pr-3">
-            <img src={FilterIcon} className="h-4 mr-2" />
-            <select className="bg-transparent outline-none text-sm opacity-50">
-              <option>Filter by Role</option>
+          <div className="ui-search min-w-[12rem]">
+            <img src={FilterIcon} className="h-4 mr-2 opacity-60" />
+            <select className="bg-transparent outline-none text-sm w-full">
+              <option>All roles</option>
               <option>Super Admin</option>
               <option>Agent Admin</option>
               <option>Responder Admin</option>

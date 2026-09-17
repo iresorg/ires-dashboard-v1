@@ -8,6 +8,7 @@ export const ROUTES = {
   RESPONDERS: "/dashboard/responders",
   AGENTS: "/dashboard/agents",
   USERS: "/dashboard/users",
+  SUBSCRIPTION_PLANS: "/dashboard/subscription-plans",
   // TICKETS: "/dashboard/tickets",
 
   //  External CTA Routes
@@ -22,6 +23,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.RESPONDERS,
   ROUTES.AGENTS,
   ROUTES.USERS,
+  ROUTES.SUBSCRIPTION_PLANS,
   // ROUTES.TICKETS,
 
   ROUTES.CTA_USERS,

@@ -1,32 +1,41 @@
+import React from "react";
+
 interface StatCardProps {
   label: string;
-  value: number;
+  value: number | string;
   iconSrc: string;
-  bgColor?: string;
-  textColor?: string;
-  border?: boolean;
+  featured?: boolean;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
   label,
   value,
   iconSrc,
-  bgColor = "bg-white",
-  textColor = "text-black",
-  border = false,
+  featured = false,
 }) => {
   return (
     <div
-      className={`flex items-center gap-4 px-6 py-4 rounded-xl shadow-sm ${bgColor} ${textColor} ${
-        border ? "border border-[#CFC3C3]" : ""
+      className={`ui-card flex items-center gap-4 px-5 py-4 ${
+        featured ? "bg-[var(--ires-navy-blue)] text-white border-transparent" : ""
       }`}
     >
-      <img src={iconSrc} alt={label} className="w-8 h-8" />
+      <div
+        className={`flex h-11 w-11 items-center justify-center rounded-lg ${
+          featured ? "bg-white/12" : "bg-[var(--cool-blue-tint)]"
+        }`}
+      >
+        <img src={iconSrc} alt="" className="w-6 h-6 object-contain" />
+      </div>
       <div>
-        <p className="text-sm">{label}</p>
-        <p className="text-xl font-bold">{value}</p>
+        <p className={`text-xs font-medium ${featured ? "text-white/70" : "text-[var(--muted)]"}`}>
+          {label}
+        </p>
+        <p className={`text-2xl font-semibold tracking-tight ${featured ? "text-white" : "text-[var(--ires-navy-blue)]"}`}>
+          {value}
+        </p>
       </div>
     </div>
   );
 };
+
 export default StatCard;

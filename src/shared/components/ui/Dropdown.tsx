@@ -48,7 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0C0E5D] focus:border-transparent transition-all cursor-pointer"
+        className="w-full flex items-center justify-between gap-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--foreground)] hover:border-[color-mix(in_srgb,var(--ires-navy-blue)_25%,var(--border))] focus:outline-none focus:ring-2 focus:ring-[var(--ires-navy-blue)]/20 focus:border-[var(--ires-navy-blue)] transition-all cursor-pointer"
       >
         <div className="flex items-center gap-2">
           {icon && <span className="flex-shrink-0">{icon}</span>}
@@ -74,7 +74,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-card)] max-h-60 overflow-auto">
           {options.map((option) => (
             <button
               key={option.value}
@@ -85,8 +85,8 @@ const Dropdown: React.FC<DropdownProps> = ({
               }}
               className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${
                 value === option.value
-                  ? "bg-[#0C0E5D] text-white"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? "bg-[var(--ires-navy-blue)] text-white"
+                  : "text-[var(--foreground)] hover:bg-[var(--cool-blue-tint)]"
               }`}
             >
               {option.label}

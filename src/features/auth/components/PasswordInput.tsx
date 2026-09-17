@@ -22,19 +22,22 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="relative w-64">
+    <div className="relative w-full">
+      <label htmlFor={id} className="block text-xs font-medium text-[var(--muted)] mb-1.5">
+        Password
+      </label>
       <input
         id={id}
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
         {...register}
-        className="block w-full rounded-md px-3 py-4 pr-10 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 text-[#727171] dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)] remove-eye"
+        className="ui-input pr-10 remove-eye"
       />
 
       <button
         type="button"
         onClick={() => setShowPassword((prev) => !prev)}
-        className="absolute inset-y-0 right-3 flex items-center justify-center w-8 h-full"
+        className="absolute inset-y-0 right-2 top-6 flex items-center justify-center w-8 h-10"
         tabIndex={-1}
       >
         <div className="relative w-5 h-5">

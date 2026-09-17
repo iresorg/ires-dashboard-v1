@@ -8,6 +8,7 @@ import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
+import SubscriptionPlansPage from "@/features/subscriptions/pages/SubscriptionPlansPage";
 // import RoleBasedTickets from "@/features/dashboard/components/RolesBasedTicket";
 
 // External CTA Pages
@@ -37,11 +38,13 @@ export const router = createBrowserRouter([
       { path: "responders", element: <RespondersPage /> },
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },
+      { path: "subscription-plans", element: <SubscriptionPlansPage /> },
       // { path: "tickets", element: <RoleBasedTickets /> },
 
 
       { path: "external-cta/users", element: <CTAUsersPage /> },
       { path: "external-cta/subscribers", element: <CTASubscribersPage /> },
+      { path: "*", element: <Navigate to={ROUTES.DASHBOARD} replace /> },
     ],
   },
   {
