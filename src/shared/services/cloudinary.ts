@@ -4,7 +4,7 @@ import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { format, quality } from '@cloudinary/url-gen/actions/delivery';
 
 // Cloudinary configuration
-const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dlfiul9k2';
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 // Initialize Cloudinary instance
 export const cld = new Cloudinary({ 
@@ -45,7 +45,7 @@ export interface CloudinaryService {
 }
 
 // Cloudinary upload preset - you'll need to create this in your Cloudinary dashboard
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'ires_uploads';
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 class CloudinaryServiceImpl implements CloudinaryService {
   
