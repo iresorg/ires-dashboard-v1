@@ -17,6 +17,7 @@ import type {
   TicketEligibilityResponse,
   TicketsListResponse,
 } from "../types";
+import { normalizeTicketAttachments } from "../types";
 
 const skipAuthRedirect = { skipAuthRedirect: true };
 
@@ -54,10 +55,17 @@ export const getTicketById = async (ticketId: string): Promise<TicketDetail> => 
     `/tickets/${ticketId}`,
     skipAuthRedirect
   );
-  if (response.data && typeof response.data === "object" && "data" in response.data) {
-    return (response.data as TicketDetailResponse).data;
-  }
-  return response.data as TicketDetail;
+  const raw =
+    response.data && typeof response.data === "object" && "data" in response.data
+      ? (response.data as TicketDetailResponse).data
+      : (response.data as TicketDetail);
+
+  return {
+    ...raw,
+    attachments: normalizeTicketAttachments(
+      raw.attachments as Parameters<typeof normalizeTicketAttachments>[0]
+    ),
+  };
 };
 
 export const getTicketEligibility = async (

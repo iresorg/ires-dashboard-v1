@@ -58,6 +58,36 @@ export interface TicketAttachment {
   publicId?: string;
 }
 
+/** API may return URL strings or attachment objects */
+export type TicketAttachmentInput = string | TicketAttachment;
+
+export const normalizeTicketAttachment = (
+  item: TicketAttachmentInput,
+  index = 0
+): TicketAttachment => {
+  if (typeof item === "string") {
+    const url = item;
+    const path = url.split("?")[0].split("#")[0];
+    const fileName = path.split("/").pop() || `Attachment ${index + 1}`;
+    return { url, fileName };
+  }
+  const url = item.url || "";
+  const path = url.split("?")[0].split("#")[0];
+  const fromUrl = path.split("/").pop();
+  return {
+    ...item,
+    url,
+    fileName: item.fileName || item.name || fromUrl || `Attachment ${index + 1}`,
+  };
+};
+
+export const normalizeTicketAttachments = (
+  attachments?: TicketAttachmentInput[] | null
+): TicketAttachment[] => {
+  if (!attachments?.length) return [];
+  return attachments.map((item, index) => normalizeTicketAttachment(item, index));
+};
+
 export interface TicketListItem {
   ticketId: string;
   title: string;
@@ -82,7 +112,7 @@ export interface TicketDetail extends TicketListItem {
   victimInformation?: VictimInformation | null;
   createdBy?: TicketStaffRef | null;
   assignedResponder?: TicketStaffRef | null;
-  attachments?: TicketAttachment[];
+  attachments?: TicketAttachment[] | TicketAttachmentInput[];
 }
 
 export interface TicketPagination {

@@ -1,12 +1,21 @@
 import React, { useEffect, useMemo } from "react";
 import { Download, ExternalLink, FileText, X } from "lucide-react";
-import type { TicketAttachment } from "../types";
+import {
+  normalizeTicketAttachment,
+  type TicketAttachment,
+  type TicketAttachmentInput,
+} from "../types";
 
 type PreviewKind = "image" | "pdf" | "video" | "audio" | "other";
 
 const IMAGE_EXT = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"];
 const VIDEO_EXT = ["mp4", "webm", "ogg", "mov"];
 const AUDIO_EXT = ["mp3", "wav", "ogg", "m4a"];
+
+const toAttachment = (
+  file: TicketAttachmentInput,
+  index = 0
+): TicketAttachment => normalizeTicketAttachment(file, index);
 
 const getExtension = (file: TicketAttachment): string => {
   const name = file.fileName || file.name || file.url || "";
@@ -15,20 +24,27 @@ const getExtension = (file: TicketAttachment): string => {
   return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : "";
 };
 
-const getPreviewKind = (file: TicketAttachment): PreviewKind => {
-  const ext = getExtension(file);
+const getPreviewKind = (file: TicketAttachmentInput): PreviewKind => {
+  const normalized = toAttachment(file);
+  const ext = getExtension(normalized);
   if (IMAGE_EXT.includes(ext)) return "image";
   if (ext === "pdf") return "pdf";
   if (VIDEO_EXT.includes(ext)) return "video";
   if (AUDIO_EXT.includes(ext)) return "audio";
+  // Cloudinary image delivery paths without a clear extension
+  if (/\/image\/upload\//i.test(normalized.url)) return "image";
+  if (/\/video\/upload\//i.test(normalized.url)) return "video";
+  if (/\/raw\/upload\/.*\.pdf/i.test(normalized.url)) return "pdf";
   return "other";
 };
 
-const getDisplayName = (file: TicketAttachment, index: number): string =>
-  file.fileName || file.name || `Attachment ${index + 1}`;
+const getDisplayName = (file: TicketAttachmentInput, index: number): string => {
+  const normalized = toAttachment(file, index);
+  return normalized.fileName || normalized.name || `Attachment ${index + 1}`;
+};
 
 interface AttachmentPreviewModalProps {
-  file: TicketAttachment;
+  file: TicketAttachmentInput;
   index: number;
   onClose: () => void;
 }
@@ -38,8 +54,9 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
   index,
   onClose,
 }) => {
-  const kind = useMemo(() => getPreviewKind(file), [file]);
-  const title = getDisplayName(file, index);
+  const attachment = useMemo(() => toAttachment(file, index), [file, index]);
+  const kind = useMemo(() => getPreviewKind(attachment), [attachment]);
+  const title = getDisplayName(attachment, index);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -72,7 +89,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <a
-              href={file.url}
+              href={attachment.url}
               target="_blank"
               rel="noreferrer"
               className="ui-action-btn h-9 px-3 inline-flex items-center gap-1.5 bg-white/10 text-white border-white/20 hover:bg-white/20"
@@ -81,7 +98,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
               Open
             </a>
             <a
-              href={file.url}
+              href={attachment.url}
               download={title}
               className="ui-action-btn h-9 px-3 inline-flex items-center gap-1.5 bg-white/10 text-white border-white/20 hover:bg-white/20"
             >
@@ -102,7 +119,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
         <div className="flex-1 min-h-0 overflow-auto bg-[#f4f5f9] p-4 flex items-center justify-center">
           {kind === "image" && (
             <img
-              src={file.url}
+              src={attachment.url}
               alt={title}
               className="max-h-[70vh] max-w-full object-contain rounded-lg shadow-sm"
             />
@@ -111,14 +128,14 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
           {kind === "pdf" && (
             <iframe
               title={title}
-              src={file.url}
+              src={attachment.url}
               className="w-full h-[70vh] rounded-lg border border-[var(--border)] bg-white"
             />
           )}
 
           {kind === "video" && (
             <video
-              src={file.url}
+              src={attachment.url}
               controls
               className="max-h-[70vh] max-w-full rounded-lg bg-black"
             >
@@ -129,7 +146,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
           {kind === "audio" && (
             <div className="w-full max-w-lg ui-card p-6 space-y-3">
               <p className="text-sm font-medium text-[var(--ires-navy-blue)]">{title}</p>
-              <audio src={file.url} controls className="w-full">
+              <audio src={attachment.url} controls className="w-full">
                 Your browser does not support audio playback.
               </audio>
             </div>
@@ -146,7 +163,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
               </div>
               <div className="flex justify-center gap-2">
                 <a
-                  href={file.url}
+                  href={attachment.url}
                   target="_blank"
                   rel="noreferrer"
                   className="ui-btn-primary inline-flex items-center gap-1.5"
@@ -155,7 +172,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
                   Open file
                 </a>
                 <a
-                  href={file.url}
+                  href={attachment.url}
                   download={title}
                   className="ui-action-btn h-10 px-4 inline-flex items-center gap-1.5"
                 >

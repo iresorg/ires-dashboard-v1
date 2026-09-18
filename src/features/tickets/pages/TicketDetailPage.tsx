@@ -23,8 +23,10 @@ import {
   getApiErrorMessage,
   type AssignTicketPayload,
   type TicketAttachment,
+  type TicketAttachmentInput,
   type TicketSeverity,
   type TicketTier,
+  normalizeTicketAttachment,
 } from "../types";
 
 const NotesModal: React.FC<{
@@ -199,7 +201,7 @@ const TicketDetailPage: React.FC = () => {
 
   const [responders, setResponders] = useState<ResponderProfile[]>([]);
   const [previewAttachment, setPreviewAttachment] = useState<{
-    file: TicketAttachment;
+    file: TicketAttachmentInput;
     index: number;
   } | null>(null);
   const [modal, setModal] = useState<
@@ -395,7 +397,11 @@ const TicketDetailPage: React.FC = () => {
             <div>
               <p className="text-xs text-[var(--muted)] mb-2">Attachments</p>
               <ul className="space-y-2">
-                {ticket.attachments?.map((file, index) => {
+                {(ticket.attachments ?? []).map((raw, index) => {
+                  const file = normalizeTicketAttachment(
+                    raw as TicketAttachmentInput,
+                    index
+                  );
                   const label = getDisplayName(file, index);
                   const kind = getPreviewKind(file);
                   return (
