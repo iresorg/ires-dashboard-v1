@@ -9,6 +9,7 @@ import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
 import SubscriptionPlansPage from "@/features/subscriptions/pages/SubscriptionPlansPage";
+import FinancialsPage from "@/features/financials/pages/FinancialsPage";
 import TicketsPage from "@/features/tickets/pages/TicketsPage";
 import TicketDetailPage from "@/features/tickets/pages/TicketDetailPage";
 import TicketCategoriesPage from "@/features/tickets/pages/TicketCategoriesPage";
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },
       { path: "subscription-plans", element: <SubscriptionPlansPage /> },
+      { path: "financials", element: <FinancialsPage /> },
       { path: "tickets", element: <TicketsPage /> },
       { path: "tickets/escalations", element: <EscalationHistoryPage /> },
       { path: "tickets/:ticketId", element: <TicketDetailPage /> },

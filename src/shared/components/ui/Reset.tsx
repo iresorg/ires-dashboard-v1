@@ -1,23 +1,17 @@
 import React from "react";
-import ResetImg from "@/shared/assets/images/reset.png"; 
+import ResetImg from "@/shared/assets/images/reset.png";
 
 interface ResetIconProps {
-  onClick?: () => void;
   className?: string;
 }
 
-const ResetIcon: React.FC<ResetIconProps> = ({ onClick, className }) => {
+const ResetIcon: React.FC<ResetIconProps> = ({ className }) => {
   return (
-    <button
-      onClick={onClick}
-      className={`w-6 h-6 hover:scale-110 transition-transform ${className}`}
-    >
-      <img
-        src={ResetImg}
-        alt="Reset"
-        className="w-full h-full object-contain"
-      />
-    </button>
+    <img
+      src={ResetImg}
+      alt=""
+      className={`w-5 h-5 object-contain ${className ?? ""}`}
+    />
   );
 };
 

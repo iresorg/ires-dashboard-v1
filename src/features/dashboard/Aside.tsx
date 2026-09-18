@@ -29,6 +29,25 @@ const navItems: NavItem[] = [
     ),
   },
   {
+    label: "Tickets",
+    path: ROUTES.TICKETS,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v1.2a2.2 2.2 0 0 0 0 4.2V14.5A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-1.6a2.2 2.2 0 0 0 0-4.2V7.5Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M9 9h6M9 12h4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
     label: "Users",
     path: ROUTES.USERS,
     icon: (
@@ -94,23 +113,20 @@ const navItems: NavItem[] = [
     roles: [Role.SUPER_ADMIN, Role.ADMIN],
   },
   {
-    label: "Tickets",
-    path: ROUTES.TICKETS,
+    label: "Financials",
+    path: ROUTES.FINANCIALS,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
         <path
-          d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v1.2a2.2 2.2 0 0 0 0 4.2V14.5A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-1.6a2.2 2.2 0 0 0 0-4.2V7.5Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M9 9h6M9 12h4"
+          d="M4 19h16M6 16V9M10 16V5M14 16v-4M18 16v-7"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     ),
+    roles: [Role.SUPER_ADMIN, Role.ADMIN],
   },
 ];
 

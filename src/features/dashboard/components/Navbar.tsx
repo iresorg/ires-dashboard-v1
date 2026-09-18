@@ -22,7 +22,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageName }) => {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button type="button" className="ui-icon-btn" aria-label="Refresh">
+          <button
+            type="button"
+            className="ui-icon-btn"
+            aria-label="Refresh"
+            onClick={() => window.location.reload()}
+          >
             <ResetIcon />
           </button>
           <NotificationButton />

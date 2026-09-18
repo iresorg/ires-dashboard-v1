@@ -14,6 +14,7 @@ const DashboardLayout: React.FC = () => {
     "/dashboard": "Admin Dashboard",
     "/dashboard/users": "User Management",
     "/dashboard/subscription-plans": "Subscription Plans",
+    "/dashboard/financials": "Financials",
     "/dashboard/agents": "Agent Management",
     "/dashboard/agents/:agentId/tokens": "Agent Token Management",
     "/dashboard/responders": "Responder Management",
