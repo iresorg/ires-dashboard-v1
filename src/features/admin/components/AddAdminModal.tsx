@@ -110,11 +110,11 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
+        className="relative z-10 bg-[var(--surface)] rounded-xl border border-[var(--border)] shadow-[var(--shadow-card)] px-6 py-10 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Add Admin</h2>
+          <h2 className="text-xl font-semibold text-center text-[var(--ires-navy-blue)]">Add Admin</h2>
           <img src={PencilIcon} alt="Add Admin" className="w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
@@ -130,9 +130,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             <div className="w-[70%]">
               <input
                 type="text"
-                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                  errors.firstName ? "border border-red-500" : ""
-                }`}
+                className={`ui-input ${errors.firstName ? "border-[var(--ires-red)]" : ""}`}
                 placeholder="First name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -144,9 +142,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             <div className="w-[70%]">
               <input
                 type="text"
-                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                  errors.lastName ? "border border-red-500" : ""
-                }`}
+                className={`ui-input ${errors.lastName ? "border-[var(--ires-red)]" : ""}`}
                 placeholder="Last name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -158,9 +154,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             <div className="w-[70%] mb-2">
               <input
                 type="email"
-                className={`w-[100%] rounded-xl bg-[#D9D9D9]/70  px-4 py-2 focus:outline-none ${
-                  errors.email ? "border border-red-500" : ""
-                }`}
+                className={`ui-input ${errors.email ? "border-[var(--ires-red)]" : ""}`}
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -187,7 +181,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             </div>
             <div className="relative w-[70%]">
               <select
-                className={`w-full rounded-xl bg-[#D9D9D9]/70  px-4 py-2 pr-8 focus:outline-none appearance-none ${
+                className={`ui-input ${
                   errors.role ? "border border-red-500" : ""
                 }`}
                 value={role}
@@ -213,7 +207,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="ui-btn-primary"
               >
                 {isSubmitting ? 'Adding...' : 'Add Admin'}
               </button>

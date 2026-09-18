@@ -31,58 +31,62 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-64">
-        <h2 className="text-2xl font-bold text-iresNavyBlue dark:text-iresWhite mb-4">
-          WELCOME TO iRES
-        </h2>
-        <p className="text-xs text-gray-500 mb-4">
-          Please enter your credentials to continue.
-        </p>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6 flex flex-col"
-        >
-          <div>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              {...register("email", { required: "Email is required" })}
-              className="block w-full rounded-md px-3 py-4 bg-[var(--input-bg-light)] dark:bg-customPink placeholder-gray-400 dark:text-[var(--ires-white)] focus:outline-none focus:ring-2 focus:ring-[var(--ires-red)] focus:border-[var(--ires-red)]"
-              placeholder="Email"
-            />
-            {errors.email && (
-              <span className="text-xs text-red-600 mt-1 block">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-
-          <PasswordInput
-            id="password"
-            placeholder="Password"
-            error={errors.password?.message}
-            register={register("password", {
-              required: "Password is required",
-            })}
+    <div className="w-full max-w-sm">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--ires-red)] mb-2">
+        Administrator access
+      </p>
+      <h2 className="text-3xl font-semibold text-[var(--ires-navy-blue)] mb-2">
+        Welcome back
+      </h2>
+      <p className="text-sm text-[var(--muted)] mb-6">
+        Sign in with your iRES credentials to continue.
+      </p>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4 flex flex-col"
+      >
+        <div>
+          <label htmlFor="email" className="block text-xs font-medium text-[var(--muted)] mb-1.5">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            {...register("email", { required: "Email is required" })}
+            className="ui-input"
+            placeholder="nina.v@example.com"
           />
+          {errors.email && (
+            <span className="text-xs text-[var(--ires-red)] mt-1 block">
+              {errors.email.message}
+            </span>
+          )}
+        </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-4 bg-[var(--ires-red)] text-white font-semibold text-base mt-2 hover:bg-red-700 transition-colors duration-200 rounded-tr-2xl rounded-bl-2xl"
-          >
-            {isSubmitting ? "Signing in..." : "LOGIN"}
-          </button>
+        <PasswordInput
+          id="password"
+          placeholder="Password"
+          error={errors.password?.message}
+          register={register("password", {
+            required: "Password is required",
+          })}
+        />
 
-          <p className="text-sm text-center">
-            <a href="#" className="text-gray-400 hover:underline">
-              Forgot password?
-            </a>
-          </p>
-        </form>
-      </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="ui-btn-danger w-full h-11 mt-2"
+        >
+          {isSubmitting ? "Signing in..." : "Sign in"}
+        </button>
+
+        <p className="text-sm text-center">
+          <a href="#" className="text-[var(--muted)] hover:text-[var(--ires-navy-blue)]">
+            Forgot password?
+          </a>
+        </p>
+      </form>
     </div>
   );
 };

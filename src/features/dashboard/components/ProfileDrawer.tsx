@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
-import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
@@ -11,7 +10,7 @@ interface ProfileDrawerProps {
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
   const { profile, logout } = useAuth();
-  
+
   const userInitials = getUserInitials(profile?.firstName, profile?.lastName);
   const initialsColor = getUserInitialsColor(profile?.firstName, profile?.lastName);
 
@@ -33,117 +32,66 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
-      {/* Blurred Background Overlay */}
       <div
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--ires-dark-blue)]/40 backdrop-blur-[2px]"
         onClick={onClose}
       />
 
-      {/* Your original drawer stays exactly the same here */}
       <div
-        className="absolute top-[83px] bottom-0 left-[40%] z-[60] flex items-start justify-end"
+        className="absolute top-[80px] right-6 z-[60]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#F9FAFB] rounded-xl shadow-xl w-[400px]">
-          {/* Header */}
-          <div className="w-full flex justify-between items-center py-2 border-b-3 !border-b-[#D9D9D9] mb-6">
-            <h2 className="bg-[#12096f] text-white px-12 py-1 rounded-xl ml-3">
-              Profile
-            </h2>
-            <button onClick={onClose}>
-              <img
-                src={CloseIcon}
-                alt="close"
-                className="w-4 h-4 object-contain mr-3"
-              />
+        <div className="ui-card w-[360px] overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--ires-navy-blue)]">
+            <h2 className="text-sm font-semibold text-white">Profile</h2>
+            <button onClick={onClose} className="text-white/80 hover:text-white">
+              <img src={CloseIcon} alt="close" className="w-3.5 h-3.5 invert" />
             </button>
           </div>
 
-          {/* Profile Picture */}
-          <div className="flex flex-col items-center mb-6 relative">
+          <div className="flex flex-col items-center pt-6 pb-4">
             {profile?.avatar ? (
               <img
-                src={typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url}
+                src={typeof profile.avatar === "string" ? profile.avatar : profile.avatar?.url}
                 alt="User"
-                className="w-20 h-20 rounded-full object-contain"
+                className="w-16 h-16 rounded-full object-cover"
               />
             ) : (
-              <div className={`w-20 h-20 rounded-full ${initialsColor} flex items-center justify-center text-white font-bold text-2xl`}>
+              <div className={`w-16 h-16 rounded-full ${initialsColor} flex items-center justify-center text-white font-bold text-xl`}>
                 {userInitials}
               </div>
             )}
-            <div className="absolute bottom-2 right-[135px]">
-              <img src={PencilIcon} alt="edit" className="w-4 h-4" />
-            </div>
+            <p className="mt-3 text-sm font-semibold text-[var(--ires-navy-blue)]">
+              {profile ? `${profile.firstName} ${profile.lastName}` : "Loading..."}
+            </p>
+            <p className="text-xs text-[var(--muted)]">{profile?.role}</p>
           </div>
 
-          {/* Content */}
-          <div className="space-y-4 w-auto border border-gray-100 px-5 pt-5 pb-12 rounded-xl mb-10 mx-10">
-            <div className="flex flex-row items-center space-x-1">
-              <label className="w-30 text-left text-md text-[#12096f]">
-                First name
-              </label>
-              <input
-                type="text"
-                value={profile?.firstName || "Loading..."}
-                className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
-                readOnly
-              />
-            </div>
+          <div className="px-5 pb-5 space-y-3">
+            {[
+              ["First name", profile?.firstName],
+              ["Last name", profile?.lastName],
+              ["Email", profile?.email],
+              ["Role", profile?.role],
+            ].map(([label, value]) => (
+              <div key={String(label)}>
+                <label className="block text-[11px] uppercase tracking-wide text-[var(--muted)] mb-1">
+                  {label}
+                </label>
+                <input
+                  type="text"
+                  value={value || "Loading..."}
+                  className="ui-input"
+                  readOnly
+                />
+              </div>
+            ))}
 
-            <div className="flex flex-row items-center space-x-0">
-              <label className="w-30 text-left text-md text-[#12096f]">
-                Last name
-              </label>
-              <input
-                type="text"
-                value={profile?.lastName || "Loading..."}
-                className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
-                readOnly
-              />
-            </div>
-
-            <div className="flex flex-row items-center space-x-1">
-              <label className="w-30 text-left text-md text-[#12096f]">
-                Email
-              </label>
-              <input
-                type="email"
-                value={profile?.email || "Loading..."}
-                className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
-                readOnly
-              />
-            </div>
-
-            <div className="flex flex-row items-center justify-start space-x-1 border-b pb-2 mb-2">
-              <label className="w-30 text-left text-md text-[#12096f]">
-                Role
-              </label>
-              <input
-                type="text"
-                value={profile?.role || "Loading..."}
-                className="w-full px-2 py-1 bg-gray-300 text-gray-900 rounded-lg"
-                readOnly
-              />
-            </div>
-
-            <div className="flex flex-row items-center justify-start space-x-1">
-              <label className="w-30 text-left text-md text-[#12096f]">
-                Security
-              </label>
-              <input
-                type="text"
-                value="Change Password"
-                className="w-full mt-1 px-2 py-1 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
-                readOnly
-              />
-            </div>
-
-            <button 
+            <button
               onClick={handleLogout}
-              className="bg-[#12096f] text-white px-10 py-1 rounded-tl-[35px] rounded-br-[35px] float-right hover:bg-[#0d0755] transition-colors"
+              className="ui-btn-danger w-full mt-2"
             >
-              Log Out
+              Log out
             </button>
           </div>
         </div>

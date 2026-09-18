@@ -42,12 +42,12 @@ function App() {
   // Show loading screen while initializing or if we're still loading
   if (showLoading || isLoading) {
     return (
-      <div className="h-screen w-screen bg-gradient-to-br from-[#12096f] via-[#1e1b4b] to-[#312e81] flex items-center justify-center">
+      <div className="h-screen w-screen bg-[var(--ires-navy-blue)] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-6 animate-loading-fade">
           {/* Animated Logo */}
           <div className="relative">
             <div className="animate-logo-glow">
-              <Logo />
+              <Logo variant="light" />
             </div>
             {/* Glowing effect */}
             <div className="absolute inset-0 bg-white/20 rounded-full blur-xl animate-ping"></div>

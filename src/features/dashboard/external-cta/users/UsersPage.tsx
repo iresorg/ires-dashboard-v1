@@ -86,28 +86,26 @@ export default function CTAUsersPage() {
   ];
 
   return (
-    <div className="w-full space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-gray-200">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          External Users
-        </h2>
-        <p className="text-sm text-gray-600">
-          View and manage all external user accounts
-        </p>
+    <div className="w-full space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+        <div>
+          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">
+            External users
+          </h2>
+          <p className="text-sm text-[var(--muted)]">
+            View and manage all external user accounts
+          </p>
+        </div>
       </div>
 
-      {/* Search and Filter Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Search Input */}
-        <div className="flex items-center bg-white border border-gray-300 rounded-lg px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
-          <img src={Search} className="w-5 h-5 mr-3 flex-shrink-0 text-gray-400" alt="Search" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="ui-search w-full min-w-0">
+          <img src={Search} className="w-4 h-4 mr-2 opacity-60" alt="" />
           <input
             type="text"
-            placeholder="Search Name / Email"
+            placeholder="Search name or email"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full outline-none text-sm text-gray-700 bg-transparent placeholder:text-gray-400"
           />
         </div>
 
@@ -154,32 +152,20 @@ export default function CTAUsersPage() {
       )}
 
       {/* Table Container - Horizontal Scroll Only */}
-      <div className="w-full max-w-full overflow-x-auto bg-white shadow-sm -mx-0">
-        <table className="w-full text-sm border-collapse" style={{ minWidth: '800px' }}>
-          <thead className="bg-gray-50">
+      <div className="ui-table-wrap">
+        <table className="ui-table" style={{ minWidth: '800px' }}>
+          <thead>
             <tr>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                User Name
-              </th>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                Email
-              </th>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                Role
-              </th>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                Email Verified
-              </th>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                Phone Number
-              </th>
-              <th className="text-left p-4 whitespace-nowrap font-semibold text-gray-700 border-b border-gray-200">
-                Joined Date
-              </th>
+              <th>User name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Email verified</th>
+              <th>Phone number</th>
+              <th>Joined date</th>
             </tr>
           </thead>
 
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody>
             {isLoading ? (
               <ExternalUserTableSkeleton />
             ) : users.length === 0 ? (

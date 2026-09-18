@@ -20,7 +20,9 @@ interface AgentState {
   fetchAgents: (page?: number, limit?: number, search?: string) => Promise<void>;
   setSearch: (search: string) => void;
   createAgent: (
-    data: Pick<AgentProfile, "firstName" | "lastName" | "email">
+    data: Pick<AgentProfile, "firstName" | "lastName" | "email"> & {
+      avatarFile?: File | null;
+    }
   ) => Promise<void>;
   updateAgent: (id: string, data: { firstName?: string; lastName?: string; email?: string; avatarFile?: File | null }) => Promise<void>;
   deactivateAgent: (id: string) => Promise<void>;
@@ -99,13 +101,16 @@ export const useAgentStore = create<AgentState>((set) => ({
 
   createAgent: async (data) => {
     try {
-      const newAgent = await agentService.createAgent(data);
-      set((state) => ({ agents: [newAgent, ...state.agents] }));
+      await agentService.createAgent(data);
+      // Create returns message only — refresh list from server
+      const state = useAgentStore.getState();
+      await state.fetchAgents(state.pagination.page, state.pagination.limit, state.search);
     } catch (error: unknown) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to create agent",
       });
+      throw error;
     }
   },
 
@@ -128,7 +133,7 @@ export const useAgentStore = create<AgentState>((set) => ({
       await agentService.deactivateAgent(id);
       set((state) => ({
         agents: state.agents.map((a) =>
-          a.id === id ? { ...a, status: "deactivated" } : a
+          a.id === id ? { ...a, status: "inactive" } : a
         ),
       }));
     } catch (error: unknown) {

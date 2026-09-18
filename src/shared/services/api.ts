@@ -1,6 +1,12 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuthRedirect?: boolean;
+  }
+}
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -22,12 +28,25 @@ api.interceptors.request.use(
   }
 );
 
+const isSessionEndpoint = (url = "") =>
+  url.includes("/users/profile") || url.includes("/auth/");
+
 // Response interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
+    const status = error.response?.status;
+    const url = String(error.config?.url || "");
+    const skipAuthRedirect = Boolean(error.config?.skipAuthRedirect);
+
+    // 403 is "not allowed", not "session expired". Never log the user out for it.
+    // 401 on a feature endpoint (like subscription plans) should stay on the page.
+    if (
+      status === 401 &&
+      !skipAuthRedirect &&
+      isSessionEndpoint(url) &&
+      window.location.pathname !== "/login"
+    ) {
       Cookies.remove("token");
       window.location.href = "/login";
     }

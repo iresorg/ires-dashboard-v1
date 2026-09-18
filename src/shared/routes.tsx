@@ -8,7 +8,12 @@ import IncidentsPage from "@/features/incidents/components/IncidentsPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
-// import RoleBasedTickets from "@/features/dashboard/components/RolesBasedTicket";
+import SubscriptionPlansPage from "@/features/subscriptions/pages/SubscriptionPlansPage";
+import FinancialsPage from "@/features/financials/pages/FinancialsPage";
+import TicketsPage from "@/features/tickets/pages/TicketsPage";
+import TicketDetailPage from "@/features/tickets/pages/TicketDetailPage";
+import TicketCategoriesPage from "@/features/tickets/pages/TicketCategoriesPage";
+import EscalationHistoryPage from "@/features/tickets/pages/EscalationHistoryPage";
 
 // External CTA Pages
 import CTAUsersPage from "@/features/dashboard/external-cta/users/UsersPage";
@@ -37,11 +42,16 @@ export const router = createBrowserRouter([
       { path: "responders", element: <RespondersPage /> },
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },
-      // { path: "tickets", element: <RoleBasedTickets /> },
-
+      { path: "subscription-plans", element: <SubscriptionPlansPage /> },
+      { path: "financials", element: <FinancialsPage /> },
+      { path: "tickets", element: <TicketsPage /> },
+      { path: "tickets/escalations", element: <EscalationHistoryPage /> },
+      { path: "tickets/:ticketId", element: <TicketDetailPage /> },
+      { path: "ticket-categories", element: <TicketCategoriesPage /> },
 
       { path: "external-cta/users", element: <CTAUsersPage /> },
       { path: "external-cta/subscribers", element: <CTASubscribersPage /> },
+      { path: "*", element: <Navigate to={ROUTES.DASHBOARD} replace /> },
     ],
   },
   {

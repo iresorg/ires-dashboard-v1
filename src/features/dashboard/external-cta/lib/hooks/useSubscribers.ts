@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getSubscribers } from "../services/subscriberService";
-import type { Subscriber, GetSubscribersParams } from "../types/subscriber";
+import type {
+  Subscriber,
+  GetSubscribersParams,
+  SubscriberPaymentType,
+  SubscriberStatus,
+} from "../types/subscriber";
 
 interface UseSubscribersReturn {
   subscribers: Subscriber[];
@@ -14,11 +19,13 @@ interface UseSubscribersReturn {
     nextPage: number | null;
   };
   search: string;
-  status: "active" | "expired" | "cancelled" | "past_due" | "";
+  status: SubscriberStatus | "";
   planId: string;
+  paymentType: SubscriberPaymentType | "";
   setSearch: (search: string) => void;
-  setStatus: (status: "active" | "expired" | "cancelled" | "past_due" | "") => void;
+  setStatus: (status: SubscriberStatus | "") => void;
   setPlanId: (planId: string) => void;
+  setPaymentType: (paymentType: SubscriberPaymentType | "") => void;
   fetchSubscribers: (page?: number, limit?: number) => Promise<void>;
   refreshSubscribers: () => Promise<void>;
 }
@@ -35,8 +42,11 @@ export const useSubscribers = (): UseSubscribersReturn => {
     nextPage: null as number | null,
   });
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<"active" | "expired" | "cancelled" | "past_due" | "">("");
+  const [status, setStatus] = useState<SubscriberStatus | "">("");
   const [planId, setPlanId] = useState("");
+  const [paymentType, setPaymentType] = useState<SubscriberPaymentType | "">(
+    "subscription"
+  );
 
   const hasInitialized = useRef(false);
 
@@ -60,6 +70,9 @@ export const useSubscribers = (): UseSubscribersReturn => {
         if (planId) {
           params.planId = planId;
         }
+        if (paymentType) {
+          params.paymentType = paymentType;
+        }
 
         const response = await getSubscribers(params);
 
@@ -80,21 +93,20 @@ export const useSubscribers = (): UseSubscribersReturn => {
         setIsLoading(false);
       }
     },
-    [search, status, planId]
+    [search, status, planId, paymentType]
   );
 
   const refreshSubscribers = useCallback(() => {
     return fetchSubscribers();
   }, [fetchSubscribers]);
 
-  // Initial fetch
   useEffect(() => {
     if (!hasInitialized.current) {
       hasInitialized.current = true;
       fetchSubscribers(1, 10);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  }, []);
 
   return {
     subscribers,
@@ -104,11 +116,12 @@ export const useSubscribers = (): UseSubscribersReturn => {
     search,
     status,
     planId,
+    paymentType,
     setSearch,
     setStatus,
     setPlanId,
+    setPaymentType,
     fetchSubscribers,
     refreshSubscribers,
   };
 };
-

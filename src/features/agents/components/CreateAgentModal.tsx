@@ -9,7 +9,7 @@ interface CreateAgentModalProps {
     firstName: string;
     lastName: string;
     email: string;
-    avatar?: string;
+    avatarFile?: File | null;
   }) => void;
 }
 
@@ -99,7 +99,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
         firstName,
         lastName,
         email,
-        avatar: avatarPreview || undefined,
+        avatarFile: avatarFile ?? null,
       });
       setFirstName("");
       setLastName("");
@@ -143,7 +143,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
             <div className="w-[70%]">
               <input
                 type="text"
-                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                className={`ui-input ${
                   errors.firstName ? "border border-red-500" : ""
                 }`}
                 placeholder="First name"
@@ -158,7 +158,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
             <div className="w-[70%]">
               <input
                 type="text"
-                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                className={`ui-input ${
                   errors.lastName ? "border border-red-500" : ""
                 }`}
                 placeholder="Last name"
@@ -173,7 +173,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
             <div className="w-[70%] mb-2">
               <input
                 type="email"
-                className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                className={`ui-input ${
                   errors.email ? "border border-red-500" : ""
                 }`}
                 placeholder="Email"
@@ -193,7 +193,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
               >
                 Upload agent avatar
               </label>
-              <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+              <div className="relative bg-[#f7f8fc] border border-[var(--border)] p-2 rounded-lg">
                 <div className="relative flex items-center">
                   <input
                     type="file"
