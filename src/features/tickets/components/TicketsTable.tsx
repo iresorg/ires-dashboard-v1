@@ -53,7 +53,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ tickets }) => {
   console.log("TicketsTable rendering with tickets:", tickets);
 
   return (
-    <div className="flex-1 overflow-auto mt-4">
+    <div className="mt-4 overflow-x-auto">
       <table className="min-w-full table-fixed border-collapse text-sm">
         <thead className="bg-gray-100">
           <tr>

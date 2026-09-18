@@ -84,7 +84,7 @@ const AgentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col gap-6 w-full">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
@@ -104,12 +104,12 @@ const AgentDashboard: React.FC = () => {
         ))}
       </div>
 
-      <section className="ui-card flex-1 flex flex-col overflow-hidden">
+      <section className="ui-card">
         <div className="px-5 py-4 border-b border-[var(--border)]">
           <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">Recent activities</h3>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-x-auto">
           <table className="ui-table min-w-[600px]">
             <thead>
               <tr>

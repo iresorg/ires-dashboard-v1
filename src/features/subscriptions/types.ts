@@ -1,4 +1,5 @@
 export type AccountType = "individual" | "organization";
+export type PaymentType = "subscription" | "one_time";
 export type PlanInterval = "monthly" | "yearly" | "annually" | "weekly";
 
 export interface SubscriptionPlan {
@@ -6,6 +7,7 @@ export interface SubscriptionPlan {
   name: string;
   tier: number;
   accountType: AccountType;
+  paymentType: PaymentType;
   amount: number;
   currency: string;
   interval: string;
@@ -33,10 +35,16 @@ export interface DeletePlanResponse {
   active?: boolean;
 }
 
+export interface SubscriptionPlanListParams {
+  accountType?: AccountType;
+  paymentType?: PaymentType;
+}
+
 export interface CreateSubscriptionPlanPayload {
   name: string;
   tier: number;
   accountType: AccountType;
+  paymentType: PaymentType;
   amount: number;
   currency?: string;
   interval?: string;
@@ -66,6 +74,15 @@ export const formatInterval = (interval: string): string => {
   if (!interval) return "Monthly";
   return interval.charAt(0).toUpperCase() + interval.slice(1);
 };
+
+export const formatPaymentType = (paymentType?: PaymentType | string): string => {
+  if (paymentType === "one_time") return "Pay as you go";
+  return "Subscription";
+};
+
+export const isSubscriptionPlan = (plan: {
+  paymentType?: PaymentType | string;
+}): boolean => plan.paymentType !== "one_time";
 
 export const getApiErrorMessage = (error: unknown, fallback: string): string => {
   if (typeof error === "object" && error && "response" in error) {

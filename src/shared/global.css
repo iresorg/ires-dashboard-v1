@@ -243,7 +243,7 @@ input::-webkit-clear-button {
   .page-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    width: 100%;
     gap: 1.25rem;
   }
 
@@ -353,7 +353,8 @@ input::-webkit-clear-button {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: visible;
     box-shadow: var(--shadow-card);
   }
 

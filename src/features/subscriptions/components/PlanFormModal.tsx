@@ -4,6 +4,7 @@ import FeatureChips from "./FeatureChips";
 import type {
   AccountType,
   CreateSubscriptionPlanPayload,
+  PaymentType,
   SubscriptionPlan,
 } from "../types";
 import { koboToNaira, nairaToKobo } from "../types";
@@ -27,6 +28,9 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
   const [accountType, setAccountType] = useState<AccountType>(
     plan?.accountType ?? "individual"
   );
+  const [paymentType, setPaymentType] = useState<PaymentType>(
+    plan?.paymentType ?? "subscription"
+  );
   const [nairaAmount, setNairaAmount] = useState(
     plan ? String(koboToNaira(plan.amount)) : ""
   );
@@ -43,6 +47,8 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
   const [active, setActive] = useState(plan?.active ?? true);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const isSubscription = paymentType === "subscription";
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -50,10 +56,20 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
     };
   }, []);
 
+  const handlePaymentTypeChange = (next: PaymentType) => {
+    setPaymentType(next);
+    if (next === "one_time" && !plan) {
+      setUnlimitedIncidents(false);
+      if (!maxIncidents) setMaxIncidents("1");
+    }
+  };
+
   const validate = () => {
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = "Name is required";
-    if (!tier || Number(tier) < 1) next.tier = "Tier must be 1 or higher";
+    if (tier === "" || Number.isNaN(Number(tier)) || Number(tier) < 0) {
+      next.tier = "Tier must be 0 or higher";
+    }
     if (!nairaAmount || Number(nairaAmount) < 0) next.amount = "Enter a valid amount in naira";
     if (!description.trim()) next.description = "Description is required";
     if (!unlimitedIncidents && (!maxIncidents || Number(maxIncidents) < 0)) {
@@ -71,14 +87,18 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
       name: name.trim(),
       tier: Number(tier),
       accountType,
+      paymentType,
       amount: nairaToKobo(Number(nairaAmount)),
       currency,
-      interval,
       description: description.trim(),
       features,
       maxIncidents: unlimitedIncidents ? null : Number(maxIncidents),
       active,
     };
+
+    if (isSubscription) {
+      payload.interval = interval;
+    }
 
     await onSubmit(payload);
   };
@@ -110,7 +130,7 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
               <span className="text-xs font-medium text-[var(--muted)]">Tier</span>
               <input
                 type="number"
-                min={1}
+                min={0}
                 className="ui-input mt-1"
                 value={tier}
                 onChange={(e) => setTier(e.target.value)}
@@ -129,6 +149,17 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
               </select>
             </label>
             <label className="block">
+              <span className="text-xs font-medium text-[var(--muted)]">Payment type</span>
+              <select
+                className="ui-input mt-1"
+                value={paymentType}
+                onChange={(e) => handlePaymentTypeChange(e.target.value as PaymentType)}
+              >
+                <option value="subscription">Subscription</option>
+                <option value="one_time">One-time (pay as you go)</option>
+              </select>
+            </label>
+            <label className="block">
               <span className="text-xs font-medium text-[var(--muted)]">Price (₦)</span>
               <input
                 type="number"
@@ -144,15 +175,17 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
               <span className="text-xs font-medium text-[var(--muted)]">Currency</span>
               <input className="ui-input mt-1" value={currency} onChange={(e) => setCurrency(e.target.value)} />
             </label>
-            <label className="block">
-              <span className="text-xs font-medium text-[var(--muted)]">Interval</span>
-              <select className="ui-input mt-1" value={interval} onChange={(e) => setInterval(e.target.value)}>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-                <option value="annually">Annually</option>
-                <option value="weekly">Weekly</option>
-              </select>
-            </label>
+            {isSubscription && (
+              <label className="block">
+                <span className="text-xs font-medium text-[var(--muted)]">Interval</span>
+                <select className="ui-input mt-1" value={interval} onChange={(e) => setInterval(e.target.value)}>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                  <option value="annually">Annually</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </label>
+            )}
           </div>
 
           <label className="block">
@@ -208,7 +241,7 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
             </label>
           </div>
 
-          {isEdit && plan?.paystackPlanCode && (
+          {isEdit && isSubscription && plan?.paystackPlanCode && (
             <p className="text-xs text-[var(--muted)]">
               Paystack code: <span className="font-medium text-[var(--ires-navy-blue)]">{plan.paystackPlanCode}</span>
             </p>

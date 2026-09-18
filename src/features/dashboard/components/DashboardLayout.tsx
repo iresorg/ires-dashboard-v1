@@ -114,7 +114,7 @@ const DashboardLayout: React.FC = () => {
         <Navbar pageName={pageName} />
 
         <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-          <div className="h-full px-6 py-6 lg:px-8">
+          <div className="min-h-full px-6 py-6 lg:px-8">
             <Outlet />
           </div>
         </main>

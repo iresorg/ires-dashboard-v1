@@ -55,14 +55,14 @@ const UsersPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-center py-12">
         <div className="text-lg text-red-600">Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col gap-4" ref={tableRef}>
+    <div className="w-full flex flex-col gap-4" ref={tableRef}>
       <div className="ui-toolbar">
         <button
           onClick={() => setShowAdd(true)}

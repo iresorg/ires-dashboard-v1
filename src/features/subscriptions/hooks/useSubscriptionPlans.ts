@@ -8,6 +8,7 @@ import {
 import type {
   AccountType,
   CreateSubscriptionPlanPayload,
+  PaymentType,
   SubscriptionPlan,
   UpdateSubscriptionPlanPayload,
 } from "../types";
@@ -18,35 +19,42 @@ export const useSubscriptionPlans = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [accountType, setAccountType] = useState<AccountType | "">("");
+  const [paymentType, setPaymentType] = useState<PaymentType | "">("");
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchPlans = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await getAdminSubscriptionPlans();
+      const data = await getAdminSubscriptionPlans({
+        ...(accountType ? { accountType } : {}),
+        ...(paymentType ? { paymentType } : {}),
+      });
       setPlans(data);
     } catch (err) {
       setError(getApiErrorMessage(err, "Failed to load subscription plans"));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [accountType, paymentType]);
 
   useEffect(() => {
     fetchPlans();
   }, [fetchPlans]);
 
   const filteredPlans = useMemo(() => {
-    const list = accountType
-      ? plans.filter((plan) => plan.accountType === accountType)
-      : plans;
-
-    return [...list].sort((a, b) => {
-      if (a.accountType === b.accountType) return a.tier - b.tier;
-      return a.accountType.localeCompare(b.accountType);
+    return [...plans].sort((a, b) => {
+      if (a.accountType !== b.accountType) {
+        return a.accountType.localeCompare(b.accountType);
+      }
+      if (a.paymentType !== b.paymentType) {
+        return (a.paymentType ?? "subscription").localeCompare(
+          b.paymentType ?? "subscription"
+        );
+      }
+      return a.tier - b.tier;
     });
-  }, [plans, accountType]);
+  }, [plans]);
 
   const createPlan = async (payload: CreateSubscriptionPlanPayload) => {
     setIsSaving(true);
@@ -90,6 +98,8 @@ export const useSubscriptionPlans = () => {
     error,
     accountType,
     setAccountType,
+    paymentType,
+    setPaymentType,
     fetchPlans,
     createPlan,
     updatePlan,

@@ -2,15 +2,24 @@ import React, { useState } from "react";
 import { useSubscriptionPlans } from "../hooks/useSubscriptionPlans";
 import PlanFormModal from "../components/PlanFormModal";
 import PlanCards from "../components/PlanCards";
+import PlanCardsSkeleton from "../components/PlanCardsSkeleton";
+import PlanTableSkeleton from "../components/PlanTableSkeleton";
 import DeletePlanModal from "../components/DeletePlanModal";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import { useToast } from "@/shared/components/ui/useToast";
 import type {
   AccountType,
   CreateSubscriptionPlanPayload,
+  PaymentType,
   SubscriptionPlan,
 } from "../types";
-import { formatInterval, formatPlanPrice, getApiErrorMessage } from "../types";
+import {
+  formatInterval,
+  formatPaymentType,
+  formatPlanPrice,
+  getApiErrorMessage,
+  isSubscriptionPlan,
+} from "../types";
 
 const SubscriptionPlansPage: React.FC = () => {
   const {
@@ -20,6 +29,8 @@ const SubscriptionPlansPage: React.FC = () => {
     error,
     accountType,
     setAccountType,
+    paymentType,
+    setPaymentType,
     createPlan,
     updatePlan,
     togglePlanActive,
@@ -87,7 +98,7 @@ const SubscriptionPlansPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 h-full">
+    <div className="flex flex-col gap-5 w-full">
       <div className="ui-toolbar">
         <div>
           <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">Subscription plans</h2>
@@ -101,17 +112,31 @@ const SubscriptionPlansPage: React.FC = () => {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="w-full sm:w-64">
-          <Dropdown
-            options={[
-              { value: "", label: "All account types" },
-              { value: "individual", label: "Individual" },
-              { value: "organization", label: "Organization" },
-            ]}
-            value={accountType}
-            onChange={(value) => setAccountType(value as AccountType | "")}
-            placeholder="All account types"
-          />
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <div className="w-full sm:w-56">
+            <Dropdown
+              options={[
+                { value: "", label: "All account types" },
+                { value: "individual", label: "Individual" },
+                { value: "organization", label: "Organization" },
+              ]}
+              value={accountType}
+              onChange={(value) => setAccountType(value as AccountType | "")}
+              placeholder="All account types"
+            />
+          </div>
+          <div className="w-full sm:w-56">
+            <Dropdown
+              options={[
+                { value: "", label: "All payment types" },
+                { value: "subscription", label: "Subscription" },
+                { value: "one_time", label: "Pay as you go" },
+              ]}
+              value={paymentType}
+              onChange={(value) => setPaymentType(value as PaymentType | "")}
+              placeholder="All payment types"
+            />
+          </div>
         </div>
         <div className="inline-flex rounded-lg border border-[var(--border)] overflow-hidden">
           <button
@@ -142,7 +167,7 @@ const SubscriptionPlansPage: React.FC = () => {
 
       {view === "cards" ? (
         isLoading ? (
-          <div className="ui-card p-8 text-sm text-[var(--muted)]">Loading plans...</div>
+          <PlanCardsSkeleton />
         ) : (
           <PlanCards plans={filteredPlans} />
         )
@@ -153,6 +178,7 @@ const SubscriptionPlansPage: React.FC = () => {
               <tr>
                 <th>Name</th>
                 <th>Account</th>
+                <th>Payment</th>
                 <th>Tier</th>
                 <th>Price</th>
                 <th>Interval</th>
@@ -163,12 +189,10 @@ const SubscriptionPlansPage: React.FC = () => {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={8} className="text-[var(--muted)]">Loading plans...</td>
-                </tr>
+                <PlanTableSkeleton />
               ) : filteredPlans.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-[var(--muted)]">
+                  <td colSpan={9} className="text-[var(--muted)]">
                     No subscription plans yet. Create the first plan to start the catalog.
                   </td>
                 </tr>
@@ -182,9 +206,14 @@ const SubscriptionPlansPage: React.FC = () => {
                       </div>
                     </td>
                     <td className="capitalize">{plan.accountType}</td>
+                    <td>{formatPaymentType(plan.paymentType)}</td>
                     <td>{plan.tier}</td>
                     <td>{formatPlanPrice(plan.amount, plan.currency)}</td>
-                    <td>{formatInterval(plan.interval)}</td>
+                    <td>
+                      {isSubscriptionPlan(plan)
+                        ? formatInterval(plan.interval)
+                        : "—"}
+                    </td>
                     <td>
                       <button
                         type="button"
@@ -199,7 +228,9 @@ const SubscriptionPlansPage: React.FC = () => {
                       </button>
                     </td>
                     <td className="text-xs text-[var(--muted)]">
-                      {plan.paystackPlanCode || "—"}
+                      {isSubscriptionPlan(plan)
+                        ? plan.paystackPlanCode || "—"
+                        : "—"}
                     </td>
                     <td>
                       <div className="flex items-center gap-2">

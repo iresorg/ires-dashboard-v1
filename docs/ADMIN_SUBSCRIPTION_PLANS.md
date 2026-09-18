@@ -34,6 +34,8 @@ When the admin types ₦50,000, send `5000000`.
 
 ## 1. Public plans (user-facing)
 
+**Full page guide:** [`PUBLIC_PLANS_PAGE.md`](./PUBLIC_PLANS_PAGE.md) — filters, card UI, checkout APIs, and expected responses.
+
 For pricing pages and checkout. Returns **active plans only**.
 
 No admin token required.
@@ -42,9 +44,14 @@ No admin token required.
 GET /api/v1/subscriptions/plans
 GET /api/v1/subscriptions/plans?accountType=individual
 GET /api/v1/subscriptions/plans?accountType=organization
+GET /api/v1/subscriptions/plans?paymentType=subscription
+GET /api/v1/subscriptions/plans?paymentType=one_time
+GET /api/v1/subscriptions/plans?accountType=individual&paymentType=one_time
 ```
 
-`accountType` is optional: `individual` | `organization`.
+`accountType` is optional: `individual` | `organization`.  
+`paymentType` is optional: `subscription` | `one_time`.  
+Combine both when needed (e.g. individual + one_time).
 
 ### Response
 
@@ -57,6 +64,7 @@ Array of plans (not wrapped):
     "name": "Basic Shield",
     "tier": 1,
     "accountType": "individual",
+    "paymentType": "subscription",
     "amount": 5000000,
     "currency": "NGN",
     "interval": "monthly",
@@ -74,10 +82,12 @@ Array of plans (not wrapped):
 
 ### UI
 
-- Two tabs or filters: Individual / Organization
-- Card per plan: name, description, formatted price, interval, feature list, CTA
+- Filters: Individual / Organization × Subscription / Pay as you go
+- Card per plan: name, description, formatted price, interval (subscriptions only), feature list, CTA
 - `maxIncidents` can be `null` → show “Unlimited”
 - Sort by `tier` (already ordered by backend)
+- Subscription CTA → `POST /subscriptions/initialize`
+- One-time CTA → `POST /subscriptions/initialize-payg`
 
 ---
 
@@ -98,7 +108,19 @@ This is the **staff** login token (same as other `/admin` routes), not the publi
 
 ```
 GET /api/v1/admin/subscription-plans
+GET /api/v1/admin/subscription-plans?paymentType=subscription
+GET /api/v1/admin/subscription-plans?paymentType=one_time
+GET /api/v1/admin/subscription-plans?accountType=individual
+GET /api/v1/admin/subscription-plans?accountType=organization
+GET /api/v1/admin/subscription-plans?accountType=individual&paymentType=one_time
 ```
+
+| Query | Values | Required |
+|---|---|---|
+| `accountType` | `individual` \| `organization` | no |
+| `paymentType` | `subscription` \| `one_time` | no |
+
+Omit both to list every plan (active + inactive).
 
 ```json
 {
@@ -108,6 +130,7 @@ GET /api/v1/admin/subscription-plans
       "name": "Basic Shield",
       "tier": 1,
       "accountType": "individual",
+      "paymentType": "subscription",
       "amount": 5000000,
       "currency": "NGN",
       "interval": "monthly",
@@ -123,7 +146,9 @@ GET /api/v1/admin/subscription-plans
 }
 ```
 
-Admin UI can show `paystackPlanCode` as read-only.
+Admin UI can show `paystackPlanCode` as read-only (subscriptions only; `null` for one_time).
+
+Use tabs/filters in the admin plan manager the same way as public pricing: **Account type** × **Payment type**.
 
 ### 2.2 Create a plan
 
@@ -131,13 +156,21 @@ Admin UI can show `paystackPlanCode` as read-only.
 POST /api/v1/admin/subscription-plans
 ```
 
-Do **not** send `paystackPlanCode`. Paystack creates the plan and the backend saves the code.
+Choose **`paymentType`** for every plan:
+
+| `paymentType` | What happens |
+|---|---|
+| `subscription` | Creates a Paystack plan (unless you pass `paystackPlanCode`). Recurring billing. |
+| `one_time` | No Paystack plan. Customer pays once via `initialize-payg` and gets an incident credit. |
+
+#### Subscription example
 
 ```json
 {
   "name": "Basic Shield",
   "tier": 1,
   "accountType": "individual",
+  "paymentType": "subscription",
   "amount": 5000000,
   "currency": "NGN",
   "interval": "monthly",
@@ -151,27 +184,60 @@ Do **not** send `paystackPlanCode`. Paystack creates the plan and the backend sa
 }
 ```
 
+#### Pay-as-you-go example
+
+```json
+{
+  "name": "Single Incident Response",
+  "tier": 0,
+  "accountType": "individual",
+  "paymentType": "one_time",
+  "amount": 2500000,
+  "description": "One incident, no monthly commitment",
+  "features": ["Single cyber incident resolution"],
+  "maxIncidents": 1,
+  "active": true
+}
+```
+
+Do **not** send `paystackPlanCode` for either (subscriptions auto-create it; one_time never uses it).
+
 | Field | Required | Notes |
 |---|---|---|
 | `name` | yes | string |
-| `tier` | yes | integer ≥ 1 |
+| `tier` | yes | integer ≥ 0 |
 | `accountType` | yes | `individual` or `organization` |
+| `paymentType` | yes | `subscription` or `one_time` |
 | `amount` | yes | kobo, number ≥ 0 |
 | `description` | yes | string |
 | `features` | yes | string array (can be empty `[]`) |
 | `currency` | no | default `NGN` |
-| `interval` | no | default `monthly` |
-| `maxIncidents` | no | number, or omit / `null` for unlimited |
+| `interval` | no | subscriptions only; default `monthly`. Ignored for `one_time` |
+| `maxIncidents` | no | number, or omit / `null` for unlimited. For `one_time` defaults to `1` |
 | `active` | no | default `true` |
-| `paystackPlanCode` | no | omit so Paystack creates it |
+| `paystackPlanCode` | no | omit; ignored for `one_time` |
 
 Response:
 
 ```json
 {
   "message": "Subscription plan created",
-  "plan": { "id": "uuid", "paystackPlanCode": "PLN_xxxxx", "...": "..." }
+  "plan": { "id": "uuid", "paymentType": "subscription", "paystackPlanCode": "PLN_xxxxx", "...": "..." }
 }
+```
+
+Admin UI form fields:
+
+1. Account type — Individual / Organization  
+2. Payment type — Subscription / One-time (pay as you go)  
+3. Name, amount, features, max incidents, active  
+4. Interval — show only when payment type is Subscription  
+
+Public pricing page:
+
+```
+GET /api/v1/subscriptions/plans?accountType=individual&paymentType=subscription
+GET /api/v1/subscriptions/plans?accountType=individual&paymentType=one_time
 ```
 
 ### 2.3 Update a plan
@@ -180,7 +246,7 @@ Response:
 PATCH /api/v1/admin/subscription-plans/{id}
 ```
 
-Send only fields that changed.
+Send only fields that changed. You can change `paymentType`, but converting subscription ↔ one_time should be rare — prefer create a new product.
 
 Change price:
 
@@ -255,13 +321,18 @@ In the UI: confirm delete. If the response has `active: false`, tell the admin i
 ## Suggested admin screens
 
 1. **Plans table**
-   - Columns: name, account type, tier, price (₦), interval, active, actions
-   - Filters: Individual / Organization / All
+   - Columns: name, account type, **payment type**, tier, price (₦), interval, active, actions
+   - Filters: Individual / Organization / All × Subscription / Pay as you go
    - Toggle `active` via PATCH
-2. **Create / edit form**
-   - Name, account type (select), tier (number)
+2. **Subscribers table** (`GET /admin/subscribers`)
+   - Columns: name, email, role, plan, **paymentType**, amount, status, dates
+   - Filter `?paymentType=subscription` (default recurring list)
+   - Filter `?paymentType=one_time` for PAYG customers (`paygCreditsAvailable` shown)
+   - Example row fields: `paymentType`, `planId`, `interval`, `paygCreditsAvailable`
+3. **Create / edit form**
+   - Name, account type (select), **payment type** (subscription | one_time), tier (number)
    - Price input in **naira**, convert to kobo on submit (`naira * 100`)
-   - Currency default NGN, interval default monthly
+   - Currency default NGN; interval only when payment type is subscription
    - Description textarea
    - **Features (important):** do not use a raw textarea or one big text box.
      - Render each feature as a **chip / tag**
@@ -273,9 +344,58 @@ In the UI: confirm delete. If the response has `active: false`, tell the admin i
      - Empty list is allowed (`[]`), but the UI should make it easy to add several quickly
    - Max incidents: number or “Unlimited”
    - Active checkbox
-3. **Do not** ask the admin for a Paystack plan code on create
+4. **Do not** ask the admin for a Paystack plan code on create
 
 On **public plan cards**, show `features` the same way: a list of chips or compact check-rows, not a paragraph.
+
+### Admin subscribers API
+
+```
+GET /api/v1/admin/subscribers
+GET /api/v1/admin/subscribers?paymentType=subscription
+GET /api/v1/admin/subscribers?paymentType=one_time
+GET /api/v1/admin/subscribers?status=active&page=1&limit=10
+```
+
+Example recurring row:
+
+```json
+{
+  "id": "account-uuid",
+  "userName": "Jane Doe",
+  "email": "jane@example.com",
+  "role": "individual",
+  "planId": "plan-uuid",
+  "planSubscribedTo": "Basic Shield",
+  "paymentType": "subscription",
+  "interval": "monthly",
+  "amount": 5000000,
+  "startDate": "2026-09-01T00:00:00.000Z",
+  "endDate": "2026-10-01T00:00:00.000Z",
+  "status": "active",
+  "paygCreditsAvailable": null
+}
+```
+
+Example PAYG row (`paymentType=one_time`):
+
+```json
+{
+  "id": "account-uuid",
+  "userName": "Jane Doe",
+  "email": "jane@example.com",
+  "role": "individual",
+  "planId": "plan-uuid",
+  "planSubscribedTo": "Pay As You Go",
+  "paymentType": "one_time",
+  "interval": null,
+  "amount": 2500000,
+  "startDate": "2026-09-18T00:00:00.000Z",
+  "endDate": null,
+  "status": "available",
+  "paygCreditsAvailable": 1
+}
+```
 
 ---
 
@@ -297,4 +417,6 @@ On **public plan cards**, show `features` the same way: a list of chips or compa
 | Who | Anyone | SUPER_ADMIN / ADMIN |
 | Inactive plans | hidden | included |
 | Paystack code | hidden | included |
+| Filter `accountType` | yes | yes |
+| Filter `paymentType` | yes (`subscription` \| `one_time`) | yes (`subscription` \| `one_time`) |
 | Use for | pricing / checkout | manage catalog |

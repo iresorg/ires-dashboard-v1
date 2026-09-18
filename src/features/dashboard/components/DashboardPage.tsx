@@ -21,7 +21,7 @@ const DashboardPage: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col gap-6 min-h-full">
+    <div className="flex flex-col gap-6 w-full">
       {error && (
         <div className="ui-card px-4 py-3 text-sm text-[var(--ires-red)] flex items-center justify-between gap-3">
           <span>Could not load overview: {error}</span>
@@ -33,7 +33,7 @@ const DashboardPage: React.FC = () => {
 
       <DashboardStats overview={overview} isLoading={isLoading} />
 
-      <section className="ui-card flex-1 flex flex-col overflow-hidden">
+      <section className="ui-card">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
           <div>
             <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">Recent activity</h3>
@@ -41,7 +41,7 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-x-auto">
           <table className="ui-table min-w-[640px]">
             <thead>
               <tr>

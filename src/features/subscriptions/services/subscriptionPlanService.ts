@@ -3,6 +3,7 @@ import type {
   CreateSubscriptionPlanPayload,
   DeletePlanResponse,
   SubscriptionPlan,
+  SubscriptionPlanListParams,
   SubscriptionPlanListResponse,
   SubscriptionPlanMutationResponse,
   UpdateSubscriptionPlanPayload,
@@ -25,10 +26,19 @@ const unwrapPlans = (payload: unknown): SubscriptionPlan[] => {
 
 const skipAuthRedirect = { skipAuthRedirect: true };
 
-export const getAdminSubscriptionPlans = async (): Promise<SubscriptionPlan[]> => {
+export const getAdminSubscriptionPlans = async (
+  params: SubscriptionPlanListParams = {}
+): Promise<SubscriptionPlan[]> => {
+  const query: Record<string, string> = {};
+  if (params.accountType) query.accountType = params.accountType;
+  if (params.paymentType) query.paymentType = params.paymentType;
+
   const response = await api.get<SubscriptionPlanListResponse | SubscriptionPlan[]>(
     "/admin/subscription-plans",
-    skipAuthRedirect
+    {
+      ...skipAuthRedirect,
+      params: Object.keys(query).length > 0 ? query : undefined,
+    }
   );
   return unwrapPlans(response.data);
 };
