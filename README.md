@@ -1,6 +1,6 @@
 # IRES Dashboard
 
-A modern dashboard for incident response and emergency services management.
+A modern dashboard for incident response and emergency services management...
 
 ## Project Structure
 
