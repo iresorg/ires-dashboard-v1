@@ -2,10 +2,13 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTicketCategories } from "../hooks/useTicketCategories";
 import CategoryFormModal from "../components/CategoryFormModal";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { getApiErrorMessage } from "../types";
 import type { TicketCategory, TicketSubCategory } from "../types";
+import PenIcon from "@/shared/assets/icons/pen.svg";
+import DeleteIcon from "@/shared/assets/icons/delete.svg";
 
 /**
  * Categories API returns the full nested catalog (no page/limit).
@@ -30,6 +33,8 @@ const TicketCategoriesPage: React.FC = () => {
   const [renamingCategory, setRenamingCategory] = useState<TicketCategory | null>(null);
   const [renamingSub, setRenamingSub] = useState<TicketSubCategory | null>(null);
   const [addingSubFor, setAddingSubFor] = useState<TicketCategory | null>(null);
+  const [deletingCategory, setDeletingCategory] = useState<TicketCategory | null>(null);
+  const [deletingSub, setDeletingSub] = useState<TicketSubCategory | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
 
@@ -80,14 +85,12 @@ const TicketCategoriesPage: React.FC = () => {
     }
   };
 
-  const handleDeleteCategory = async (category: TicketCategory) => {
-    const confirmed = window.confirm(
-      `Delete "${category.name}"? Tickets using this category will lose the category link.`
-    );
-    if (!confirmed) return;
+  const handleConfirmDeleteCategory = async () => {
+    if (!deletingCategory) return;
     try {
-      await removeCategory(category.id);
+      await removeCategory(deletingCategory.id);
       showInfo("Category deleted");
+      setDeletingCategory(null);
     } catch (err) {
       showError(getApiErrorMessage(err, "Could not delete category"));
     }
@@ -116,12 +119,12 @@ const TicketCategoriesPage: React.FC = () => {
     }
   };
 
-  const handleDeleteSub = async (sub: TicketSubCategory) => {
-    const confirmed = window.confirm(`Delete sub-category "${sub.name}"?`);
-    if (!confirmed) return;
+  const handleConfirmDeleteSub = async () => {
+    if (!deletingSub) return;
     try {
-      await removeSubCategory(sub.id);
+      await removeSubCategory(deletingSub.id);
       showInfo("Sub-category deleted");
+      setDeletingSub(null);
     } catch (err) {
       showError(getApiErrorMessage(err, "Could not delete sub-category"));
     }
@@ -271,7 +274,7 @@ const TicketCategoriesPage: React.FC = () => {
                               <button
                                 type="button"
                                 className="ui-action-btn ui-action-danger"
-                                onClick={() => handleDeleteCategory(category)}
+                                onClick={() => setDeletingCategory(category)}
                               >
                                 Delete
                               </button>
@@ -286,30 +289,36 @@ const TicketCategoriesPage: React.FC = () => {
                                   No sub-categories yet.
                                 </p>
                               ) : (
-                                <div className="flex flex-wrap gap-2 py-1">
+                                <div className="flex flex-col gap-2 py-1">
                                   {category.subCategories.map((sub) => (
-                                    <span
+                                    <div
                                       key={sub.id}
-                                      className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--ires-navy-blue)]"
+                                      className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white px-3 py-2"
                                     >
-                                      {sub.name}
-                                      <button
-                                        type="button"
-                                        className="text-[var(--muted)] hover:text-[var(--ires-navy-blue)]"
-                                        onClick={() => setRenamingSub(sub)}
-                                        title="Rename"
-                                      >
-                                        ✎
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="text-[var(--muted)] hover:text-[var(--ires-red)]"
-                                        onClick={() => handleDeleteSub(sub)}
-                                        title="Delete"
-                                      >
-                                        ×
-                                      </button>
-                                    </span>
+                                      <span className="text-sm font-medium text-[var(--ires-navy-blue)]">
+                                        {sub.name}
+                                      </span>
+                                      <div className="flex items-center gap-2 shrink-0">
+                                        <button
+                                          type="button"
+                                          className="ui-action-btn h-9 px-3 inline-flex items-center gap-1.5"
+                                          onClick={() => setRenamingSub(sub)}
+                                          aria-label={`Rename ${sub.name}`}
+                                        >
+                                          <img src={PenIcon} alt="" className="w-4 h-4" />
+                                          <span>Edit</span>
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="ui-action-btn ui-action-danger h-9 px-3 inline-flex items-center gap-1.5"
+                                          onClick={() => setDeletingSub(sub)}
+                                          aria-label={`Delete ${sub.name}`}
+                                        >
+                                          <img src={DeleteIcon} alt="" className="w-4 h-4" />
+                                          <span>Delete</span>
+                                        </button>
+                                      </div>
+                                    </div>
                                   ))}
                                 </div>
                               )}
@@ -359,6 +368,40 @@ const TicketCategoriesPage: React.FC = () => {
           isSaving={isSaving}
           onClose={() => setRenamingSub(null)}
           onSubmit={handleRenameSub}
+        />
+      )}
+      {deletingCategory && (
+        <DeleteConfirmModal
+          title="Delete category"
+          description={
+            <>
+              Delete{" "}
+              <span className="font-medium text-[var(--ires-navy-blue)]">
+                {deletingCategory.name}
+              </span>
+              ? Tickets using this category will lose the category link.
+            </>
+          }
+          isSaving={isSaving}
+          onClose={() => setDeletingCategory(null)}
+          onConfirm={handleConfirmDeleteCategory}
+        />
+      )}
+      {deletingSub && (
+        <DeleteConfirmModal
+          title="Delete sub-category"
+          description={
+            <>
+              Delete sub-category{" "}
+              <span className="font-medium text-[var(--ires-navy-blue)]">
+                {deletingSub.name}
+              </span>
+              ? This cannot be undone.
+            </>
+          }
+          isSaving={isSaving}
+          onClose={() => setDeletingSub(null)}
+          onConfirm={handleConfirmDeleteSub}
         />
       )}
     </div>
