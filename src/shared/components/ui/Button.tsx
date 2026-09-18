@@ -15,18 +15,18 @@ const Button: React.FC<ButtonProps> = ({
     disabled,
     ...props
 }) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+    const baseStyles = 'inline-flex items-center justify-center rounded-lg font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 
     const variants = {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-        secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+        primary: 'bg-[var(--ires-navy-blue)] text-white hover:bg-[var(--ires-dark-blue)] focus-visible:ring-[var(--ires-navy-blue)]',
+        secondary: 'bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)] hover:bg-[#d7dced] focus-visible:ring-[var(--ires-navy-blue)]',
+        danger: 'bg-[var(--ires-red)] text-white hover:bg-[#b10d1e] focus-visible:ring-[var(--ires-red)]',
     };
 
     const sizes = {
-        sm: 'px-3 py-1.5 text-sm',
-        md: 'px-4 py-2 text-base',
-        lg: 'px-6 py-3 text-lg',
+        sm: 'h-8 px-3 text-xs',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-6 text-base',
     };
 
     return (
@@ -48,4 +48,4 @@ const Button: React.FC<ButtonProps> = ({
     );
 };
 
-export default Button; 
+export default Button;

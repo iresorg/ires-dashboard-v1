@@ -162,7 +162,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
                 <input
                   type="text"
                   name="firstName"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.firstName ? "border border-red-500" : ""
                   }`}
                   placeholder="First name"
@@ -177,7 +177,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
                 <input
                   type="text"
                   name="lastName"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.lastName ? "border border-red-500" : ""
                   }`}
                   placeholder="Last name"
@@ -192,7 +192,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
                 <input
                   type="email"
                   name="email"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.email ? "border border-red-500" : ""
                   }`}
                   placeholder="Email"

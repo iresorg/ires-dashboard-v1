@@ -2,60 +2,41 @@ import React, { useEffect } from "react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 
 interface NotificationDrawerProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ onClose }) => {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
     };
-  }, [isOpen]);
 
-  if (!isOpen) return null;
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
-      {/* Blur + backdrop */}
-      <div
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        onClick={onClose}
-      />
+    <div className="ui-card overflow-hidden" role="dialog" aria-modal="true" aria-label="Notifications">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)] bg-[var(--ires-navy-blue)]">
+        <h2 className="text-sm font-semibold text-white">Notifications</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-white/80 hover:text-white"
+          aria-label="Close notifications"
+        >
+          <img src={CloseIcon} alt="" className="w-3.5 h-3.5 invert" />
+        </button>
+      </div>
 
-      {/* Drawer content */}
-      <div
-        className="absolute top-[65px] bottom-0 left-[40%] z-[60] flex items-start justify-end"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="bg-[#F9FAFB] rounded-xl shadow-xl w-[350px]">
-          {/* Header */}
-          <div className="w-full flex justify-between items-center py-2 border-b-3 !border-b-[#D9D9D9] mb-6">
-            <h2 className="bg-[#12096f] text-white px-5 py-1 rounded-xl ml-3">
-              Notifications
-            </h2>
-            <button onClick={onClose}>
-              <img
-                src={CloseIcon}
-                alt="close"
-                className="w-4 h-4 object-contain mr-3"
-              />
-            </button>
-          </div>
-
-          {/* Content */}
-          <div className="bg-[#FCF9F9] space-y-3 w-auto mx-10 border border-gray-100 px-5 py-30 rounded-xl my-30">
-            <h2 className="w-60 text-md font-semibold text-center">
-              No Notifications Yet
-            </h2>
-          </div>
-        </div>
+      <div className="px-5 py-10 min-h-[200px] flex flex-col items-center justify-center text-center">
+        <div className="h-10 w-10 rounded-full bg-[var(--cool-blue-tint)] mb-3" />
+        <p className="text-sm font-semibold text-[var(--ires-navy-blue)]">
+          No notifications yet
+        </p>
+        <p className="text-xs text-[var(--muted)] mt-1">
+          New alerts will appear here.
+        </p>
       </div>
     </div>
   );

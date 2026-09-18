@@ -93,14 +93,18 @@ export const useResponderStore = create<ResponderState>((set) => ({
 
   createResponder: async (data) => {
     try {
-      const newResponder = await responderService.createResponder(data);
-      set((state) => ({
-        responders: [newResponder, ...state.responders],
-      }));
+      await responderService.createResponder(data);
+      const state = useResponderStore.getState();
+      await state.fetchResponders(
+        state.pagination.page,
+        state.pagination.limit,
+        state.search
+      );
     } catch (err) {
       set({
         error: getErrorMessage(err),
       });
+      throw err;
     }
   },
 

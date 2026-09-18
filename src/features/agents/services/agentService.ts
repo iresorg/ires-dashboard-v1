@@ -1,60 +1,25 @@
-import api from "@shared/services/api";
+import {
+  activateUser,
+  createUser,
+  deleteUser,
+  deactivateUser,
+  getUserById,
+  getUsers,
+  updateUser,
+  type UserProfile,
+  type UsersResponse,
+} from "@/features/users/services/userService";
 
-export interface AgentProfile {
-  id: string;
+export type AgentProfile = UserProfile;
+
+export type AgentsResponse = UsersResponse;
+
+export interface CreateAgentPayload {
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
-  status: string;
-  avatar?: {
-    url: string;
-    publicId: string;
-  } | null;
-  createdAt: string;
-  updatedAt: string;
-  lastLogin: string | null;
+  avatarFile?: File | null;
 }
-
-export interface AgentsResponse {
-  data: AgentProfile[];
-  total: number;
-  limit: number;
-  page: number;
-  totalPages: number;
-  nextPage: number | null;
-}
-
-export const getAgents = async (
-  page = 1,
-  limit = 10,
-  search?: string
-): Promise<AgentsResponse> => {
-  const params = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-  });
-  
-  if (search && search.trim()) {
-    params.append('search', search.trim());
-  }
-  
-  const url = `/agents?${params.toString()}`;
-  const response = await api.get(url);
-  return response.data;
-};
-
-export const getAgentProfile = async (id: string): Promise<AgentProfile> => {
-  const response = await api.get(`/agents/${id}`);
-  return response.data;
-};
-
-export const createAgent = async (
-  data: Pick<AgentProfile, "firstName" | "lastName" | "email">
-): Promise<AgentProfile> => {
-  const response = await api.post("/agents", data);
-  return response.data;
-};
 
 export interface UpdateAgentPayload {
   firstName?: string;
@@ -63,32 +28,51 @@ export interface UpdateAgentPayload {
   avatarFile?: File | null;
 }
 
+export const getAgents = async (
+  page = 1,
+  limit = 10,
+  search?: string
+): Promise<AgentsResponse> => {
+  return getUsers({
+    page,
+    limit,
+    search,
+    role: "AGENT",
+  });
+};
+
+export const getAgentProfile = async (id: string): Promise<AgentProfile> => {
+  return getUserById(id);
+};
+
+export const createAgent = async (
+  data: CreateAgentPayload
+): Promise<{ message: string }> => {
+  return createUser({
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    role: "AGENT",
+    avatarFile: data.avatarFile,
+  });
+};
+
 export const updateAgent = async (
   id: string,
   data: UpdateAgentPayload
 ): Promise<AgentProfile> => {
-  const form = new FormData();
-  if (data.firstName !== undefined) form.append('firstName', String(data.firstName));
-  if (data.lastName !== undefined) form.append('lastName', String(data.lastName));
-  if (data.email !== undefined) form.append('email', String(data.email));
-  if (data.avatarFile) {
-    form.append('avatar', data.avatarFile);
-  }
-  
-  const response = await api.put(`/agents/${id}`, form, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const response = await updateUser(id, data);
   return response.data;
 };
 
 export const deactivateAgent = async (id: string): Promise<void> => {
-  await api.patch(`/agents/${id}/deactivate`);
+  await deactivateUser(id);
 };
 
 export const activateAgent = async (id: string): Promise<void> => {
-  await api.patch(`/agents/${id}/activate`);
+  await activateUser(id);
 };
 
 export const deleteAgent = async (id: string): Promise<void> => {
-  await api.delete(`/agents/${id}`);
+  await deleteUser(id);
 };

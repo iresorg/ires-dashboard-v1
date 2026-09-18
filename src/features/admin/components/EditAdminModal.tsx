@@ -167,7 +167,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <input
                   type="text"
                   name="firstName"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.firstName ? "border border-red-500" : ""
                   }`}
                   placeholder="First name"
@@ -182,7 +182,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <input
                   type="text"
                   name="lastName"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.lastName ? "border border-red-500" : ""
                   }`}
                   placeholder="Last name"
@@ -197,7 +197,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <input
                   type="email"
                   name="email"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 focus:outline-none ${
+                  className={`ui-input ${
                     errors.email ? "border border-red-500" : ""
                   }`}
                   placeholder="Email"
@@ -230,7 +230,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
               <div className="relative w-[70%]">
                 <select
                   name="role"
-                  className={`w-full rounded-xl bg-[#D9D9D9]/70 px-4 py-2 pr-8 focus:outline-none appearance-none ${
+                  className={`ui-input ${
                     errors.role ? "border border-red-500" : ""
                   }`}
                   value={form.role}

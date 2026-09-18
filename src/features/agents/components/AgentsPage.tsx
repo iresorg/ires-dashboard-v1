@@ -4,20 +4,19 @@ import type { AgentProfile } from "@/features/agents/services/agentService";
 import { useDebounce } from "@/shared/hooks";
 import AddIcon from "@/shared/assets/icons/add.svg";
 import Search from "@/shared/assets/icons/lineicons_search-2.svg";
-import ActionIcon from "@/shared/assets/icons/actions.svg";
 import PersonIcon from "@/shared/assets/icons/Vector.svg";
-import EmailIcon from "@/shared/assets/icons/icon.svg";
 import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pagination from "@/shared/components/ui/Pagination";
 import Pen from "@/shared/assets/icons/pen.svg";
-import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
-import EditAgentModal from "@/features/agents/components/EditAgentModal";
+import EditAgentModal, { type Agent } from "@/features/agents/components/EditAgentModal";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
+import { getAvatarUrl } from "@/features/users/services/userService";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
 const AgentsPage: React.FC = () => {
   const {
@@ -39,23 +38,13 @@ const AgentsPage: React.FC = () => {
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [pendingAgent, setPendingAgent] = useState<Pick<
-    AgentProfile,
-    "firstName" | "lastName" | "email"
-  > | null>(null);
-  const [editingAgent, setEditingAgent] = useState<{
-    id: string;
+  const [pendingAgent, setPendingAgent] = useState<{
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
-    status: string;
-    avatar?: string;
     avatarFile?: File | null;
-    createdAt: string;
-    updatedAt: string;
-    lastLogin: string | null;
   } | null>(null);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [confirming, setConfirming] = useState<{
     type: "deactivate" | "activate" | "delete";
     agent: AgentProfile;
@@ -85,13 +74,14 @@ const AgentsPage: React.FC = () => {
     firstName: string;
     lastName: string;
     email: string;
+    avatarFile?: File | null;
   }) => {
-    const newAgentData = {
+    setPendingAgent({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-    };
-    setPendingAgent(newAgentData);
+      avatarFile: data.avatarFile,
+    });
     setShowCreateAgentModal(false);
     setShowConfirmAgentModal(true);
   };
@@ -106,19 +96,7 @@ const AgentsPage: React.FC = () => {
     }
   };
 
-  const handleEditAgent = async (updatedAgent: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    status: string;
-    avatar?: string;
-    avatarFile?: File | null;
-    createdAt: string;
-    updatedAt: string;
-    lastLogin: string | null;
-  }) => {
+  const handleEditAgent = async (updatedAgent: Agent) => {
     await updateAgent(updatedAgent.id, {
       firstName: updatedAgent.firstName,
       lastName: updatedAgent.lastName,
@@ -156,22 +134,21 @@ const AgentsPage: React.FC = () => {
   return (
     <div className="page-container">
       {/* Top Bar */}
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+      <div className="ui-toolbar">
         <button
           type="button"
           onClick={() => setShowCreateAgentModal(true)}
-          className="flex flex-col items-center justify-center px-6 py-3 bg-[var(--ires-dark-blue)] text-white rounded-lg hover:bg-[var(--ires-navy-blue)] cursor-pointer"
+          className="ui-btn-primary"
         >
-          <img src={AddIcon} alt="Add Agent" className="h-5 mb-1" />
-          <span className="text-sm font-semibold">Create Agent</span>
+          <img src={AddIcon} alt="" className="h-4" />
+          Create agent
         </button>
 
-        <div className="flex items-center bg-[#D9D9D9] rounded-sm px-4 h-12 w-64">
-          <img src={Search} className="h-5 mr-2" alt="Search" />
+        <div className="ui-search">
+          <img src={Search} className="h-4 mr-2 opacity-60" alt="" />
           <input
             type="text"
-            className="bg-transparent outline-none text-sm w-full placeholder:text-gray-600"
-            placeholder="Search Name/Email"
+            placeholder="Search name or email"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -179,29 +156,15 @@ const AgentsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-y-auto mt-6 max-h-[500px] mb-5">
-        <table className="w-full table-auto text-sm">
-          <thead className="bg-gray-100 text-left sticky top-0">
+      <div className="ui-table-wrap">
+        <table className="ui-table">
+          <thead>
             <tr>
-              <th className="px-2 py-1">
-                <div className="flex items-center gap-0">
-                  <img src={PersonIcon} className="h-4" alt="Person" />
-                </div>
-              </th>
-              <th className="px-4 py-1 min-w-[150px]">Full Name</th>
-              <th className="px-0 py-1 min-w-[200px]">
-                <div className="flex items-center gap-1">
-                  <img src={EmailIcon} className="h-4" alt="Email" />
-                  <span>Email</span>
-                </div>
-              </th>
-              <th className="px-0 py-1 min-w-[100px]">Status</th>
-              <th className="px-4 py-1 min-w-[250px]">
-                <div className="flex items-center gap-1">
-                  <img src={ActionIcon} className="h-4" alt="Actions" />
-                  <span>Actions</span>
-                </div>
-              </th>
+              <th></th>
+              <th>Full name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -213,25 +176,32 @@ const AgentsPage: React.FC = () => {
               </>
             ) : agents && agents.length > 0 ? (
               agents.map((agent) => {
+                const avatarUrl = getAvatarUrl(agent.avatar);
                 return (
-                  <tr key={agent.id} className="border-t">
-                    <td className="px-0 py-1">
-                      <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-white overflow-hidden">
-                        {agent.avatar?.url ? (
+                  <tr key={agent.id}>
+                    <td>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white overflow-hidden ${
+                          avatarUrl
+                            ? "bg-[var(--cool-blue-tint)]"
+                            : getUserInitialsColor(agent.firstName, agent.lastName)
+                        }`}
+                      >
+                        {avatarUrl ? (
                           <img
-                            src={agent.avatar.url}
+                            src={avatarUrl}
                             alt={`${agent.firstName} ${agent.lastName}`}
                             className="w-full h-full object-cover rounded-full"
                           />
                         ) : (
-                          agent.firstName?.[0] || '?'
+                          getUserInitials(agent.firstName, agent.lastName)
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-1">{`${agent.firstName || ''} ${agent.lastName || ''}`}</td>
-                    <td className="px-0 py-1">{agent.email || ''}</td>
-                    <td className="px-0 py-1">
-                      <div className="flex items-center gap-1">
+                    <td className="font-medium">{`${agent.firstName || ''} ${agent.lastName || ''}`}</td>
+                    <td className="text-[var(--muted)]">{agent.email || ''}</td>
+                    <td>
+                      <div className="flex items-center gap-2">
                         <img
                           src={agent.status?.toLowerCase() === "active" ? GreenDot : RedDot}
                           className="h-3"
@@ -240,18 +210,18 @@ const AgentsPage: React.FC = () => {
                         {agent.status || 'Unknown'}
                       </div>
                     </td>
-                    <td className="px-4 py-1">
-                      <div className="flex items-center gap-3">
+                    <td>
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
                         onClick={() => {
                           setEditingAgent({
                             ...agent,
-                            avatar: agent.avatar?.url || undefined,
+                            avatar: avatarUrl || undefined,
                             avatarFile: null,
                           });
                         }}
-                          className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs cursor-pointer"
+                          className="ui-action-btn"
                         >
                           Edit <img src={Pen} className="h-3" alt="Edit" />
                         </button>
@@ -263,21 +233,21 @@ const AgentsPage: React.FC = () => {
                             agent 
                           })
                         }
-                          className={`flex items-center gap-1 rounded px-2 py-1 text-xs cursor-pointer ${
+                          className={`ui-action-btn ${
                             agent.status?.toLowerCase() === "active" 
-                              ? "bg-red-100" 
-                              : "bg-green-100"
+                              ? "ui-action-danger" 
+                              : "ui-action-success"
                           }`}
                       >
-                        {agent.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}{" "}
-                        <img src={Scissors} className="h-3" alt={agent.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"} />
+                        {agent.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}
                       </button>
                         <button
                           type="button"
                           onClick={() => setConfirming({ type: "delete", agent })}
-                          className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs cursor-pointer"
+                          className="ui-icon-btn !w-8 !h-8"
+                          aria-label="Delete agent"
                         >
-                          <img src={Trash} className="h-3" alt="Delete" />
+                          <img src={Trash} className="h-3.5" alt="Delete" />
                         </button>
 
                       </div>
