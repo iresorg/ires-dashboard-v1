@@ -15,6 +15,7 @@ import CreateResponderSucessModal from "@/features/responders/components/CreateR
 import EditResponderModal from "@/features/responders/components/EditResponderModal";
 import ConfirmResponderModal from "@/features/responders/components/ConfirmResponderModal";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
 const RespondersPage: React.FC = () => {
   const {
@@ -175,7 +176,13 @@ const RespondersPage: React.FC = () => {
               responders.map((responder: ResponderProfile) => (
                 <tr key={responder.id}>
                 <td>
-                    <div className="w-8 h-8 rounded-full bg-[var(--cool-blue-tint)] flex items-center justify-center text-sm font-medium text-[var(--ires-navy-blue)] overflow-hidden">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white overflow-hidden ${
+                        responder.avatar?.url
+                          ? "bg-[var(--cool-blue-tint)]"
+                          : getUserInitialsColor(responder.firstName, responder.lastName)
+                      }`}
+                    >
                       {responder.avatar?.url ? (
                       <img
                           src={responder.avatar.url}
@@ -183,7 +190,7 @@ const RespondersPage: React.FC = () => {
                           className="w-full h-full object-cover rounded-full"
                       />
                       ) : (
-                        responder.firstName?.[0] || '?'
+                        getUserInitials(responder.firstName, responder.lastName)
                       )}
                   </div>
                 </td>

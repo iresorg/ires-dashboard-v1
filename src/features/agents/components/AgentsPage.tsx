@@ -15,6 +15,8 @@ import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
 import EditAgentModal from "@/features/agents/components/EditAgentModal";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
+import { getAvatarUrl } from "@/features/users/services/userService";
+import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 
 const AgentsPage: React.FC = () => {
   const {
@@ -36,10 +38,12 @@ const AgentsPage: React.FC = () => {
   const [showCreateAgentModal, setShowCreateAgentModal] = useState(false);
   const [showConfirmAgentModal, setShowConfirmAgentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [pendingAgent, setPendingAgent] = useState<Pick<
-    AgentProfile,
-    "firstName" | "lastName" | "email"
-  > | null>(null);
+  const [pendingAgent, setPendingAgent] = useState<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatarFile?: File | null;
+  } | null>(null);
   const [editingAgent, setEditingAgent] = useState<{
     id: string;
     firstName: string;
@@ -82,13 +86,14 @@ const AgentsPage: React.FC = () => {
     firstName: string;
     lastName: string;
     email: string;
+    avatarFile?: File | null;
   }) => {
-    const newAgentData = {
+    setPendingAgent({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-    };
-    setPendingAgent(newAgentData);
+      avatarFile: data.avatarFile,
+    });
     setShowCreateAgentModal(false);
     setShowConfirmAgentModal(true);
   };
@@ -195,18 +200,25 @@ const AgentsPage: React.FC = () => {
               </>
             ) : agents && agents.length > 0 ? (
               agents.map((agent) => {
+                const avatarUrl = getAvatarUrl(agent.avatar);
                 return (
                   <tr key={agent.id}>
                     <td>
-                      <div className="w-8 h-8 rounded-full bg-[var(--cool-blue-tint)] flex items-center justify-center text-sm font-medium text-[var(--ires-navy-blue)] overflow-hidden">
-                        {agent.avatar?.url ? (
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white overflow-hidden ${
+                          avatarUrl
+                            ? "bg-[var(--cool-blue-tint)]"
+                            : getUserInitialsColor(agent.firstName, agent.lastName)
+                        }`}
+                      >
+                        {avatarUrl ? (
                           <img
-                            src={agent.avatar.url}
+                            src={avatarUrl}
                             alt={`${agent.firstName} ${agent.lastName}`}
                             className="w-full h-full object-cover rounded-full"
                           />
                         ) : (
-                          agent.firstName?.[0] || '?'
+                          getUserInitials(agent.firstName, agent.lastName)
                         )}
                       </div>
                     </td>
@@ -229,7 +241,7 @@ const AgentsPage: React.FC = () => {
                         onClick={() => {
                           setEditingAgent({
                             ...agent,
-                            avatar: agent.avatar?.url || undefined,
+                            avatar: avatarUrl || undefined,
                             avatarFile: null,
                           });
                         }}

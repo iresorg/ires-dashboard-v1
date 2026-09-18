@@ -7,6 +7,7 @@ import { useToast } from "@/shared/components/ui/useToast";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/shared/types/roles";
 import { getResponders, type ResponderProfile } from "@/features/responders/services/respondersService";
+import { getUsers } from "@/features/users/services/userService";
 import { ROUTES } from "@/shared/constants/routes";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import {
@@ -202,10 +203,29 @@ const TicketDetailPage: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const response = await getResponders(1, 50);
-        setResponders(response.data ?? []);
+        const [tier1, tier2] = await Promise.all([
+          getUsers({ page: 1, limit: 50, role: "RESPONDER_TIER_1" }),
+          getUsers({ page: 1, limit: 50, role: "RESPONDER_TIER_2" }),
+        ]);
+        const mapped: ResponderProfile[] = [...tier1.data, ...tier2.data].map((user) => ({
+          ...user,
+          role: user.role as ResponderProfile["role"],
+          status: user.status === "inactive" ? "inactive" : "active",
+          avatar:
+            user.avatar && typeof user.avatar === "object"
+              ? { url: user.avatar.url, publicId: user.avatar.publicId }
+              : typeof user.avatar === "string"
+                ? { url: user.avatar }
+                : null,
+        }));
+        setResponders(mapped);
       } catch {
-        setResponders([]);
+        try {
+          const response = await getResponders(1, 50);
+          setResponders(response.data ?? []);
+        } catch {
+          setResponders([]);
+        }
       }
     };
     load();

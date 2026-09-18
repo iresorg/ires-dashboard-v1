@@ -78,8 +78,8 @@ export interface TicketDetail extends TicketListItem {
   location?: string;
   reporterName?: string;
   internalNotes?: string | null;
-  contactInformation?: string | null;
-  victimInformation?: string | null;
+  contactInformation?: ContactInformation | null;
+  victimInformation?: VictimInformation | null;
   createdBy?: TicketStaffRef | null;
   assignedResponder?: TicketStaffRef | null;
   attachments?: TicketAttachment[];
@@ -129,6 +129,33 @@ export interface TicketEligibilityResponse {
   data: TicketEligibility;
 }
 
+export interface EligibleAccount {
+  accountId: string;
+  email: string;
+  name?: string;
+  role?: string;
+  status?: string;
+  source: EntitlementSource;
+  subscription?: TicketEligibilitySubscription | null;
+  paygCreditsAvailable?: number;
+  usedIncidentsThisPeriod?: number;
+  remainingIncidentsThisPeriod?: number | null;
+  ticketsCreatedTotal?: number;
+}
+
+export interface GetEligibleAccountsParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+  source?: "subscription" | "payg";
+}
+
+export interface EligibleAccountsResponse {
+  message?: string;
+  data: EligibleAccount[];
+  pagination?: TicketPagination;
+}
+
 export interface LifecycleEntry {
   id?: string;
   action: string;
@@ -160,6 +187,21 @@ export interface EscalationHistoryResponse {
   pagination: TicketPagination;
 }
 
+export interface ContactInformation {
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface VictimInformation {
+  name: string;
+  phone: string;
+  address: string;
+  email: string;
+  age?: number;
+  gender?: string;
+}
+
 export interface CreateTicketPayload {
   accountId: string;
   title: string;
@@ -170,8 +212,8 @@ export interface CreateTicketPayload {
   categoryId: string;
   subCategoryId?: string;
   internalNotes?: string;
-  contactInformation?: string;
-  victimInformation?: string;
+  contactInformation?: ContactInformation;
+  victimInformation?: VictimInformation;
   attachments?: File[];
 }
 

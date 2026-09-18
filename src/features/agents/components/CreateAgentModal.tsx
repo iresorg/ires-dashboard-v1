@@ -9,7 +9,7 @@ interface CreateAgentModalProps {
     firstName: string;
     lastName: string;
     email: string;
-    avatar?: string;
+    avatarFile?: File | null;
   }) => void;
 }
 
@@ -99,7 +99,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
         firstName,
         lastName,
         email,
-        avatar: avatarPreview || undefined,
+        avatarFile: avatarFile ?? null,
       });
       setFirstName("");
       setLastName("");

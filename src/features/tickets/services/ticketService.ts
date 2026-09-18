@@ -3,8 +3,11 @@ import type {
   AssignTicketPayload,
   CreateTicketPayload,
   CreateTicketResponse,
+  EligibleAccount,
+  EligibleAccountsResponse,
   EscalatePayload,
   EscalationHistoryResponse,
+  GetEligibleAccountsParams,
   GetTicketsParams,
   LifecycleResponse,
   NotesPayload,
@@ -68,6 +71,35 @@ export const getTicketEligibility = async (
   return response.data as unknown as TicketEligibility;
 };
 
+export const getEligibleAccounts = async (
+  params: GetEligibleAccountsParams = {}
+): Promise<EligibleAccountsResponse> => {
+  const query: Record<string, string> = {
+    page: String(params.page ?? 1),
+    limit: String(params.limit ?? 10),
+  };
+  if (params.search?.trim()) query.search = params.search.trim();
+  if (params.source) query.source = params.source;
+
+  const response = await api.get<EligibleAccountsResponse | EligibleAccount[]>(
+    "/tickets/eligible-accounts",
+    {
+      ...skipAuthRedirect,
+      params: query,
+    }
+  );
+
+  if (Array.isArray(response.data)) {
+    return { data: response.data, pagination: emptyPagination };
+  }
+
+  return {
+    message: response.data?.message,
+    data: response.data?.data ?? [],
+    pagination: response.data?.pagination ?? emptyPagination,
+  };
+};
+
 export const createTicket = async (
   payload: CreateTicketPayload
 ): Promise<CreateTicketResponse> => {
@@ -83,10 +115,16 @@ export const createTicket = async (
   if (payload.subCategoryId) formData.append("subCategoryId", payload.subCategoryId);
   if (payload.internalNotes) formData.append("internalNotes", payload.internalNotes);
   if (payload.contactInformation) {
-    formData.append("contactInformation", payload.contactInformation);
+    formData.append(
+      "contactInformation",
+      JSON.stringify(payload.contactInformation)
+    );
   }
   if (payload.victimInformation) {
-    formData.append("victimInformation", payload.victimInformation);
+    formData.append(
+      "victimInformation",
+      JSON.stringify(payload.victimInformation)
+    );
   }
   payload.attachments?.forEach((file) => {
     formData.append("attachments", file);

@@ -113,7 +113,7 @@ const DashboardLayout: React.FC = () => {
     <div className="h-screen w-screen flex bg-[var(--background)] overflow-hidden">
       <Aside />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden ml-64 lg:ml-60">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden ml-52">
         <Navbar pageName={pageName} />
 
         <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">

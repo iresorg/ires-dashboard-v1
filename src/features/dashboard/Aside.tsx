@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "@/shared/constants/routes";
 import Logo from "@/features/auth/components/Logo";
@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
     label: "Overview",
     path: ROUTES.DASHBOARD,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 34 34" fill="none">
+      <svg width="18" height="18" viewBox="0 0 34 34" fill="none">
         <path
           d="M26.15 14.88h-4.86a2.42 2.42 0 0 0-2.41 2.41v4.86a2.42 2.42 0 0 0 2.41 2.41h4.86a2.42 2.42 0 0 0 2.41-2.41v-4.86a2.42 2.42 0 0 0-2.41-2.41ZM26.15 1.44H7.85a2.42 2.42 0 0 0-2.41 2.41v4.86a2.42 2.42 0 0 0 2.41 2.42h18.3a2.42 2.42 0 0 0 2.41-2.42V3.85a2.42 2.42 0 0 0-2.41-2.41ZM12.71 14.88H7.85a2.42 2.42 0 0 0-2.41 2.41v4.86a2.42 2.42 0 0 0 2.41 2.41h4.86a2.42 2.42 0 0 0 2.41-2.41v-4.86a2.42 2.42 0 0 0-2.41-2.41Z"
           stroke="currentColor"
@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     label: "Users",
     path: ROUTES.USERS,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 26 19" fill="none">
+      <svg width="18" height="18" viewBox="0 0 26 19" fill="none">
         <path
           d="M14.3375 8.01248C15.0968 6.95156 15.5051 5.67963 15.5051 4.37498C15.5051 3.07034 15.0968 1.79841 14.3375 0.737485C15.0485 0.253149 15.8897 -0.00401646 16.75 -1.50395e-05C17.9103 -1.50395e-05 19.0231 0.460921 19.8436 1.28139C20.6641 2.10186 21.125 3.21466 21.125 4.37498C21.125 5.53531 20.6641 6.64811 19.8436 7.46858C19.0231 8.28905 17.9103 8.74998 16.75 8.74998C15.8897 8.75399 15.0485 8.49682 14.3375 8.01248ZM4.875 4.37498C4.875 3.50969 5.13159 2.66383 5.61232 1.94437C6.09305 1.2249 6.77633 0.664146 7.57576 0.333012C8.37519 0.00187884 9.25485 -0.0847608 10.1035 0.0840496C10.9522 0.25286 11.7317 0.669538 12.3436 1.28139C12.9554 1.89325 13.3721 2.6728 13.5409 3.52146C13.7097 4.37013 13.6231 5.2498 13.292 6.04922C12.9608 6.84865 12.4001 7.53193 11.6806 8.01266C10.9612 8.4934 10.1153 8.74998 9.25 8.74998C8.08968 8.74998 6.97688 8.28905 6.15641 7.46858C5.33594 6.64811 4.875 5.53531 4.875 4.37498Z"
           fill="currentColor"
@@ -45,7 +45,7 @@ const navItems: NavItem[] = [
     label: "Agents",
     path: ROUTES.AGENTS,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+      <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -62,7 +62,7 @@ const navItems: NavItem[] = [
     label: "Responders",
     path: ROUTES.RESPONDERS,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+      <svg width="18" height="18" viewBox="0 0 30 30" fill="none">
         <path
           d="M26.25 10c.66 0 1.3.26 1.77.73.47.47.73 1.11.73 1.77v5c0 .66-.26 1.3-.73 1.77a2.5 2.5 0 0 1-1.77.73h-1.33c-.3 2.42-1.48 4.64-3.31 6.25A10 10 0 0 1 15 28.75v-2.5c1.99 0 3.9-.79 5.3-2.2A7.5 7.5 0 0 0 22.5 18.75v-7.5a7.5 7.5 0 0 0-7.5-7.5 7.5 7.5 0 0 0-7.5 7.5V20H3.75a2.5 2.5 0 0 1 0-10h1.33A10 10 0 0 1 15 1.25c2.43 0 4.79.97 6.61 2.5 1.83 1.61 3 3.83 3.31 6.25h1.33Z"
           stroke="currentColor"
@@ -77,7 +77,7 @@ const navItems: NavItem[] = [
     label: "Subscriptions",
     path: ROUTES.SUBSCRIPTION_PLANS,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z"
           stroke="currentColor"
@@ -97,7 +97,7 @@ const navItems: NavItem[] = [
     label: "Tickets",
     path: ROUTES.TICKETS,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v1.2a2.2 2.2 0 0 0 0 4.2V14.5A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-1.6a2.2 2.2 0 0 0 0-4.2V7.5Z"
           stroke="currentColor"
@@ -129,6 +129,10 @@ const Aside: React.FC = () => {
   const isCtaRoute = location.pathname.startsWith("/dashboard/external-cta");
   const [ctaOpen, setCtaOpen] = useState(isCtaRoute);
 
+  useEffect(() => {
+    if (isCtaRoute) setCtaOpen(true);
+  }, [isCtaRoute]);
+
   const canSeeCTA = useMemo(() => {
     if (!user || !user.role) return false;
     return externalCTA.roles.some((role) => role === user.role);
@@ -141,16 +145,13 @@ const Aside: React.FC = () => {
   });
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 lg:w-60 bg-[var(--ires-navy-blue)] text-white flex flex-col z-50">
-      <div className="h-[72px] flex items-center px-6 border-b border-white/10">
-        <Logo variant="light" className="h-7 w-auto" />
+    <aside className="fixed top-0 left-0 h-screen w-52 bg-[var(--ires-navy-blue)] text-white flex flex-col z-50">
+      <div className="h-14 shrink-0 flex items-center px-4 border-b border-white/10">
+        <Logo variant="light" className="h-6 w-auto" />
       </div>
 
-      <nav className="flex-1 px-3 py-5 overflow-y-auto">
-        <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
-          Command center
-        </p>
-        <ul className="flex flex-col gap-1">
+      <nav className="flex-1 px-2 py-4 overflow-y-auto">
+        <ul className="flex flex-col gap-0.5">
           {filteredNavItems.map((item) => {
             const isActive =
               item.path === ROUTES.DASHBOARD
@@ -162,18 +163,22 @@ const Aside: React.FC = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${
                     isActive
                       ? "bg-white/12 text-white font-semibold shadow-[inset_3px_0_0_#D10F24]"
                       : "text-white/70 hover:bg-white/8 hover:text-white"
                   }`}
                 >
-                  <span className={`flex h-8 w-8 items-center justify-center rounded-md ${
-                    isActive ? "bg-[var(--ires-red)] text-white" : "bg-white/8 text-white/80"
-                  }`}>
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+                      isActive
+                        ? "bg-[var(--ires-red)] text-white"
+                        : "bg-white/8 text-white/80"
+                    }`}
+                  >
                     {item.icon}
                   </span>
-                  <span>{item.label}</span>
+                  <span className="truncate">{item.label}</span>
                 </Link>
               </li>
             );
@@ -181,34 +186,35 @@ const Aside: React.FC = () => {
         </ul>
 
         {canSeeCTA && (
-          <div className="mt-6 pt-5 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-white/10">
             <button
-              onClick={() => setCtaOpen(!ctaOpen)}
-              className="w-full flex items-center justify-between px-3 py-2 text-sm text-white/70 hover:text-white cursor-pointer"
+              type="button"
+              onClick={() => setCtaOpen((open) => !open)}
+              className="w-full flex items-center justify-between px-2.5 py-2 text-[13px] text-white/70 hover:text-white cursor-pointer"
             >
-              <span className="flex items-center gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/8">
-                  <svg width="16" height="16" viewBox="0 0 25 25" fill="none">
+              <span className="flex items-center gap-2.5 min-w-0">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/8">
+                  <svg width="14" height="14" viewBox="0 0 25 25" fill="none">
                     <path
                       d="M13.75 3.75c2.7625 0 5 2.2375 5 5 0 1.875-1 3.4625-2.5 4.325v-1.525c.7625-.6875 1.25-1.6875 1.25-2.8 0-2.075-1.675-3.75-3.75-3.75s-3.75 1.675-3.75 3.75c0 1.1125.4875 2.1125 1.25 2.8v1.525c-1.5-.8625-2.5-2.45-2.5-4.325 0-2.7625 2.2375-5 5-5z"
                       fill="currentColor"
                     />
                   </svg>
                 </span>
-                {externalCTA.label}
+                <span className="truncate">{externalCTA.label}</span>
               </span>
               <svg
-                className={`transition-transform duration-200 ${ctaOpen || isCtaRoute ? "rotate-180" : ""}`}
-                width="14"
-                height="14"
+                className={`shrink-0 transition-transform duration-200 ${ctaOpen ? "rotate-180" : ""}`}
+                width="12"
+                height="12"
                 viewBox="0 0 20 20"
               >
                 <path d="M5 7l5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" />
               </svg>
             </button>
 
-            {(ctaOpen || isCtaRoute) && (
-              <ul className="mt-1 ml-4 space-y-1">
+            {ctaOpen && (
+              <ul className="mt-0.5 ml-2 space-y-0.5">
                 {externalCTA.children.map((child) => {
                   const active = location.pathname === child.path;
 
@@ -216,7 +222,7 @@ const Aside: React.FC = () => {
                     <li key={child.path}>
                       <Link
                         to={child.path}
-                        className={`block rounded-md px-3 py-2 text-sm ${
+                        className={`block rounded-md px-2.5 py-1.5 text-[13px] ${
                           active
                             ? "bg-white/12 text-white font-medium"
                             : "text-white/60 hover:bg-white/8 hover:text-white"
@@ -232,11 +238,6 @@ const Aside: React.FC = () => {
           </div>
         )}
       </nav>
-
-      <div className="px-5 py-4 border-t border-white/10">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-white/40">iRES operations</p>
-        <p className="mt-1 text-xs text-white/65">Secure incident response</p>
-      </div>
     </aside>
   );
 };

@@ -107,10 +107,10 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-[var(--ires-dark-blue)]/40" onClick={onClose} />
       <div
-        className="relative z-10 ui-card w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="relative z-10 ui-card w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--ires-navy-blue)]">
+        <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--ires-navy-blue)]">
           <h2 className="text-sm font-semibold text-white">
             {isEdit ? "Edit plan" : "Create plan"}
           </h2>
@@ -119,7 +119,8 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
           </button>
         </div>
 
-        <form className="p-5 space-y-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit}>
+          <div className="flex-1 overflow-y-auto p-5 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="block">
               <span className="text-xs font-medium text-[var(--muted)]">Name</span>
@@ -246,8 +247,9 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
               Paystack code: <span className="font-medium text-[var(--ires-navy-blue)]">{plan.paystackPlanCode}</span>
             </p>
           )}
+          </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="shrink-0 flex justify-end gap-2 px-5 py-4 border-t border-[var(--border)] bg-white">
             <button type="button" className="ui-action-btn h-10 px-4" onClick={onClose}>
               Cancel
             </button>

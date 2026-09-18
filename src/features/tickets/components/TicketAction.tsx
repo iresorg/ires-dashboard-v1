@@ -64,10 +64,10 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
         onClick={onClose}
       />
       <div
-        className="relative bg-white rounded-lg shadow-md px-4 py-3 w-full max-w-xl h-full overflow-y-auto"
+        className="relative bg-white rounded-lg shadow-md w-full max-w-xl h-full flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-row justify-between w-full">
+        <div className="shrink-0 flex flex-row justify-between w-full px-4 pt-3">
           <div>
             <p className="text-lg font-semibold bg-[#0C0E5D] text-white px-4 rounded-xl">{ticket.ticket || "N/A"}</p>
           </div>
@@ -80,10 +80,11 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
             />
           </div>
         </div>
-        <div className="-mx-4">
+        <div className="shrink-0">
           <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3" />
         </div>
 
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
         <div className="space-y-4 flex justify-between mt-3">
           <div className="flex">
             <p className="block text-sm font-medium text-[#0C0E5D]">
@@ -146,11 +147,9 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
           <div className="ml-80 mt-10 mb-5">
             <button className="bg-[#0C0E5D] text-[#ffffff] px-8 rounded-tl-3xl rounded-br-3xl text-sm font-medium">Save</button>
           </div>
-        
-          
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
