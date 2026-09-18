@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTicketCategories } from "../hooks/useTicketCategories";
 import CategoryFormModal from "../components/CategoryFormModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import TicketCategoriesSkeleton from "../components/TicketCategoriesSkeleton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { getApiErrorMessage } from "../types";
@@ -159,7 +160,7 @@ const TicketCategoriesPage: React.FC = () => {
       )}
 
       {isLoading ? (
-        <div className="ui-card p-8 text-sm text-[var(--muted)]">Loading categories...</div>
+        <TicketCategoriesSkeleton />
       ) : categories.length === 0 ? (
         <div className="ui-card p-10 text-center">
           <p className="text-base font-medium text-[var(--ires-navy-blue)]">

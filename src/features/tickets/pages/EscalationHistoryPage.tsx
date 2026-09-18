@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useEscalationHistory } from "../hooks/useEscalationHistory";
 import TicketStatusBadge from "../components/TicketStatusBadge";
+import TicketTableSkeleton from "../components/TicketTableSkeleton";
 import Pagination from "@/shared/components/ui/Pagination";
 import { ROUTES } from "@/shared/constants/routes";
 import { formatDateTime, formatStaffName } from "../types";
@@ -51,15 +52,7 @@ const EscalationHistoryPage: React.FC = () => {
           </thead>
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, index) => (
-                <tr key={index}>
-                  {Array.from({ length: 5 }).map((__, col) => (
-                    <td key={col}>
-                      <div className="h-4 bg-gray-200 rounded animate-pulse w-24" />
-                    </td>
-                  ))}
-                </tr>
-              ))
+              <TicketTableSkeleton rows={6} columns={5} />
             ) : items.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-[var(--muted)] text-center py-10">
