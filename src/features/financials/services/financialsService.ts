@@ -157,13 +157,11 @@ export const syncPaystackTransactions = async (
   if (params.from) query.from = params.from;
   if (params.to) query.to = params.to;
 
-  const response = await api.post(
-    "/admin/financials/sync-paystack",
-    {},
-    {
-      ...skipAuthRedirect,
-      params: Object.keys(query).length ? query : undefined,
-    }
-  );
+  // GET only — no body; drop JSON Content-Type so the API does not reject the call
+  const response = await api.get("/admin/financials/sync-paystack", {
+    ...skipAuthRedirect,
+    params: Object.keys(query).length ? query : undefined,
+    headers: { "Content-Type": undefined },
+  });
   return unwrapSync(response.data);
 };
