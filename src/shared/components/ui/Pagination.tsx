@@ -109,13 +109,13 @@ const Pagination: React.FC<PaginationProps> = ({
     <div 
       ref={paginationRef}
       data-pagination
-      className={`flex items-center justify-center space-x-2 text-sm text-gray-700 ${className}`}
+      className={`flex items-center justify-center space-x-2 text-sm text-[var(--muted)] ${className}`}
     >
       {/* Previous Button */}
       <button
         onClick={() => handlePageChange(validCurrentPage - 1)}
         disabled={validCurrentPage === 1}
-        className="flex items-center gap-1 text-[var(--ires-dark-blue)] hover:bg-gray-100 px-3 py-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-1 text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <ChevronLeftIcon className="h-4 w-4" />
             <span>Previous</span>
@@ -130,10 +130,10 @@ const Pagination: React.FC<PaginationProps> = ({
             ) : (
               <button
                 onClick={() => handlePageChange(page as number)}
-                className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+                className={`min-w-8 h-8 px-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
                   page === validCurrentPage
-                    ? 'bg-[#0C0E5D] text-white'
-                    : 'hover:bg-gray-200 text-gray-700 hover:text-gray-900'
+                    ? 'bg-[var(--ires-navy-blue)] text-white'
+                    : 'hover:bg-[var(--cool-blue-tint)] text-[var(--steel-gray)]'
                 }`}
               >
                 {page}
@@ -147,7 +147,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => handlePageChange(validCurrentPage + 1)}
         disabled={validCurrentPage === totalPages}
-        className="flex items-center gap-1 text-[var(--ires-dark-blue)] hover:bg-gray-100 px-3 py-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-1 text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
             <span>Next</span>
         <ChevronRightIcon className="h-4 w-4" />

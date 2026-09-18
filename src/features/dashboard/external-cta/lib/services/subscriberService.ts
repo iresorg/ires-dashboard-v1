@@ -15,7 +15,6 @@ export const getSubscribers = async (
 ): Promise<SubscribersResponse> => {
   const queryParams = new URLSearchParams();
 
-  // Add optional query parameters
   if (params.search) {
     queryParams.append("search", params.search);
   }
@@ -24,6 +23,9 @@ export const getSubscribers = async (
   }
   if (params.planId) {
     queryParams.append("planId", params.planId);
+  }
+  if (params.paymentType) {
+    queryParams.append("paymentType", params.paymentType);
   }
   if (params.page) {
     queryParams.append("page", params.page.toString());
@@ -38,4 +40,3 @@ export const getSubscribers = async (
   const response = await api.get<SubscribersResponse>(url);
   return response.data;
 };
-

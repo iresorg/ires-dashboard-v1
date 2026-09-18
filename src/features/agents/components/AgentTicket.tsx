@@ -91,7 +91,7 @@ const AgentTicketManagement: React.FC = () => {
           <img src={AddIcon} alt="Add Ticket" className="h-5 mb-1" />
           <span className="text-sm font-semibold">Create Ticket</span>
         </button>
-        <div className="flex items-center bg-[#D9D9D9] rounded-md px-4 h-12 w-64">
+        <div className="flex items-center bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 h-12 w-64">
           <img src={Search} className="h-5 mr-2" alt="Search" />
           <input
             type="text"

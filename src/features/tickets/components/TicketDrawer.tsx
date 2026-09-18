@@ -82,8 +82,8 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
         className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col h-full px-4 py-3 overflow-y-auto">
-          <div className="flex flex-row justify-between w-full">
+        <div className="flex flex-col h-full">
+          <div className="shrink-0 flex flex-row justify-between w-full px-4 pt-3">
             <div>
               <p className="text-lg font-semibold bg-[#0C0E5D] text-white px-4 rounded-xl">{ticket.ticket || "N/A"}</p>
             </div>
@@ -96,10 +96,11 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
               />
             </div>
           </div>
-          <div className="-mx-4">
+          <div className="shrink-0 -mx-0 px-0">
             <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3" />
           </div>
 
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
           <div className="space-y-4 flex justify-between mt-3">
             <div className="flex">
               <p className="block text-sm font-medium text-[#0C0E5D]">
@@ -268,6 +269,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
             )}
           </div>
           <div className="flex items-center justify-center mt-6"></div>
+          </div>
         </div>
       </div>
     </div>

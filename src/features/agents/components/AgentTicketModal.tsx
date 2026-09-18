@@ -47,8 +47,8 @@ const AgentTicketModal: React.FC<AgentTicketModalProps> = ({ ticket, onClose, is
         className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col h-full px-4 py-3 overflow-y-auto">
-          <div className="flex flex-row justify-between w-full">
+        <div className="flex flex-col h-full">
+          <div className="shrink-0 flex flex-row justify-between w-full px-4 pt-3">
             <div>
               <p className="text-lg font-semibold bg-[#0C0E5D] text-white px-4 rounded-xl">
                 Create a Ticket
@@ -63,9 +63,10 @@ const AgentTicketModal: React.FC<AgentTicketModalProps> = ({ ticket, onClose, is
               />
             </div>
           </div>
-          <div className="-mx-4">
-            <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3 mb-10" />
+          <div className="shrink-0">
+            <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3 mb-0" />
           </div>
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
           <div>
             <p className="bg-[#EBEBEB] w-40 pl-4 py-2 pr-10 rounded-bl-lg rounded-br-lg text-sm text-[#0C0E5D]">
               Ticket Details
@@ -207,6 +208,7 @@ const AgentTicketModal: React.FC<AgentTicketModalProps> = ({ ticket, onClose, is
                 Create Ticket
               </button>
             </div>
+          </div>
           </div>
         </div>
       </div>

@@ -9,9 +9,6 @@ import type { CreatableUserRole } from "@/shared/types/roles";
 import { useToast } from "@/shared/components/ui/useToast";
 
 import PersonIcon from "@/shared/assets/icons/Vector.svg";
-import EmailIcon from "@/shared/assets/icons/icon.svg";
-import RoleIcon from "@/shared/assets/icons/Shield.svg";
-import ActionsIcon from "@/shared/assets/icons/Group.svg";
 import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
@@ -65,44 +62,16 @@ const UserTable: React.FC<UserTableProps> = ({
   );
 
   return (
-    <div className="overflow-auto mt-6">
-      <table className="w-full table-auto text-sm">
-        <thead className="bg-gray-100 text-left">
+    <div className="ui-table-wrap mt-1">
+      <table className="ui-table">
+        <thead>
           <tr>
-            <th className="px-2 py-1">
-              <div className="flex items-center gap-2">
-                <img src={PersonIcon} className="h-4" alt="person" />
-              </div>
-            </th>
-            <th className="px-4 py-1">
-              <div className="flex items-center gap-2">
-                <span>Full Name</span>
-              </div>
-            </th>
-            <th className="px-4 py-1">
-              <div className="flex items-center gap-2">
-                <img src={EmailIcon} className="h-4" alt="email" />
-                <span>Email</span>
-              </div>
-            </th>
-            <th className="px-4 py-1">
-              <div className="flex items-center gap-2">
-                <img src={RoleIcon} className="h-4" alt="role" />
-                <span>Role</span>
-              </div>
-            </th>
-            <th className="px-4 py-1">
-              <div className="flex items-center gap-2">
-                <img src={GreenDot} className="h-3"></img>
-                <span>Status</span>
-              </div>
-            </th>
-            <th className="px-4 py-1">
-              <div className="flex items-center gap-2">
-                <img src={ActionsIcon} className="h-4" alt="actions" />
-                <span>Actions</span>
-              </div>
-            </th>
+            <th></th>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -130,8 +99,8 @@ const UserTable: React.FC<UserTableProps> = ({
               };
 
               return (
-                <tr key={user.id} className="border-t">
-                  <td className="px-0 py-1">
+                <tr key={user.id}>
+                  <td>
                     <div className="flex items-center justify-start">
                       {(() => {
                         const avatarUrl = typeof user.avatar === 'string' ? user.avatar : user.avatar?.url;
@@ -149,25 +118,29 @@ const UserTable: React.FC<UserTableProps> = ({
                       })()}
                     </div>
                   </td>
-                  <td className="px-4 py-1">
-                    <span>{user.firstName} {user.lastName}</span>
+                  <td>
+                    <span className="font-medium">{user.firstName} {user.lastName}</span>
                   </td>
-                  <td className="px-4 py-1">{user.email}</td>
-                  <td className="px-4 py-1">{user.role}</td>
-                  <td className="px-4 py-1">
+                  <td className="text-[var(--muted)]">{user.email}</td>
+                  <td>
+                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]">
+                      {user.role}
+                    </span>
+                  </td>
+                  <td>
                     <div className="flex items-center gap-2">
                       <img
                         src={user.status === "active" ? GreenDot : RedDot}
-                        className="h-3"
+                        className="h-2.5"
                         alt={user.status}
                       />
-                      <span className={user.status === "active" ? "text-green-600" : "text-red-600"}>
+                      <span className={user.status === "active" ? "text-emerald-700 font-medium" : "text-[var(--ires-red)] font-medium"}>
                         {user.status}
                       </span>
                     </div>
                   </td>
-                  <td className="px-4 py-1">
-                    <div className="flex items-center gap-3">
+                  <td>
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={async () => {
                           // Open modal immediately with existing data for instant feedback
@@ -193,34 +166,38 @@ const UserTable: React.FC<UserTableProps> = ({
                             // Keep existing data if fetch fails
                           }
                         }}
-                        className="flex items-center gap-1 bg-gray-300 rounded px-2 py-1 text-xs cursor-pointer"
+                        className="ui-action-btn"
                       >
                         Edit <img src={Pen} className="h-3" alt="edit" />
                       </button>
                       
-                      {/* Show Activate/Deactivate button based on status */}
                       {user.status === 'active' ? (
                         <button
                           onClick={() => setConfirming({ type: "deactivate", user: userForEdit })}
-                          className="flex items-center gap-1 bg-red-100 rounded px-2 py-1 text-xs cursor-pointer"
+                          className="ui-action-btn ui-action-danger"
                         >
                           Deactivate <img src={Scissors} className="h-3" alt="deactivate" />
                         </button>
                       ) : (
                         <button
                           onClick={() => setConfirming({ type: "activate", user: userForEdit })}
-                          className="flex items-center gap-1 bg-green-100 rounded px-2 py-1 text-xs cursor-pointer"
+                          className="ui-action-btn ui-action-success"
                         >
-                          Activate <img src={GreenDot} className="h-3" alt="activate" />
+                          Activate
                         </button>
                       )}
                       
-                      <img
-                        src={Trash}
+                      <button
                         onClick={() => setConfirming({ type: "delete", user: userForEdit })}
-                        className="h-4 cursor-pointer"
-                        alt="delete"
-                      />
+                        className="ui-icon-btn !w-8 !h-8"
+                        aria-label="Delete user"
+                      >
+                        <img
+                          src={Trash}
+                          className="h-3.5"
+                          alt="delete"
+                        />
+                      </button>
                     </div>
                   </td>
                 </tr>

@@ -15,7 +15,7 @@ interface UserState {
   isLoading: boolean;
   error: string | null;
   fetchProfile: () => Promise<void>;
-  fetchUsers: (page?: number, limit?: number) => Promise<void>;
+  fetchUsers: (page?: number, limit?: number, search?: string, role?: string) => Promise<void>;
   clearProfile: () => void;
   clearUsers: () => void;
 }
@@ -45,10 +45,15 @@ export const useUserStore = create<UserState>((set) => ({
       });
     }
   },
-  fetchUsers: async (page = 1, limit = 10) => {
+  fetchUsers: async (page = 1, limit = 10, search?: string, role?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response: UsersResponse = await userService.getUsers(page, limit);
+      const response: UsersResponse = await userService.getUsers({
+        page,
+        limit,
+        search,
+        role,
+      });
       set({ 
         users: response.data, 
         pagination: {

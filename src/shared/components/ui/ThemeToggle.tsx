@@ -9,18 +9,14 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className={`px-4 py-2 transition duration-300
-        ${
-          isDark
-            ? "bg-iresNavyBlue text-iresWhite"
-            : "bg-iresWhite text-iresNavyBlue"
-        }
-        border-iresRed`}
+      type="button"
+      aria-label="Toggle theme"
+      className="ui-icon-btn"
     >
       <img
         src={isDark ? SunIcon : MoonIcon}
         alt="Theme icon"
-        className="w-5 h-5"
+        className="w-4 h-4"
       />
     </button>
   );

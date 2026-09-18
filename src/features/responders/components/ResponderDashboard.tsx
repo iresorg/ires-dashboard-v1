@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Pagination from "@/shared/components/ui/Pagination";
-import TicketIcon from "@/shared/assets/images/ticket.png";
-import TimeIcon from "@/shared/assets/icons/time-icon.svg";
 import ColoredTicket from "@/shared/assets/images/coloredTicket.png";
 
 interface Activity {
@@ -13,28 +11,20 @@ interface Activity {
 
 const stats = [
   {
-    label: "Total Tickets Submitted",
-    value: "2371",
-    color: "bg-gray-300",
-    textColor: "text-gray-800",
+    label: "Tickets submitted",
+    value: "2,371",
   },
   {
-    label: "Total Tickets Resolved",
-    value: "2048",
-    color: "bg-green-200",
-    textColor: "text-green-800",
+    label: "Tickets resolved",
+    value: "2,048",
   },
   {
-    label: "Tickets In Progress",
-    value: "1134",
-    color: "bg-blue-200",
-    textColor: "text-blue-800",
+    label: "In progress",
+    value: "1,134",
   },
   {
-    label: "Tickets Escalated",
-    value: "0109",
-    color: "bg-red-200",
-    textColor: "text-red-800",
+    label: "Escalated",
+    value: "109",
   },
 ];
 
@@ -94,65 +84,66 @@ const ResponderDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-8 h-full overflow-hidden">
-      {/* Stats Section */}
+    <div className="flex flex-col gap-6 w-full">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
-            className={`flex flex-col items-start justify-center p-4 rounded-lg shadow-sm ${stat.color}`}
+            className="ui-card flex items-center gap-4 px-5 py-4"
           >
-            <img src={ColoredTicket} alt="Ticket Icon" className="h-12 mb-2" />
-            <p className={`text-2xl font-bold ${stat.textColor}`}>
-              {stat.value}
-            </p>
-            <p className="text-sm text-gray-600">{stat.label}</p>
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--cool-blue-tint)]">
+              <img src={ColoredTicket} alt="" className="h-6" />
+            </div>
+            <div>
+              <p className="text-xs text-[var(--muted)]">{stat.label}</p>
+              <p className="text-2xl font-semibold text-[var(--ires-navy-blue)]">
+                {stat.value}
+              </p>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Recent Activities */}
-      <div className="flex flex-col flex-1 overflow-hidden p-6">
-        <h3 className="text-lg font-bold mb-4 text-black">Recent Activities</h3>
+      <section className="ui-card">
+        <div className="px-5 py-4 border-b border-[var(--border)]">
+          <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">Recent activities</h3>
+        </div>
 
-        {/* Table */}
-        <div className="flex-1 overflow-auto">
-          <table className="w-full text-sm text-left min-w-[600px] text-black">
-            <thead className="font-bold">
-              <tr className="border-b">
-                <th className="px-4 py-2 text-left flex items-center gap-2">
-                  <img src={TicketIcon} className="h-4" />
-                  Ticket ID
-                </th>
-                <th className="px-4 py-2 text-left">Title</th>
-                <th className="px-4 py-2 text-left">Status</th>
-                <th className="px-4 py-2 text-left flex items-center gap-2">
-                  <img src={TimeIcon} className="h-4" />
-                  Timestamp
-                </th>
+        <div className="overflow-x-auto">
+          <table className="ui-table min-w-[600px]">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Timestamp</th>
               </tr>
             </thead>
             <tbody>
               {currentActivities.map((item, index) => (
-                <tr key={index} className="border-b">
-                  <td className="py-3 px-4">{item.id}</td>
-                  <td className="py-3 px-4">{item.title}</td>
-                  <td className="py-3 px-4">{item.status}</td>
-                  <td className="py-3 px-4">{item.timestamp}</td>
+                <tr key={index}>
+                  <td className="font-medium">{item.id}</td>
+                  <td>{item.title}</td>
+                  <td>
+                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]">
+                      {item.status}
+                    </span>
+                  </td>
+                  <td className="text-[var(--muted)]">{item.timestamp}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          className="mt-6"
-        />
-      </div>
+        <div className="px-5 py-4 border-t border-[var(--border)]">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      </section>
     </div>
   );
 };

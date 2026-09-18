@@ -148,7 +148,7 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
             )}
 
             {/* Upload Area */}
-            <div className="relative bg-[#D9D9D9]/70 p-2 rounded-xl">
+            <div className="relative bg-[#f7f8fc] border border-[var(--border)] p-2 rounded-lg">
                 <div className="relative flex items-center">
                     <input
                         type="file"

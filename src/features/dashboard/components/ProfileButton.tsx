@@ -22,20 +22,20 @@ const ProfileButton = () => {
     <div className="relative" ref={wrapperRef}>
       <button
         onClick={toggleDrawer}
-        className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#B9B4B4] hover:bg-[#EAF1FF] transition"
+        className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--cool-blue-tint)] transition-colors"
       >
         {profile?.avatar ? (
           <img
             src={typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url}
             alt="profile"
-            className="w-10 h-10 rounded-full object-cover"
+            className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
-          <div className={`w-10 h-10 rounded-full ${initialsColor} flex items-center justify-center text-white font-semibold text-sm`}>
+          <div className={`w-8 h-8 rounded-full ${initialsColor} flex items-center justify-center text-white font-semibold text-xs`}>
             {userInitials}
           </div>
         )}
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-[var(--ires-navy-blue)] hidden sm:inline">
           {displayName}
         </span>
       </button>

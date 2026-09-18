@@ -1,6 +1,12 @@
 import React from "react";
 
-const SubscriberTableSkeleton: React.FC = () => {
+interface SubscriberTableSkeletonProps {
+  showCredits?: boolean;
+}
+
+const SubscriberTableSkeleton: React.FC<SubscriberTableSkeletonProps> = ({
+  showCredits = false,
+}) => {
   return (
     <>
       {Array.from({ length: 5 }).map((_, index) => (
@@ -23,6 +29,14 @@ const SubscriberTableSkeleton: React.FC = () => {
           <td className="p-4">
             <div className="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
           </td>
+          {showCredits && (
+            <td className="p-4">
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-12"></div>
+            </td>
+          )}
+          <td className="p-4">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+          </td>
           <td className="p-4">
             <div className="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
           </td>
@@ -36,4 +50,3 @@ const SubscriberTableSkeleton: React.FC = () => {
 };
 
 export default SubscriberTableSkeleton;
-

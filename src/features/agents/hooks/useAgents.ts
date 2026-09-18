@@ -21,7 +21,9 @@ interface UseAgentsReturn {
   
   // Agent operations
   fetchAgents: (page?: number, limit?: number, search?: string) => Promise<void>;
-  createAgent: (data: Pick<AgentProfile, "firstName" | "lastName" | "email">) => Promise<void>;
+  createAgent: (data: Pick<AgentProfile, "firstName" | "lastName" | "email"> & {
+    avatarFile?: File | null;
+  }) => Promise<void>;
   updateAgent: (id: string, data: { firstName?: string; lastName?: string; email?: string; avatarFile?: File | null }) => Promise<void>;
   deactivateAgent: (id: string) => Promise<void>;
   activateAgent: (id: string) => Promise<void>;
@@ -50,7 +52,9 @@ export const useAgents = (): UseAgentsReturn => {
     await fetchAgentsFromStore(page, limit, search);
   }, [fetchAgentsFromStore]);
 
-  const createAgent = useCallback(async (data: Pick<AgentProfile, "firstName" | "lastName" | "email">) => {
+  const createAgent = useCallback(async (data: Pick<AgentProfile, "firstName" | "lastName" | "email"> & {
+    avatarFile?: File | null;
+  }) => {
     await createAgentFromStore(data);
   }, [createAgentFromStore]);
 
