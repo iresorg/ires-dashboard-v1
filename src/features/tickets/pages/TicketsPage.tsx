@@ -16,6 +16,7 @@ import {
   TICKET_STATUSES,
   type TicketStatus,
 } from "../types";
+import TicketTableSkeleton from "../components/TicketTableSkeleton";
 
 const TicketsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -112,15 +113,7 @@ const TicketsPage: React.FC = () => {
           </thead>
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, index) => (
-                <tr key={index}>
-                  {Array.from({ length: 8 }).map((__, col) => (
-                    <td key={col}>
-                      <div className="h-4 bg-gray-200 rounded animate-pulse w-24" />
-                    </td>
-                  ))}
-                </tr>
-              ))
+              <TicketTableSkeleton rows={6} columns={8} />
             ) : tickets.length === 0 ? (
               <tr>
                 <td colSpan={8} className="text-[var(--muted)] text-center py-10">

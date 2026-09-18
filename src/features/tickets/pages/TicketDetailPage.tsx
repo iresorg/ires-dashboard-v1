@@ -2,6 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTicketDetail } from "../hooks/useTicketDetail";
 import TicketStatusBadge from "../components/TicketStatusBadge";
+import TicketDetailSkeleton from "../components/TicketDetailSkeleton";
+import AttachmentPreviewModal, {
+  getDisplayName,
+  getPreviewKind,
+} from "../components/AttachmentPreviewModal";
 import Pagination from "@/shared/components/ui/Pagination";
 import { useToast } from "@/shared/components/ui/useToast";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -10,12 +15,14 @@ import { getResponders, type ResponderProfile } from "@/features/responders/serv
 import { getUsers } from "@/features/users/services/userService";
 import { ROUTES } from "@/shared/constants/routes";
 import CloseIcon from "@/shared/assets/icons/close.svg";
+import { Eye, FileText, Image as ImageIcon } from "lucide-react";
 import {
   formatDateTime,
   formatEntitlementSource,
   formatStaffName,
   getApiErrorMessage,
   type AssignTicketPayload,
+  type TicketAttachment,
   type TicketSeverity,
   type TicketTier,
 } from "../types";
@@ -191,6 +198,10 @@ const TicketDetailPage: React.FC = () => {
   } = useTicketDetail(ticketId);
 
   const [responders, setResponders] = useState<ResponderProfile[]>([]);
+  const [previewAttachment, setPreviewAttachment] = useState<{
+    file: TicketAttachment;
+    index: number;
+  } | null>(null);
   const [modal, setModal] = useState<
     null | "analysis" | "assign" | "respond" | "escalate" | "reassign" | "resolve" | "close"
   >(null);
@@ -278,7 +289,7 @@ const TicketDetailPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="ui-card p-8 text-sm text-[var(--muted)]">Loading ticket...</div>;
+    return <TicketDetailSkeleton />;
   }
 
   if (error || !ticket) {
@@ -383,19 +394,36 @@ const TicketDetailPage: React.FC = () => {
           {(ticket.attachments?.length ?? 0) > 0 && (
             <div>
               <p className="text-xs text-[var(--muted)] mb-2">Attachments</p>
-              <ul className="space-y-1">
-                {ticket.attachments?.map((file, index) => (
-                  <li key={file.id || file.url || index}>
-                    <a
-                      href={file.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sm text-[var(--ires-navy-blue)] underline"
+              <ul className="space-y-2">
+                {ticket.attachments?.map((file, index) => {
+                  const label = getDisplayName(file, index);
+                  const kind = getPreviewKind(file);
+                  return (
+                    <li
+                      key={file.id || file.url || index}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[#f8f9fc] px-3 py-2"
                     >
-                      {file.fileName || file.name || `Attachment ${index + 1}`}
-                    </a>
-                  </li>
-                ))}
+                      <div className="flex items-center gap-2 min-w-0">
+                        {kind === "image" ? (
+                          <ImageIcon className="h-4 w-4 shrink-0 text-[var(--muted)]" />
+                        ) : (
+                          <FileText className="h-4 w-4 shrink-0 text-[var(--muted)]" />
+                        )}
+                        <span className="text-sm text-[var(--ires-navy-blue)] truncate">
+                          {label}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="ui-action-btn h-8 px-3 inline-flex items-center gap-1.5 shrink-0"
+                        onClick={() => setPreviewAttachment({ file, index })}
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        Preview
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -503,6 +531,14 @@ const TicketDetailPage: React.FC = () => {
               showError(getApiErrorMessage(err, "Could not update assignment"));
             }
           }}
+        />
+      )}
+
+      {previewAttachment && (
+        <AttachmentPreviewModal
+          file={previewAttachment.file}
+          index={previewAttachment.index}
+          onClose={() => setPreviewAttachment(null)}
         />
       )}
     </div>
