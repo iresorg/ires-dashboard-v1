@@ -8,6 +8,7 @@ import AttachmentPreviewModal, {
   getPreviewKind,
 } from "../components/AttachmentPreviewModal";
 import Pagination from "@/shared/components/ui/Pagination";
+import Dropdown from "@/shared/components/ui/Dropdown";
 import { useToast } from "@/shared/components/ui/useToast";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/shared/types/roles";
@@ -22,7 +23,6 @@ import {
   formatStaffName,
   getApiErrorMessage,
   type AssignTicketPayload,
-  type TicketAttachment,
   type TicketAttachmentInput,
   type TicketSeverity,
   type TicketTier,
@@ -90,12 +90,38 @@ const AssignModal: React.FC<{
   const [tier, setTier] = useState<TicketTier>("TIER_1");
   const [severity, setSeverity] = useState<TicketSeverity>("MEDIUM");
   const [notes, setNotes] = useState("");
+  const [error, setError] = useState("");
+
+  const responderOptions = useMemo(
+    () =>
+      responders.map((responder) => ({
+        value: responder.id,
+        label: `${responder.firstName} ${responder.lastName} · ${
+          responder.role === "RESPONDER_TIER_2" ? "Tier 2" : "Tier 1"
+        }`,
+      })),
+    [responders]
+  );
+
+  const tierOptions = [
+    { value: "TIER_1", label: "Tier 1" },
+    { value: "TIER_2", label: "Tier 2" },
+  ];
+
+  const severityOptions = [
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
+  ];
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[var(--ires-dark-blue)]/40" onClick={onClose} />
-      <div className="relative z-10 ui-card w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--ires-navy-blue)]">
+      <div
+        className="relative z-10 ui-card w-full max-w-lg overflow-visible"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--ires-navy-blue)] rounded-t-[inherit]">
           <h2 className="text-sm font-semibold text-white">{title}</h2>
           <button type="button" onClick={onClose} aria-label="Close">
             <img src={CloseIcon} alt="" className="w-3.5 h-3.5 invert" />
@@ -105,7 +131,11 @@ const AssignModal: React.FC<{
           className="p-5 space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
-            if (!assignedResponderId) return;
+            if (!assignedResponderId) {
+              setError("Select a responder");
+              return;
+            }
+            setError("");
             await onSubmit({
               assignedResponderId,
               tier,
@@ -114,46 +144,41 @@ const AssignModal: React.FC<{
             });
           }}
         >
-          <label className="block">
+          <div className="block">
             <span className="text-xs font-medium text-[var(--muted)]">Responder</span>
-            <select
-              className="ui-input mt-1"
+            <Dropdown
+              className="mt-1"
+              options={responderOptions}
               value={assignedResponderId}
-              onChange={(e) => setAssignedResponderId(e.target.value)}
-              required
-            >
-              <option value="">Select responder</option>
-              {responders.map((responder) => (
-                <option key={responder.id} value={responder.id}>
-                  {responder.firstName} {responder.lastName} ({responder.role})
-                </option>
-              ))}
-            </select>
-          </label>
+              onChange={(value) => {
+                setAssignedResponderId(value);
+                setError("");
+              }}
+              placeholder="Select responder"
+            />
+            {error && <p className="text-xs text-[var(--ires-red)] mt-1">{error}</p>}
+          </div>
           <div className="grid grid-cols-2 gap-4">
-            <label className="block">
+            <div className="block">
               <span className="text-xs font-medium text-[var(--muted)]">Tier</span>
-              <select
-                className="ui-input mt-1"
+              <Dropdown
+                className="mt-1"
+                options={tierOptions}
                 value={tier}
-                onChange={(e) => setTier(e.target.value as TicketTier)}
-              >
-                <option value="TIER_1">Tier 1</option>
-                <option value="TIER_2">Tier 2</option>
-              </select>
-            </label>
-            <label className="block">
+                onChange={(value) => setTier(value as TicketTier)}
+                placeholder="Select tier"
+              />
+            </div>
+            <div className="block">
               <span className="text-xs font-medium text-[var(--muted)]">Severity</span>
-              <select
-                className="ui-input mt-1"
+              <Dropdown
+                className="mt-1"
+                options={severityOptions}
                 value={severity}
-                onChange={(e) => setSeverity(e.target.value as TicketSeverity)}
-              >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-              </select>
-            </label>
+                onChange={(value) => setSeverity(value as TicketSeverity)}
+                placeholder="Select severity"
+              />
+            </div>
           </div>
           <label className="block">
             <span className="text-xs font-medium text-[var(--muted)]">Notes</span>
