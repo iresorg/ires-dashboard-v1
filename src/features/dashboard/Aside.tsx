@@ -93,6 +93,25 @@ const navItems: NavItem[] = [
     ),
     roles: [Role.SUPER_ADMIN, Role.ADMIN],
   },
+  {
+    label: "Tickets",
+    path: ROUTES.TICKETS,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v1.2a2.2 2.2 0 0 0 0 4.2V14.5A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-1.6a2.2 2.2 0 0 0 0-4.2V7.5Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M9 9h6M9 12h4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
 ];
 
 const externalCTA = {
@@ -133,7 +152,11 @@ const Aside: React.FC = () => {
         </p>
         <ul className="flex flex-col gap-1">
           {filteredNavItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive =
+              item.path === ROUTES.DASHBOARD
+                ? location.pathname === item.path
+                : location.pathname === item.path ||
+                  location.pathname.startsWith(`${item.path}/`);
 
             return (
               <li key={item.path}>

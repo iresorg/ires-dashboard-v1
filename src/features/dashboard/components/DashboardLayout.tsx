@@ -19,6 +19,9 @@ const DashboardLayout: React.FC = () => {
     "/dashboard/responders": "Responder Management",
     "/dashboard/responders/:responderId/tokens": "Responder Token Management",
     "/dashboard/tickets": "Ticket Management",
+    "/dashboard/tickets/escalations": "Escalation History",
+    "/dashboard/tickets/:ticketId": "Ticket Detail",
+    "/dashboard/ticket-categories": "Ticket Categories",
     "/dashboard/external-cta/users": "External Users",
     "/dashboard/external-cta/subscribers": "Subscribers",
   };

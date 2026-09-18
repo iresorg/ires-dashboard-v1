@@ -9,7 +9,10 @@ import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
 import SubscriptionPlansPage from "@/features/subscriptions/pages/SubscriptionPlansPage";
-// import RoleBasedTickets from "@/features/dashboard/components/RolesBasedTicket";
+import TicketsPage from "@/features/tickets/pages/TicketsPage";
+import TicketDetailPage from "@/features/tickets/pages/TicketDetailPage";
+import TicketCategoriesPage from "@/features/tickets/pages/TicketCategoriesPage";
+import EscalationHistoryPage from "@/features/tickets/pages/EscalationHistoryPage";
 
 // External CTA Pages
 import CTAUsersPage from "@/features/dashboard/external-cta/users/UsersPage";
@@ -39,8 +42,10 @@ export const router = createBrowserRouter([
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },
       { path: "subscription-plans", element: <SubscriptionPlansPage /> },
-      // { path: "tickets", element: <RoleBasedTickets /> },
-
+      { path: "tickets", element: <TicketsPage /> },
+      { path: "tickets/escalations", element: <EscalationHistoryPage /> },
+      { path: "tickets/:ticketId", element: <TicketDetailPage /> },
+      { path: "ticket-categories", element: <TicketCategoriesPage /> },
 
       { path: "external-cta/users", element: <CTAUsersPage /> },
       { path: "external-cta/subscribers", element: <CTASubscribersPage /> },
