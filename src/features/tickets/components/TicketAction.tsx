@@ -149,6 +149,7 @@ const TicketAction: React.FC<TicketActionProps> = ({ ticket, onClose }) => {
           </div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   );

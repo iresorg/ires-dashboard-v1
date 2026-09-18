@@ -7,7 +7,6 @@ import {
   getUsers,
   updateUser,
   type UserProfile,
-  type UsersResponse,
 } from "@/features/users/services/userService";
 
 export type ResponderRole = "RESPONDER_TIER_1" | "RESPONDER_TIER_2";
@@ -21,7 +20,14 @@ export interface ResponderProfile extends Omit<UserProfile, "role" | "status"> {
   } | null;
 }
 
-export type RespondersResponse = UsersResponse;
+export type RespondersResponse = {
+  data: ResponderProfile[];
+  total: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  nextPage: number | null;
+};
 
 export interface CreateResponderData {
   firstName: string;
