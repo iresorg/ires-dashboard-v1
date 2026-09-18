@@ -13,7 +13,7 @@ import Trash from "@/shared/assets/icons/delete.svg";
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
 import ConfirmAgentModal from "@/features/agents/components/ConfirmAgentModal";
 import CreateAgentSucessModal from "@/features/agents/components/CreateAgentSucessModal";
-import EditAgentModal from "@/features/agents/components/EditAgentModal";
+import EditAgentModal, { type Agent } from "@/features/agents/components/EditAgentModal";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
 import { getAvatarUrl } from "@/features/users/services/userService";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
@@ -44,19 +44,7 @@ const AgentsPage: React.FC = () => {
     email: string;
     avatarFile?: File | null;
   } | null>(null);
-  const [editingAgent, setEditingAgent] = useState<{
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    status: string;
-    avatar?: string;
-    avatarFile?: File | null;
-    createdAt: string;
-    updatedAt: string;
-    lastLogin: string | null;
-  } | null>(null);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [confirming, setConfirming] = useState<{
     type: "deactivate" | "activate" | "delete";
     agent: AgentProfile;
@@ -108,19 +96,7 @@ const AgentsPage: React.FC = () => {
     }
   };
 
-  const handleEditAgent = async (updatedAgent: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    status: string;
-    avatar?: string;
-    avatarFile?: File | null;
-    createdAt: string;
-    updatedAt: string;
-    lastLogin: string | null;
-  }) => {
+  const handleEditAgent = async (updatedAgent: Agent) => {
     await updateAgent(updatedAgent.id, {
       firstName: updatedAgent.firstName,
       lastName: updatedAgent.lastName,
