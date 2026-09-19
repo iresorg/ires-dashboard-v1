@@ -254,6 +254,43 @@ const Aside: React.FC = () => {
           </div>
         )}
       </nav>
+
+      <div className="shrink-0 border-t border-white/10 p-2">
+        <Link
+          to={ROUTES.DOCS}
+          className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${
+            location.pathname === ROUTES.DOCS ||
+            location.pathname.startsWith(`${ROUTES.DOCS}/`)
+              ? "bg-white/12 text-white font-semibold shadow-[inset_3px_0_0_#D10F24]"
+              : "text-white/70 hover:bg-white/8 hover:text-white"
+          }`}
+        >
+          <span
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+              location.pathname === ROUTES.DOCS ||
+              location.pathname.startsWith(`${ROUTES.DOCS}/`)
+                ? "bg-[var(--ires-red)] text-white"
+                : "bg-white/8 text-white/80"
+            }`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M7 3.5A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5L14 3.5H7Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 3.5V8.5h5M8.5 12h7M8.5 15.5h7M8.5 8.5H11"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <span className="truncate">Documentation</span>
+        </Link>
+      </div>
     </aside>
   );
 };

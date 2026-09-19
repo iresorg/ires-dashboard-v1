@@ -25,6 +25,8 @@ const DashboardLayout: React.FC = () => {
     "/dashboard/ticket-categories": "Ticket Categories",
     "/dashboard/external-cta/users": "External Users",
     "/dashboard/external-cta/subscribers": "Subscribers",
+    "/dashboard/docs": "Documentation",
+    "/dashboard/docs/:sectionId": "Documentation",
   };
 
   const resolveTitle = (pathname: string): string => {
