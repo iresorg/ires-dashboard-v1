@@ -96,7 +96,7 @@ const ResponderDashboard: React.FC = () => {
             </div>
             <div>
               <p className="text-xs text-[var(--muted)]">{stat.label}</p>
-              <p className="text-2xl font-semibold text-[var(--ires-navy-blue)]">
+              <p className="text-2xl font-semibold text-[var(--heading)]">
                 {stat.value}
               </p>
             </div>
@@ -106,7 +106,7 @@ const ResponderDashboard: React.FC = () => {
 
       <section className="ui-card">
         <div className="px-5 py-4 border-b border-[var(--border)]">
-          <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">Recent activities</h3>
+          <h3 className="text-base font-semibold text-[var(--heading)]">Recent activities</h3>
         </div>
 
         <div className="overflow-x-auto">
@@ -125,7 +125,7 @@ const ResponderDashboard: React.FC = () => {
                   <td className="font-medium">{item.id}</td>
                   <td>{item.title}</td>
                   <td>
-                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]">
+                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--heading)]">
                       {item.status}
                     </span>
                   </td>

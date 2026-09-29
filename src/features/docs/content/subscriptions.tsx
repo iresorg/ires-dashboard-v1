@@ -13,7 +13,7 @@ const headings = [
 const SubscriptionsContent: React.FC = () => (
   <>
     <section id="plans" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Subscription plans
       </h3>
       <p className="text-sm leading-relaxed">
@@ -28,7 +28,7 @@ const SubscriptionsContent: React.FC = () => (
     </section>
 
     <section id="pricing" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Pricing fields
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -47,7 +47,7 @@ const SubscriptionsContent: React.FC = () => (
     </section>
 
     <section id="active" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Active flag
       </h3>
       <p className="text-sm leading-relaxed">
@@ -57,7 +57,7 @@ const SubscriptionsContent: React.FC = () => (
     </section>
 
     <section id="subscribers" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Subscribers
       </h3>
       <p className="text-sm leading-relaxed">
@@ -67,7 +67,7 @@ const SubscriptionsContent: React.FC = () => (
     </section>
 
     <section id="external-cta" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         External CTA
       </h3>
       <p className="text-sm leading-relaxed">

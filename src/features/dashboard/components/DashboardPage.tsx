@@ -36,7 +36,7 @@ const DashboardPage: React.FC = () => {
       <section className="ui-card">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
           <div>
-            <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">Recent activity</h3>
+            <h3 className="text-base font-semibold text-[var(--heading)]">Recent activity</h3>
             <p className="text-xs text-[var(--muted)] mt-0.5">Latest operator actions across the platform</p>
           </div>
         </div>
@@ -69,7 +69,7 @@ const DashboardPage: React.FC = () => {
                   <tr key={`${getActivityActor(item)}-${index}`}>
                     <td className="font-medium">{getActivityActor(item)}</td>
                     <td>
-                      <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]">
+                      <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--heading)]">
                         {item.role || "—"}
                       </span>
                     </td>

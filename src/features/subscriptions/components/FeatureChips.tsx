@@ -48,7 +48,7 @@ const FeatureChips: React.FC<FeatureChipsProps> = ({ features, onChange }) => {
           {features.map((feature, index) => (
             <span
               key={`${feature}-${index}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)] px-3 py-1 text-xs font-medium"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--cool-blue-tint)] text-[var(--heading)] px-3 py-1 text-xs font-medium"
             >
               {feature}
               <button

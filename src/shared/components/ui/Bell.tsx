@@ -10,7 +10,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className }) => {
     <img
       src={BellIcon}
       alt=""
-      className={`w-4 h-4 object-contain ${className ?? ""}`}
+      className={`w-4 h-4 object-contain dark:invert dark:opacity-90 ${className ?? ""}`}
     />
   );
 };

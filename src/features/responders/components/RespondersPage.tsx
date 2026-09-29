@@ -7,6 +7,7 @@ import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.png";
 import Pagination from "@/shared/components/ui/Pagination";
+import Tooltip from "@/shared/components/ui/Tooltip";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Responder from "@/shared/assets/icons/respondericon.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
@@ -201,7 +202,7 @@ const RespondersPage: React.FC = () => {
                     className={`ui-chip ${
                         responder.role === "RESPONDER_TIER_2"
                         ? "bg-[color-mix(in_srgb,var(--ires-red)_12%,white)] text-[var(--ires-red)]"
-                          : "bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]"
+                          : "bg-[var(--cool-blue-tint)] text-[var(--heading)]"
                     }`}
                   >
                       {responder.role === "RESPONDER_TIER_1" ? "Tier 1" : "Tier 2"}
@@ -224,7 +225,7 @@ const RespondersPage: React.FC = () => {
                       onClick={() => setEditingResponder(responder)}
                         className="ui-action-btn"
                     >
-                      Edit <img src={Pen} className="h-3" alt="Edit" />
+                      Edit <img src={Pen} className="ui-icon-adaptive h-3" alt="Edit" />
                     </button>
                     <button
                       type="button"
@@ -242,14 +243,16 @@ const RespondersPage: React.FC = () => {
                       >
                         {responder.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => setConfirming({ type: "delete", responder })}
-                        className="ui-icon-btn !w-8 !h-8"
-                        aria-label="Delete responder"
-                      >
-                        <img src={Trash} className="h-3.5" alt="Delete" />
-                      </button>
+                      <Tooltip content="Delete responder" side="top">
+                        <button
+                          type="button"
+                          onClick={() => setConfirming({ type: "delete", responder })}
+                          className="ui-icon-btn !w-8 !h-8"
+                          aria-label="Delete responder"
+                        >
+                          <img src={Trash} className="ui-icon-adaptive h-3.5" alt="" />
+                        </button>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>

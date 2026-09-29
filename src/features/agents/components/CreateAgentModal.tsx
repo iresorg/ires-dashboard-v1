@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
+import Trash from "@/shared/assets/icons/delete.svg";
 
 interface CreateAgentModalProps {
   onClose: () => void;
@@ -127,7 +128,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
           <h2 className="text-xl font-semibold text-center">Create Agent</h2>
-          <img src={PencilIcon} alt="Create Agent" className="w-5 h-6" />
+          <img src={PencilIcon} alt="Create Agent" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
           <img
@@ -239,9 +240,9 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
                   className="mt-2 flex items-center text-red-600 text-sm hover:underline cursor-pointer"
                 >
                   <img
-                    src="/icons/delete.svg"
+                    src={Trash}
                     alt="Delete Icon"
-                    className="w-4 h-4 mr-1"
+                    className="ui-icon-adaptive w-4 h-4 mr-1"
                   />
                   Remove Avatar
                 </button>

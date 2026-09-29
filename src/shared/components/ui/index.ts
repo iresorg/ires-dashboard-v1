@@ -8,3 +8,6 @@ export { default as Button } from './Button';
 export { default as Pagination } from './Pagination';
 export { default as Reset } from './Reset';
 export { default as Dropdown } from './Dropdown';
+export { default as Tooltip } from './Tooltip';
+export { default as ThemeToggle } from './ThemeToggle';
+export { default as DatePicker } from './DatePicker';

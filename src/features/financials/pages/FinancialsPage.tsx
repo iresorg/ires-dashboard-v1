@@ -80,7 +80,7 @@ const SummaryCard: React.FC<{
     </p>
     <p
       className={`mt-1 text-2xl font-semibold tracking-tight ${
-        featured ? "text-white" : "text-[var(--ires-navy-blue)]"
+        featured ? "text-white" : "text-[var(--heading)]"
       }`}
     >
       {value}
@@ -256,7 +256,7 @@ const FinancialsPage: React.FC = () => {
   if (!canAccess) {
     return (
       <div className="ui-card px-5 py-8 text-center">
-        <h2 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+        <h2 className="text-lg font-semibold text-[var(--heading)]">
           Financials
         </h2>
         <p className="text-sm text-[var(--muted)] mt-2">
@@ -273,7 +273,7 @@ const FinancialsPage: React.FC = () => {
     <div className="w-full flex flex-col gap-6">
       <div className="ui-toolbar items-start">
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">
+          <h2 className="text-xl font-semibold text-[var(--heading)]">
             Financials
           </h2>
           <p className="text-sm text-[var(--muted)]">
@@ -367,7 +367,7 @@ const FinancialsPage: React.FC = () => {
 
       <section className="ui-card overflow-hidden">
         <div className="px-5 py-4 border-b border-[var(--border)]">
-          <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">
+          <h3 className="text-base font-semibold text-[var(--heading)]">
             Payment ledger
           </h3>
           <p className="text-xs text-[var(--muted)] mt-0.5">
@@ -462,7 +462,7 @@ const FinancialsPage: React.FC = () => {
                       {formatDateTime(tx.createdAt)}
                     </td>
                     <td>
-                      <div className="font-medium text-[var(--ires-navy-blue)]">
+                      <div className="font-medium text-[var(--heading)]">
                         {tx.accountName || "—"}
                       </div>
                       <div className="text-xs text-[var(--muted)]">
@@ -471,7 +471,7 @@ const FinancialsPage: React.FC = () => {
                       {tx.accountId && (
                         <Link
                           to={ROUTES.CTA_SUBSCRIBERS}
-                          className="text-xs text-[var(--ires-navy-blue)] hover:underline"
+                          className="text-xs text-[var(--heading)] hover:underline"
                         >
                           View subscribers
                         </Link>
@@ -511,7 +511,7 @@ const FinancialsPage: React.FC = () => {
 
       <section className="space-y-4">
         <div>
-          <h3 className="text-base font-semibold text-[var(--ires-navy-blue)]">
+          <h3 className="text-base font-semibold text-[var(--heading)]">
             Paystack wallet
           </h3>
           <p className="text-xs text-[var(--muted)] mt-0.5">
@@ -541,7 +541,7 @@ const FinancialsPage: React.FC = () => {
               <ul className="mt-2 space-y-2">
                 {balances.map((item) => (
                   <li key={item.currency}>
-                    <p className="text-2xl font-semibold text-[var(--ires-navy-blue)]">
+                    <p className="text-2xl font-semibold text-[var(--heading)]">
                       {typeof item.balanceNaira === "number"
                         ? formatMoney(item.balanceNaira * 100, item.currency)
                         : formatMoney(item.balance, item.currency)}
@@ -559,7 +559,7 @@ const FinancialsPage: React.FC = () => {
           <div className="ui-card overflow-hidden lg:col-span-2">
             <div className="px-5 py-4 border-b border-[var(--border)] flex items-center justify-between gap-3">
               <div>
-                <h4 className="text-sm font-semibold text-[var(--ires-navy-blue)]">
+                <h4 className="text-sm font-semibold text-[var(--heading)]">
                   Money to bank
                 </h4>
                 <p className="text-xs text-[var(--muted)]">Paystack settlements</p>

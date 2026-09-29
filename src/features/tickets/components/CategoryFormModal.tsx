@@ -102,7 +102,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                   {subCategories.map((item) => (
                     <span
                       key={item}
-                      className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]"
+                      className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--heading)]"
                     >
                       {item}
                       <button

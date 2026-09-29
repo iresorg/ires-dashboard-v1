@@ -54,15 +54,15 @@ const getStatusBadgeClass = (status: string): string => {
   switch (status) {
     case "active":
     case "available":
-      return "bg-green-100 text-green-800";
+      return "ui-badge-success";
     case "expired":
-      return "bg-red-100 text-red-800";
+      return "ui-badge-danger";
     case "cancelled":
-      return "bg-gray-100 text-gray-800";
+      return "ui-badge-neutral";
     case "past_due":
-      return "bg-yellow-100 text-yellow-800";
+      return "ui-badge-warning";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "ui-badge-neutral";
   }
 };
 
@@ -139,9 +139,9 @@ export default function CTASubscribersPage() {
   ];
 
   const paymentTypeOptions = [
+    { value: "", label: "All payment types" },
     { value: "subscription", label: "Subscription" },
     { value: "one_time", label: "Pay as you go" },
-    { value: "", label: "All payment types" },
   ];
 
   const planIdOptions = [
@@ -153,7 +153,7 @@ export default function CTASubscribersPage() {
   return (
     <div className="w-full space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">
+        <h2 className="text-xl font-semibold text-[var(--heading)]">
           Subscribers
         </h2>
         <p className="text-sm text-[var(--muted)]">
@@ -163,7 +163,7 @@ export default function CTASubscribersPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="ui-search w-full min-w-0">
-          <img src={Search} className="w-4 h-4 mr-2 opacity-60" alt="" />
+          <img src={Search} className="ui-icon-adaptive w-4 h-4 mr-2 opacity-70" alt="" />
           <input
             type="text"
             placeholder="Search name or email"
@@ -179,7 +179,7 @@ export default function CTASubscribersPage() {
             setPaymentType(value as SubscriberPaymentType | "")
           }
           placeholder="Payment type"
-          icon={<img src={Filter} className="w-4 h-4" alt="Filter" />}
+          icon={<img src={Filter} className="ui-icon-adaptive w-4 h-4" alt="Filter" />}
         />
 
         <Dropdown
@@ -187,7 +187,7 @@ export default function CTASubscribersPage() {
           value={status}
           onChange={(value) => setStatus(value as SubscriberStatus | "")}
           placeholder="All Status"
-          icon={<img src={Filter} className="w-4 h-4" alt="Filter" />}
+          icon={<img src={Filter} className="ui-icon-adaptive w-4 h-4" alt="Filter" />}
         />
 
         {planIdOptions.length > 1 && (
@@ -201,7 +201,7 @@ export default function CTASubscribersPage() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
+        <div className="p-4 bg-red-50 dark:bg-[color-mix(in_srgb,var(--accent)_14%,var(--surface))] border-l-4 border-red-400 dark:border-[var(--accent)] rounded-r-lg">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg
@@ -217,7 +217,7 @@ export default function CTASubscribersPage() {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm text-red-700 dark:text-[#fda4af]">{error}</p>
             </div>
           </div>
         </div>
@@ -247,11 +247,11 @@ export default function CTASubscribersPage() {
               <tr>
                 <td
                   colSpan={showCreditsColumn ? 10 : 9}
-                  className="text-center p-12 text-gray-500"
+                  className="text-center p-12 text-[var(--muted)]"
                 >
                   <div className="flex flex-col items-center justify-center">
                     <svg
-                      className="w-12 h-12 text-gray-400 mb-4"
+                      className="w-12 h-12 text-[var(--muted)] mb-4 opacity-70"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -263,8 +263,8 @@ export default function CTASubscribersPage() {
                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
-                    <p className="text-base font-medium">No subscribers found</p>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-base font-medium text-[var(--heading)]">No subscribers found</p>
+                    <p className="text-sm text-[var(--muted)] mt-1">
                       Try adjusting your search or filters
                     </p>
                   </div>
@@ -275,22 +275,19 @@ export default function CTASubscribersPage() {
                 const isPayg = subscriber.paymentType === "one_time";
 
                 return (
-                  <tr
-                    key={subscriber.id}
-                    className="hover:bg-gray-50 transition-colors duration-150"
-                  >
-                    <td className="p-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                  <tr key={subscriber.id}>
+                    <td className="whitespace-nowrap font-medium">
                       {subscriber.userName}
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap">
                       {subscriber.email}
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <td className="whitespace-nowrap">
+                      <span className="ui-badge ui-badge-info">
                         {formatRole(subscriber.role)}
                       </span>
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap">
                       <div>{subscriber.planSubscribedTo}</div>
                       {!isPayg && subscriber.interval && (
                         <div className="text-xs text-[var(--muted)] capitalize">
@@ -298,31 +295,27 @@ export default function CTASubscribersPage() {
                         </div>
                       )}
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap">
                       {formatPaymentType(subscriber.paymentType)}
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap">
                       {formatAmount(subscriber.amount)}
                     </td>
                     {showCreditsColumn && (
-                      <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                      <td className="whitespace-nowrap">
                         {isPayg
                           ? subscriber.paygCreditsAvailable ?? 0
                           : "—"}
                       </td>
                     )}
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap ui-td-muted">
                       {formatDate(subscriber.startDate)}
                     </td>
-                    <td className="p-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="whitespace-nowrap ui-td-muted">
                       {formatDate(subscriber.endDate)}
                     </td>
-                    <td className="p-4">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusBadgeClass(
-                          subscriber.status
-                        )}`}
-                      >
+                    <td>
+                      <span className={`ui-badge ${getStatusBadgeClass(subscriber.status)}`}>
                         {formatStatus(subscriber.status)}
                       </span>
                     </td>
@@ -335,10 +328,10 @@ export default function CTASubscribersPage() {
       </div>
 
       {!isLoading && subscribers.length > 0 && (
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          <div className="text-sm text-gray-600">
-            Showing <span className="font-medium">{subscribers.length}</span> of{" "}
-            <span className="font-medium">{pagination.total}</span> subscribers
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+          <div className="text-sm text-[var(--muted)]">
+            Showing <span className="font-medium text-[var(--foreground)]">{subscribers.length}</span> of{" "}
+            <span className="font-medium text-[var(--foreground)]">{pagination.total}</span> subscribers
           </div>
           <Pagination
             currentPage={pagination.page}

@@ -27,9 +27,9 @@ const DeletePlanModal: React.FC<DeletePlanModalProps> = ({
       <div className="relative z-10 ui-card w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-[var(--ires-navy-blue)]">Delete plan</h2>
+            <h2 className="text-lg font-semibold text-[var(--heading)]">Delete plan</h2>
             <p className="text-sm text-[var(--muted)] mt-2">
-              Delete <span className="font-medium text-[var(--ires-navy-blue)]">{planName}</span>? If people are already subscribed, it will be hidden instead of removed.
+              Delete <span className="font-medium text-[var(--heading)]">{planName}</span>? If people are already subscribed, it will be hidden instead of removed.
             </p>
           </div>
           <button type="button" onClick={onClose} aria-label="Close">

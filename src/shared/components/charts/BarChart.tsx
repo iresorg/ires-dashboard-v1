@@ -77,7 +77,7 @@ const BarChart: React.FC<BarChartProps> = ({ points = [], isLoading = false }) =
 
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] p-5 rounded-xl shadow-[var(--shadow-card)] h-full overflow-hidden">
-      <h2 className="text-sm font-semibold text-[var(--ires-navy-blue)] mb-4">Ticket status</h2>
+      <h2 className="text-sm font-semibold text-[var(--heading)] mb-4">Ticket status</h2>
       <div className="h-[calc(100%-2rem)]">
         {isLoading ? (
           <div className="h-full rounded-lg bg-[var(--cool-blue-tint)]/50 animate-pulse" />

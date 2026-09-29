@@ -8,6 +8,7 @@ import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pagination from "@/shared/components/ui/Pagination";
+import Tooltip from "@/shared/components/ui/Tooltip";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import CreateAgentModal from "@/features/agents/components/CreateAgentModal";
@@ -223,7 +224,7 @@ const AgentsPage: React.FC = () => {
                         }}
                           className="ui-action-btn"
                         >
-                          Edit <img src={Pen} className="h-3" alt="Edit" />
+                          Edit <img src={Pen} className="ui-icon-adaptive h-3" alt="Edit" />
                         </button>
                       <button
                         type="button"
@@ -241,14 +242,16 @@ const AgentsPage: React.FC = () => {
                       >
                         {agent.status?.toLowerCase() === "active" ? "Deactivate" : "Activate"}
                       </button>
-                        <button
-                          type="button"
-                          onClick={() => setConfirming({ type: "delete", agent })}
-                          className="ui-icon-btn !w-8 !h-8"
-                          aria-label="Delete agent"
-                        >
-                          <img src={Trash} className="h-3.5" alt="Delete" />
-                        </button>
+                        <Tooltip content="Delete agent" side="top">
+                          <button
+                            type="button"
+                            onClick={() => setConfirming({ type: "delete", agent })}
+                            className="ui-icon-btn !w-8 !h-8"
+                            aria-label="Delete agent"
+                          >
+                            <img src={Trash} className="ui-icon-adaptive h-3.5" alt="" />
+                          </button>
+                        </Tooltip>
 
                       </div>
                     </td>

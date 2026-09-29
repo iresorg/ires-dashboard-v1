@@ -125,7 +125,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
           <h2 className="text-xl font-semibold text-center">Edit Agent</h2>
-          <img src={PencilIcon} alt="Edit Agent" className="w-5 h-6" />
+          <img src={PencilIcon} alt="Edit Agent" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
           <img

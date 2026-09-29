@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import ProfileDrawer from "./ProfileDrawer";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
+import Tooltip from "@/shared/components/ui/Tooltip";
 
 const ProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +12,7 @@ const ProfileButton = () => {
   const toggleDrawer = () => setIsOpen((prev) => !prev);
   const closeDrawer = () => setIsOpen(false);
 
-  const displayName = profile 
+  const displayName = profile
     ? `${profile.firstName} ${profile.lastName}`
     : "Loading...";
 
@@ -20,25 +21,32 @@ const ProfileButton = () => {
 
   return (
     <div className="relative" ref={wrapperRef}>
-      <button
-        onClick={toggleDrawer}
-        className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--cool-blue-tint)] transition-colors"
-      >
-        {profile?.avatar ? (
-          <img
-            src={typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url}
-            alt="profile"
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        ) : (
-          <div className={`w-8 h-8 rounded-full ${initialsColor} flex items-center justify-center text-white font-semibold text-xs`}>
-            {userInitials}
-          </div>
-        )}
-        <span className="text-sm font-medium text-[var(--ires-navy-blue)] hidden sm:inline">
-          {displayName}
-        </span>
-      </button>
+      <Tooltip content="Profile & account">
+        <button
+          onClick={toggleDrawer}
+          type="button"
+          aria-label="Profile & account"
+          aria-expanded={isOpen}
+          className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--cool-blue-tint)] transition-colors"
+        >
+          {profile?.avatar ? (
+            <img
+              src={typeof profile.avatar === "string" ? profile.avatar : profile.avatar?.url}
+              alt=""
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <div
+              className={`w-8 h-8 rounded-full ${initialsColor} flex items-center justify-center text-white font-semibold text-xs`}
+            >
+              {userInitials}
+            </div>
+          )}
+          <span className="text-sm font-medium text-[var(--heading)] hidden sm:inline">
+            {displayName}
+          </span>
+        </button>
+      </Tooltip>
 
       {isOpen && <ProfileDrawer isOpen={isOpen} onClose={closeDrawer} />}
     </div>

@@ -44,9 +44,7 @@ export const useSubscribers = (): UseSubscribersReturn => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<SubscriberStatus | "">("");
   const [planId, setPlanId] = useState("");
-  const [paymentType, setPaymentType] = useState<SubscriberPaymentType | "">(
-    "subscription"
-  );
+  const [paymentType, setPaymentType] = useState<SubscriberPaymentType | "">("");
 
   const hasInitialized = useRef(false);
 

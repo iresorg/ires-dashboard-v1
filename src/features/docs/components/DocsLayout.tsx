@@ -18,7 +18,7 @@ const DocsLayout: React.FC<{
           >
             ← Documentation
           </Link>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)] mt-1">
+          <h2 className="text-xl font-semibold text-[var(--heading)] mt-1">
             {section.title}
           </h2>
           <p className="text-sm text-[var(--muted)] mt-1 max-w-2xl">
@@ -36,7 +36,7 @@ const DocsLayout: React.FC<{
             <a
               key={heading.id}
               href={`#${heading.id}`}
-              className="block rounded-md px-2.5 py-1.5 text-sm text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)]"
+              className="block rounded-md px-2.5 py-1.5 text-sm text-[var(--heading)] hover:bg-[var(--cool-blue-tint)]"
             >
               {heading.title}
             </a>

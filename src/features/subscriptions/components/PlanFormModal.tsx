@@ -244,7 +244,7 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
 
           {isEdit && isSubscription && plan?.paystackPlanCode && (
             <p className="text-xs text-[var(--muted)]">
-              Paystack code: <span className="font-medium text-[var(--ires-navy-blue)]">{plan.paystackPlanCode}</span>
+              Paystack code: <span className="font-medium text-[var(--heading)]">{plan.paystackPlanCode}</span>
             </p>
           )}
           </div>

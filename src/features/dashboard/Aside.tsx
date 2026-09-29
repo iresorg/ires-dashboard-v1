@@ -161,8 +161,8 @@ const Aside: React.FC = () => {
   });
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-52 bg-[var(--ires-navy-blue)] text-white flex flex-col z-50">
-      <div className="h-14 shrink-0 flex items-center px-4 border-b border-white/10">
+    <aside className="fixed top-0 left-0 h-screen w-52 bg-[var(--sidebar-bg)] text-white flex flex-col z-50 border-r border-[var(--sidebar-border)]">
+      <div className="h-14 shrink-0 flex items-center px-4 border-b border-[var(--sidebar-border)]">
         <Logo variant="light" className="h-6 w-auto" />
       </div>
 
@@ -181,15 +181,15 @@ const Aside: React.FC = () => {
                   to={item.path}
                   className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${
                     isActive
-                      ? "bg-white/12 text-white font-semibold shadow-[inset_3px_0_0_#D10F24]"
-                      : "text-white/70 hover:bg-white/8 hover:text-white"
+                      ? "bg-[var(--sidebar-active)] text-[var(--sidebar-text-active)] font-semibold shadow-[inset_3px_0_0_var(--accent)]"
+                      : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-text-active)]"
                   }`}
                 >
                   <span
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
                       isActive
                         ? "bg-[var(--ires-red)] text-white"
-                        : "bg-white/8 text-white/80"
+                        : "bg-white/8 text-white/80 dark:bg-white/6"
                     }`}
                   >
                     {item.icon}
@@ -202,18 +202,24 @@ const Aside: React.FC = () => {
         </ul>
 
         {canSeeCTA && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-[var(--sidebar-border)]">
             <button
               type="button"
               onClick={() => setCtaOpen((open) => !open)}
-              className="w-full flex items-center justify-between px-2.5 py-2 text-[13px] text-white/70 hover:text-white cursor-pointer"
+              className="w-full flex items-center justify-between px-2.5 py-2 text-[13px] text-[var(--sidebar-text)] hover:text-[var(--sidebar-text-active)] cursor-pointer"
             >
               <span className="flex items-center gap-2.5 min-w-0">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/8">
-                  <svg width="14" height="14" viewBox="0 0 25 25" fill="none">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/12 text-white">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path
-                      d="M13.75 3.75c2.7625 0 5 2.2375 5 5 0 1.875-1 3.4625-2.5 4.325v-1.525c.7625-.6875 1.25-1.6875 1.25-2.8 0-2.075-1.675-3.75-3.75-3.75s-3.75 1.675-3.75 3.75c0 1.1125.4875 2.1125 1.25 2.8v1.525c-1.5-.8625-2.5-2.45-2.5-4.325 0-2.7625 2.2375-5 5-5z"
+                      d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 0a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 8 11Z"
                       fill="currentColor"
+                      opacity="0.95"
+                    />
+                    <path
+                      d="M16 13c-2.8 0-8 1.4-8 4.2V19h12v-1.8C20 14.4 18.8 13 16 13ZM8 13.2c-.3 0-.7 0-1 .1C4.5 13.8 2 15 2 17.1V19h5v-1.8c0-1.5.7-2.7 1.8-3.5-.4-.2-.9-.3-1.8-.5Z"
+                      fill="currentColor"
+                      opacity="0.95"
                     />
                   </svg>
                 </span>
@@ -240,8 +246,8 @@ const Aside: React.FC = () => {
                         to={child.path}
                         className={`block rounded-md px-2.5 py-1.5 text-[13px] ${
                           active
-                            ? "bg-white/12 text-white font-medium"
-                            : "text-white/60 hover:bg-white/8 hover:text-white"
+                            ? "bg-[var(--sidebar-active)] text-[var(--sidebar-text-active)] font-medium"
+                            : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-text-active)]"
                         }`}
                       >
                         {child.label}
@@ -255,14 +261,14 @@ const Aside: React.FC = () => {
         )}
       </nav>
 
-      <div className="shrink-0 border-t border-white/10 p-2">
+      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-2">
         <Link
           to={ROUTES.DOCS}
           className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${
             location.pathname === ROUTES.DOCS ||
             location.pathname.startsWith(`${ROUTES.DOCS}/`)
-              ? "bg-white/12 text-white font-semibold shadow-[inset_3px_0_0_#D10F24]"
-              : "text-white/70 hover:bg-white/8 hover:text-white"
+              ? "bg-[var(--sidebar-active)] text-[var(--sidebar-text-active)] font-semibold shadow-[inset_3px_0_0_var(--accent)]"
+              : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-text-active)]"
           }`}
         >
           <span
@@ -270,7 +276,7 @@ const Aside: React.FC = () => {
               location.pathname === ROUTES.DOCS ||
               location.pathname.startsWith(`${ROUTES.DOCS}/`)
                 ? "bg-[var(--ires-red)] text-white"
-                : "bg-white/8 text-white/80"
+                : "bg-white/8 text-white/80 dark:bg-white/6"
             }`}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

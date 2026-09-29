@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import EyeIcon from "../../../shared/assets/icons/Eye.svg";
+import Tooltip from "@/shared/components/ui/Tooltip";
 
 interface PasswordInputProps {
   id: string;
@@ -12,6 +12,31 @@ interface PasswordInputProps {
     ref: (instance: HTMLInputElement | null) => void;
   };
 }
+
+const EyeIconSvg: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-hidden
+  >
+    <path
+      d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="3"
+      stroke="currentColor"
+      strokeWidth="1.75"
+    />
+  </svg>
+);
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
   id,
@@ -34,23 +59,26 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         className="ui-input pr-10 remove-eye"
       />
 
-      <button
-        type="button"
-        onClick={() => setShowPassword((prev) => !prev)}
-        className="absolute inset-y-0 right-2 top-6 flex items-center justify-center w-8 h-10"
-        tabIndex={-1}
+      <Tooltip
+        content={showPassword ? "Hide password" : "Show password"}
+        side="left"
+        className="absolute right-2 top-[1.85rem] h-10 w-8"
       >
-        <div className="relative w-5 h-5">
-          <img
-            src={EyeIcon}
-            alt={showPassword ? "Hide password" : "Show password"}
-            className="w-full h-full"
-          />
-          {showPassword && (
-            <span className="absolute top-1/2 left-1/2 w-[110%] h-[2px] bg-black dark:bg-white transform -translate-x-1/2 -translate-y-1/2 rotate-45 pointer-events-none" />
-          )}
-        </div>
-      </button>
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="flex h-10 w-8 items-center justify-center text-[var(--muted)] hover:text-[var(--foreground)]"
+          tabIndex={-1}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          <span className="relative inline-flex h-5 w-5">
+            <EyeIconSvg className="h-5 w-5" />
+            {showPassword && (
+              <span className="pointer-events-none absolute left-1/2 top-1/2 h-[2px] w-[110%] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[var(--muted)]" />
+            )}
+          </span>
+        </button>
+      </Tooltip>
       {error && (
         <span className="text-xs text-red-600 mt-1 block">{error}</span>
       )}

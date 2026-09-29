@@ -12,6 +12,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import Tooltip from "@/shared/components/ui/Tooltip";
 
 interface DatePickerProps {
   value: string;
@@ -83,7 +84,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       >
         <span className="flex items-center gap-2 min-w-0">
           <CalendarIcon className="h-4 w-4 shrink-0 text-[var(--muted)]" />
-          <span className={`truncate ${selected ? "text-[var(--ires-navy-blue)]" : "text-[var(--muted)]"}`}>
+          <span className={`truncate ${selected ? "text-[var(--heading)]" : "text-[var(--muted)]"}`}>
             {display}
           </span>
         </span>
@@ -100,25 +101,29 @@ const DatePicker: React.FC<DatePickerProps> = ({
       {open && (
         <div className="absolute z-50 mt-1 w-[280px] rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between mb-3">
-            <button
-              type="button"
-              className="ui-action-btn h-8 w-8 p-0 inline-flex items-center justify-center"
-              onClick={() => setViewMonth((month) => addMonths(month, -1))}
-              aria-label="Previous month"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <p className="text-sm font-semibold text-[var(--ires-navy-blue)]">
+            <Tooltip content="Previous month" side="top">
+              <button
+                type="button"
+                className="ui-action-btn h-8 w-8 p-0 inline-flex items-center justify-center"
+                onClick={() => setViewMonth((month) => addMonths(month, -1))}
+                aria-label="Previous month"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            </Tooltip>
+            <p className="text-sm font-semibold text-[var(--heading)]">
               {format(viewMonth, "MMMM yyyy")}
             </p>
-            <button
-              type="button"
-              className="ui-action-btn h-8 w-8 p-0 inline-flex items-center justify-center"
-              onClick={() => setViewMonth((month) => addMonths(month, 1))}
-              aria-label="Next month"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            <Tooltip content="Next month" side="top">
+              <button
+                type="button"
+                className="ui-action-btn h-8 w-8 p-0 inline-flex items-center justify-center"
+                onClick={() => setViewMonth((month) => addMonths(month, 1))}
+                aria-label="Next month"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </Tooltip>
           </div>
 
           <div className="grid grid-cols-7 gap-1 mb-1">
@@ -150,7 +155,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     isSelected
                       ? "bg-[var(--ires-navy-blue)] text-white font-semibold"
                       : inMonth
-                        ? "text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)]"
+                        ? "text-[var(--heading)] hover:bg-[var(--cool-blue-tint)]"
                         : "text-[var(--muted)]/50 hover:bg-[var(--cool-blue-tint)]/50"
                   } ${!isSelected && isToday ? "ring-1 ring-[var(--ires-navy-blue)]/30" : ""}`}
                 >
@@ -163,7 +168,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           <div className="mt-3 flex items-center justify-between gap-2 border-t border-[var(--border)] pt-3">
             <button
               type="button"
-              className="text-xs font-medium text-[var(--ires-navy-blue)] hover:underline"
+              className="text-xs font-medium text-[var(--heading)] hover:underline"
               onClick={() => {
                 onChange(format(new Date(), "yyyy-MM-dd"));
                 setOpen(false);
@@ -174,7 +179,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             {allowClear && (
               <button
                 type="button"
-                className="text-xs font-medium text-[var(--muted)] hover:text-[var(--ires-navy-blue)]"
+                className="text-xs font-medium text-[var(--muted)] hover:text-[var(--heading)]"
                 onClick={() => {
                   onChange("");
                   setOpen(false);

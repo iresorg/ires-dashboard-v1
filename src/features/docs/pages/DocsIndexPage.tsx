@@ -26,7 +26,7 @@ const DocsIndexPage: React.FC = () => {
     <div className="w-full flex flex-col gap-5">
       <div className="ui-toolbar items-start sm:items-center">
         <div>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">
+          <h2 className="text-xl font-semibold text-[var(--heading)]">
             Documentation
           </h2>
           <p className="text-sm text-[var(--muted)] mt-1 max-w-2xl">
@@ -63,13 +63,13 @@ const DocsIndexPage: React.FC = () => {
               to={`${ROUTES.DOCS}/${section.id}`}
               className="ui-card p-5 hover:border-[var(--ires-navy-blue)] transition-colors group"
             >
-              <h3 className="text-base font-semibold text-[var(--ires-navy-blue)] group-hover:underline">
+              <h3 className="text-base font-semibold text-[var(--heading)] group-hover:underline">
                 {section.title}
               </h3>
               <p className="mt-2 text-sm text-[var(--muted)] leading-relaxed">
                 {section.summary}
               </p>
-              <span className="mt-4 inline-block text-xs font-medium text-[var(--ires-navy-blue)]">
+              <span className="mt-4 inline-block text-xs font-medium text-[var(--heading)]">
                 Read guide →
               </span>
             </Link>

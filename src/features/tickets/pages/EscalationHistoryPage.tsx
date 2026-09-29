@@ -17,7 +17,7 @@ const EscalationHistoryPage: React.FC = () => {
           <Link to={ROUTES.TICKETS} className="text-xs text-[var(--muted)] hover:underline">
             ← Tickets
           </Link>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)] mt-1">
+          <h2 className="text-xl font-semibold text-[var(--heading)] mt-1">
             Escalation history
           </h2>
           <p className="text-sm text-[var(--muted)]">
@@ -65,7 +65,7 @@ const EscalationHistoryPage: React.FC = () => {
                   <td>
                     <Link
                       to={`${ROUTES.TICKETS}/${item.ticketId}`}
-                      className="font-medium text-[var(--ires-navy-blue)] hover:underline"
+                      className="font-medium text-[var(--heading)] hover:underline"
                     >
                       {item.ticketId}
                     </Link>

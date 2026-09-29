@@ -267,7 +267,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
       <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[var(--ires-dark-blue)]/40" onClick={onClose} />
         <div className="relative z-10 ui-card w-full max-w-md p-6">
-          <h2 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+          <h2 className="text-lg font-semibold text-[var(--heading)]">
             Categories required
           </h2>
           <p className="text-sm text-[var(--muted)] mt-2">
@@ -340,7 +340,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                       }`}
                       onClick={() => handleSelectAccount(account)}
                     >
-                      <div className="font-medium text-[var(--ires-navy-blue)]">
+                      <div className="font-medium text-[var(--heading)]">
                         {account.name || account.email}
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-0.5">
@@ -483,7 +483,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           </label>
 
           <section className="rounded-lg border border-[var(--border)] p-4 space-y-3">
-            <label className="flex items-center gap-2 text-sm font-medium text-[var(--ires-navy-blue)]">
+            <label className="flex items-center gap-2 text-sm font-medium text-[var(--heading)]">
               <input
                 type="checkbox"
                 checked={includeContact}
@@ -526,7 +526,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           </section>
 
           <section className="rounded-lg border border-[var(--border)] p-4 space-y-3">
-            <label className="flex items-center gap-2 text-sm font-medium text-[var(--ires-navy-blue)]">
+            <label className="flex items-center gap-2 text-sm font-medium text-[var(--heading)]">
               <input
                 type="checkbox"
                 checked={includeVictim}
@@ -620,7 +620,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               }}
             >
               <img src={UploadIcon} alt="" className="mx-auto h-6 w-6 opacity-70" />
-              <p className="mt-2 text-sm font-medium text-[var(--ires-navy-blue)]">
+              <p className="mt-2 text-sm font-medium text-[var(--heading)]">
                 Choose files or drag them here
               </p>
               <p className="mt-1 text-xs text-[var(--muted)]">
@@ -638,7 +638,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                     className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm"
                   >
                     <div className="min-w-0">
-                      <p className="truncate font-medium text-[var(--ires-navy-blue)]">
+                      <p className="truncate font-medium text-[var(--heading)]">
                         {file.name}
                       </p>
                       <p className="text-xs text-[var(--muted)]">
@@ -650,7 +650,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                       className="ui-action-btn ui-action-danger h-9 px-3 inline-flex items-center gap-1.5"
                       onClick={() => removeAttachment(index)}
                     >
-                      <img src={TrashIcon} alt="" className="w-3.5 h-3.5" />
+                      <img src={TrashIcon} alt="" className="ui-icon-adaptive w-3.5 h-3.5" />
                       Remove
                     </button>
                   </li>

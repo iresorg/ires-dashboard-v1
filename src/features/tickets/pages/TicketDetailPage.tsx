@@ -342,7 +342,7 @@ const TicketDetailPage: React.FC = () => {
           <Link to={ROUTES.TICKETS} className="text-xs text-[var(--muted)] hover:underline">
             ← Tickets
           </Link>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)] mt-1">
+          <h2 className="text-xl font-semibold text-[var(--heading)] mt-1">
             {ticket.ticketId}
           </h2>
           <p className="text-sm text-[var(--muted)]">{ticket.title}</p>
@@ -366,7 +366,7 @@ const TicketDetailPage: React.FC = () => {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <section className="ui-card p-5 xl:col-span-2 space-y-4">
-          <h3 className="text-sm font-semibold text-[var(--ires-navy-blue)]">Details</h3>
+          <h3 className="text-sm font-semibold text-[var(--heading)]">Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div>
               <p className="text-xs text-[var(--muted)]">Severity</p>
@@ -440,7 +440,7 @@ const TicketDetailPage: React.FC = () => {
                         ) : (
                           <FileText className="h-4 w-4 shrink-0 text-[var(--muted)]" />
                         )}
-                        <span className="text-sm text-[var(--ires-navy-blue)] truncate">
+                        <span className="text-sm text-[var(--heading)] truncate">
                           {label}
                         </span>
                       </div>
@@ -461,7 +461,7 @@ const TicketDetailPage: React.FC = () => {
         </section>
 
         <section className="ui-card p-5">
-          <h3 className="text-sm font-semibold text-[var(--ires-navy-blue)] mb-3">
+          <h3 className="text-sm font-semibold text-[var(--heading)] mb-3">
             Lifecycle
           </h3>
           {lifecycle.length === 0 ? (

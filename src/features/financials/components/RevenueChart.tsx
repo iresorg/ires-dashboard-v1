@@ -103,7 +103,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
   return (
     <div className="ui-card p-5 h-[340px] overflow-hidden">
       <div className="mb-4">
-        <h3 className="text-sm font-semibold text-[var(--ires-navy-blue)]">
+        <h3 className="text-sm font-semibold text-[var(--heading)]">
           Revenue by month
         </h3>
         <p className="text-xs text-[var(--muted)] mt-0.5">

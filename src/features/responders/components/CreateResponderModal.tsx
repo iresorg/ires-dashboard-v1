@@ -123,7 +123,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
           <h2 className="text-xl font-semibold text-center">
             Create Responder
           </h2>
-          <img src={EditIcon} alt="Create Responder" className="w-5 h-6" />
+          <img src={EditIcon} alt="Create Responder" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
           <img
@@ -240,7 +240,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                   <img
                     src={Trash}
                     alt="Remove Avatar"
-                    className="w-3 h-3 mr-1"
+                    className="ui-icon-adaptive w-3 h-3 mr-1"
                   />
                   Remove Avatar
                 </button>

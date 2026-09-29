@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { Download, ExternalLink, FileText, X } from "lucide-react";
+import Tooltip from "@/shared/components/ui/Tooltip";
 import {
   normalizeTicketAttachment,
   type TicketAttachment,
@@ -105,14 +106,16 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
               <Download className="h-3.5 w-3.5" />
               Download
             </a>
-            <button
-              type="button"
-              className="ui-action-btn h-9 w-9 p-0 inline-flex items-center justify-center bg-white/10 text-white border-white/20 hover:bg-white/20"
-              onClick={onClose}
-              aria-label="Close preview"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <Tooltip content="Close preview" side="bottom">
+              <button
+                type="button"
+                className="ui-action-btn h-9 w-9 p-0 inline-flex items-center justify-center bg-white/10 text-white border-white/20 hover:bg-white/20"
+                onClick={onClose}
+                aria-label="Close preview"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </Tooltip>
           </div>
         </div>
 
@@ -145,7 +148,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
 
           {kind === "audio" && (
             <div className="w-full max-w-lg ui-card p-6 space-y-3">
-              <p className="text-sm font-medium text-[var(--ires-navy-blue)]">{title}</p>
+              <p className="text-sm font-medium text-[var(--heading)]">{title}</p>
               <audio src={attachment.url} controls className="w-full">
                 Your browser does not support audio playback.
               </audio>
@@ -156,7 +159,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
             <div className="ui-card p-8 max-w-md text-center space-y-4">
               <FileText className="h-12 w-12 mx-auto text-[var(--muted)]" />
               <div>
-                <p className="text-sm font-medium text-[var(--ires-navy-blue)]">{title}</p>
+                <p className="text-sm font-medium text-[var(--heading)]">{title}</p>
                 <p className="text-xs text-[var(--muted)] mt-1">
                   Preview isn’t available for this file type. Open or download it instead.
                 </p>

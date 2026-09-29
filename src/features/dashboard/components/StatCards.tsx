@@ -30,7 +30,7 @@ const StatCard: React.FC<StatCardProps> = ({
         <p className={`text-xs font-medium ${featured ? "text-white/70" : "text-[var(--muted)]"}`}>
           {label}
         </p>
-        <p className={`text-2xl font-semibold tracking-tight ${featured ? "text-white" : "text-[var(--ires-navy-blue)]"}`}>
+        <p className={`text-2xl font-semibold tracking-tight ${featured ? "text-white" : "text-[var(--heading)]"}`}>
           {value}
         </p>
       </div>
