@@ -13,7 +13,7 @@ const headings = [
 const FinancialsContent: React.FC = () => (
   <>
     <section id="source-of-truth" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Local ledger
       </h3>
       <p className="text-sm leading-relaxed">
@@ -27,7 +27,7 @@ const FinancialsContent: React.FC = () => (
     </section>
 
     <section id="overview" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Overview cards & chart
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -43,7 +43,7 @@ const FinancialsContent: React.FC = () => (
     </section>
 
     <section id="transactions" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Transactions table
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -54,7 +54,7 @@ const FinancialsContent: React.FC = () => (
     </section>
 
     <section id="sync" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Sync from Paystack
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -71,7 +71,7 @@ const FinancialsContent: React.FC = () => (
     </section>
 
     <section id="wallet" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Wallet & settlements
       </h3>
       <p className="text-sm leading-relaxed">

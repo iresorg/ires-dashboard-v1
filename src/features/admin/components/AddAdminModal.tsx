@@ -114,8 +114,8 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center text-[var(--ires-navy-blue)]">Add Admin</h2>
-          <img src={PencilIcon} alt="Add Admin" className="w-5 h-6" />
+          <h2 className="text-xl font-semibold text-center text-[var(--heading)]">Add Admin</h2>
+          <img src={PencilIcon} alt="Add Admin" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
           <img

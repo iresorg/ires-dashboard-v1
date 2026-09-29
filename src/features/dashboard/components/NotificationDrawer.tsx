@@ -31,7 +31,7 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ onClose }) => {
 
       <div className="px-5 py-10 min-h-[200px] flex flex-col items-center justify-center text-center">
         <div className="h-10 w-10 rounded-full bg-[var(--cool-blue-tint)] mb-3" />
-        <p className="text-sm font-semibold text-[var(--ires-navy-blue)]">
+        <p className="text-sm font-semibold text-[var(--heading)]">
           No notifications yet
         </p>
         <p className="text-xs text-[var(--muted)] mt-1">

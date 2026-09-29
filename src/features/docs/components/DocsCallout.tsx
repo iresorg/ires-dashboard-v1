@@ -2,7 +2,7 @@ import React from "react";
 import type { DocsCalloutTone } from "../types";
 
 const toneClass: Record<DocsCalloutTone, string> = {
-  info: "bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)] border-[color-mix(in_srgb,var(--ires-navy-blue)_15%,var(--border))]",
+  info: "bg-[var(--cool-blue-tint)] text-[var(--heading)] border-[color-mix(in_srgb,var(--ires-navy-blue)_15%,var(--border))]",
   admin: "bg-[#fff4e5] text-[#8a4b00] border-[#f0d2a8]",
   warning: "bg-[#fdebec] text-[var(--ires-red)] border-[#f3c4c9]",
 };

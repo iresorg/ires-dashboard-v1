@@ -14,7 +14,7 @@ const headings = [
 const UsersStaffContent: React.FC = () => (
   <>
     <section id="who" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Who manages what
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -36,7 +36,7 @@ const UsersStaffContent: React.FC = () => (
     </section>
 
     <section id="users" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Users
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -47,7 +47,7 @@ const UsersStaffContent: React.FC = () => (
     </section>
 
     <section id="agents" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Agents
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -58,7 +58,7 @@ const UsersStaffContent: React.FC = () => (
     </section>
 
     <section id="responders" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Responders
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -69,7 +69,7 @@ const UsersStaffContent: React.FC = () => (
     </section>
 
     <section id="avatars" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Avatars
       </h3>
       <p className="text-sm leading-relaxed">
@@ -80,7 +80,7 @@ const UsersStaffContent: React.FC = () => (
     </section>
 
     <section id="activate" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Activate / deactivate
       </h3>
       <p className="text-sm leading-relaxed">

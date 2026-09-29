@@ -115,7 +115,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => handlePageChange(validCurrentPage - 1)}
         disabled={validCurrentPage === 1}
-        className="flex items-center gap-1 text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="flex items-center gap-1 text-[var(--heading)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <ChevronLeftIcon className="h-4 w-4" />
             <span>Previous</span>
@@ -147,7 +147,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => handlePageChange(validCurrentPage + 1)}
         disabled={validCurrentPage === totalPages}
-        className="flex items-center gap-1 text-[var(--ires-navy-blue)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="flex items-center gap-1 text-[var(--heading)] hover:bg-[var(--cool-blue-tint)] px-3 py-1.5 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
             <span>Next</span>
         <ChevronRightIcon className="h-4 w-4" />

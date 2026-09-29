@@ -148,7 +148,7 @@ const AgentTicketModal: React.FC<AgentTicketModalProps> = ({ ticket, onClose, is
                     <p className="text-xs text-[#0C0E5D]/49">1mb</p>
                   </div>
                 </div>
-                <img src={Trash} className="h-7 w-5 pt-2" alt="Delete" />
+                <img src={Trash} className="ui-icon-adaptive h-7 w-5 pt-2" alt="Delete" />
               </div>
               <div className="flex bg-[#0C0E5D]/15 pl-3 pt-1 pb-2 rounded-md mt-3">
                 <img src={Image2} className="mr-5" alt="Image" />
@@ -162,7 +162,7 @@ const AgentTicketModal: React.FC<AgentTicketModalProps> = ({ ticket, onClose, is
                     <p className="text-xs text-[#0C0E5D]/49">524kb</p>
                   </div>
                 </div>
-                <img src={Trash} className="h-7 w-5 pt-2" alt="Delete" />
+                <img src={Trash} className="ui-icon-adaptive h-7 w-5 pt-2" alt="Delete" />
               </div>
             </div>
             <div>

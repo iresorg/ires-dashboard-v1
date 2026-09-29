@@ -15,7 +15,7 @@ const headings = [
 const TicketsContent: React.FC = () => (
   <>
     <section id="overview" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         What tickets are
       </h3>
       <p className="text-sm leading-relaxed">
@@ -31,7 +31,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="categories" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Categories first
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -42,7 +42,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="create" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Create a ticket
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed">
@@ -70,7 +70,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="list" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         List and filters
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -81,7 +81,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="detail" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Ticket detail
       </h3>
       <p className="text-sm leading-relaxed">
@@ -92,7 +92,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="lifecycle" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Lifecycle actions
       </h3>
       <p className="text-sm leading-relaxed mb-2">
@@ -123,7 +123,7 @@ const TicketsContent: React.FC = () => (
     </section>
 
     <section id="attachments" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Attachments
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">

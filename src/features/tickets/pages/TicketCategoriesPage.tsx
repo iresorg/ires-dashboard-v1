@@ -5,6 +5,7 @@ import CategoryFormModal from "../components/CategoryFormModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import TicketCategoriesSkeleton from "../components/TicketCategoriesSkeleton";
 import { useToast } from "@/shared/components/ui/useToast";
+import Tooltip from "@/shared/components/ui/Tooltip";
 import { ROUTES } from "@/shared/constants/routes";
 import { getApiErrorMessage } from "../types";
 import type { TicketCategory, TicketSubCategory } from "../types";
@@ -135,12 +136,12 @@ const TicketCategoriesPage: React.FC = () => {
     <div className="w-full flex flex-col gap-5">
       <div className="ui-toolbar">
         <div>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">
+          <h2 className="text-xl font-semibold text-[var(--heading)]">
             Ticket categories
           </h2>
           <p className="text-sm text-[var(--muted)]">
             Seed categories before filing tickets.{" "}
-            <Link to={ROUTES.TICKETS} className="text-[var(--ires-navy-blue)] underline">
+            <Link to={ROUTES.TICKETS} className="text-[var(--heading)] underline">
               Back to tickets
             </Link>
           </p>
@@ -163,7 +164,7 @@ const TicketCategoriesPage: React.FC = () => {
         <TicketCategoriesSkeleton />
       ) : categories.length === 0 ? (
         <div className="ui-card p-10 text-center">
-          <p className="text-base font-medium text-[var(--ires-navy-blue)]">
+          <p className="text-base font-medium text-[var(--heading)]">
             No categories yet — create one before tickets can be filed
           </p>
           <p className="text-sm text-[var(--muted)] mt-2">
@@ -223,26 +224,28 @@ const TicketCategoriesPage: React.FC = () => {
                       <React.Fragment key={category.id}>
                         <tr>
                           <td>
-                            <button
-                              type="button"
-                              className="ui-icon-btn"
-                              aria-label={isOpen ? "Collapse" : "Expand"}
-                              onClick={() => toggleExpanded(category.id)}
-                            >
-                              <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 20 20"
-                                className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+                            <Tooltip content={isOpen ? "Collapse category" : "Expand category"} side="right">
+                              <button
+                                type="button"
+                                className="ui-icon-btn"
+                                aria-label={isOpen ? "Collapse category" : "Expand category"}
+                                onClick={() => toggleExpanded(category.id)}
                               >
-                                <path
-                                  d="M5 7l5 5 5-5"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                  fill="none"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 20 20"
+                                  className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+                                >
+                                  <path
+                                    d="M5 7l5 5 5-5"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    fill="none"
+                                  />
+                                </svg>
+                              </button>
+                            </Tooltip>
                           </td>
                           <td>
                             <button
@@ -296,7 +299,7 @@ const TicketCategoriesPage: React.FC = () => {
                                       key={sub.id}
                                       className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white px-3 py-2"
                                     >
-                                      <span className="text-sm font-medium text-[var(--ires-navy-blue)]">
+                                      <span className="text-sm font-medium text-[var(--heading)]">
                                         {sub.name}
                                       </span>
                                       <div className="flex items-center gap-2 shrink-0">
@@ -306,7 +309,7 @@ const TicketCategoriesPage: React.FC = () => {
                                           onClick={() => setRenamingSub(sub)}
                                           aria-label={`Rename ${sub.name}`}
                                         >
-                                          <img src={PenIcon} alt="" className="w-4 h-4" />
+                                          <img src={PenIcon} alt="" className="ui-icon-adaptive w-4 h-4" />
                                           <span>Edit</span>
                                         </button>
                                         <button
@@ -315,7 +318,7 @@ const TicketCategoriesPage: React.FC = () => {
                                           onClick={() => setDeletingSub(sub)}
                                           aria-label={`Delete ${sub.name}`}
                                         >
-                                          <img src={DeleteIcon} alt="" className="w-4 h-4" />
+                                          <img src={DeleteIcon} alt="" className="ui-icon-adaptive w-4 h-4" />
                                           <span>Delete</span>
                                         </button>
                                       </div>
@@ -377,7 +380,7 @@ const TicketCategoriesPage: React.FC = () => {
           description={
             <>
               Delete{" "}
-              <span className="font-medium text-[var(--ires-navy-blue)]">
+              <span className="font-medium text-[var(--heading)]">
                 {deletingCategory.name}
               </span>
               ? Tickets using this category will lose the category link.
@@ -394,7 +397,7 @@ const TicketCategoriesPage: React.FC = () => {
           description={
             <>
               Delete sub-category{" "}
-              <span className="font-medium text-[var(--ires-navy-blue)]">
+              <span className="font-medium text-[var(--heading)]">
                 {deletingSub.name}
               </span>
               ? This cannot be undone.

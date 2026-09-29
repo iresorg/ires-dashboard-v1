@@ -3,7 +3,7 @@ import type { User } from "@/features/admin/components/EditAdminModal";
 import EditAdminModal from "@/features/admin/components/EditAdminModal";
 import ConfirmModal from "@/features/admin/components/ConfirmModal";
 import type { UserProfile } from "../services/userService";
-import { UserTableSkeletonRow } from "@/shared/components/ui";
+import { UserTableSkeletonRow, Tooltip } from "@/shared/components/ui";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
 import type { CreatableUserRole } from "@/shared/types/roles";
 import { useToast } from "@/shared/components/ui/useToast";
@@ -123,7 +123,7 @@ const UserTable: React.FC<UserTableProps> = ({
                   </td>
                   <td className="text-[var(--muted)]">{user.email}</td>
                   <td>
-                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)]">
+                    <span className="ui-chip bg-[var(--cool-blue-tint)] text-[var(--heading)]">
                       {user.role}
                     </span>
                   </td>
@@ -168,7 +168,7 @@ const UserTable: React.FC<UserTableProps> = ({
                         }}
                         className="ui-action-btn"
                       >
-                        Edit <img src={Pen} className="h-3" alt="edit" />
+                        Edit <img src={Pen} className="ui-icon-adaptive h-3" alt="edit" />
                       </button>
                       
                       {user.status === 'active' ? (
@@ -176,7 +176,7 @@ const UserTable: React.FC<UserTableProps> = ({
                           onClick={() => setConfirming({ type: "deactivate", user: userForEdit })}
                           className="ui-action-btn ui-action-danger"
                         >
-                          Deactivate <img src={Scissors} className="h-3" alt="deactivate" />
+                          Deactivate <img src={Scissors} className="ui-icon-adaptive h-3" alt="deactivate" />
                         </button>
                       ) : (
                         <button
@@ -187,17 +187,19 @@ const UserTable: React.FC<UserTableProps> = ({
                         </button>
                       )}
                       
-                      <button
-                        onClick={() => setConfirming({ type: "delete", user: userForEdit })}
-                        className="ui-icon-btn !w-8 !h-8"
-                        aria-label="Delete user"
-                      >
-                        <img
-                          src={Trash}
-                          className="h-3.5"
-                          alt="delete"
-                        />
-                      </button>
+                      <Tooltip content="Delete user" side="top">
+                        <button
+                          onClick={() => setConfirming({ type: "delete", user: userForEdit })}
+                          className="ui-icon-btn !w-8 !h-8"
+                          aria-label="Delete user"
+                        >
+                          <img
+                            src={Trash}
+                            className="ui-icon-adaptive h-3.5"
+                            alt=""
+                          />
+                        </button>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>

@@ -38,7 +38,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       >
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-[var(--ires-navy-blue)]">{title}</h2>
+            <h2 className="text-lg font-semibold text-[var(--heading)]">{title}</h2>
             <div className="text-sm text-[var(--muted)] mt-2">{description}</div>
           </div>
           <button type="button" onClick={onClose} aria-label="Close">

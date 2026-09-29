@@ -33,7 +33,7 @@ const PlanCards: React.FC<PlanCardsProps> = ({ plans }) => {
                   {plan.accountType} · {formatPaymentType(plan.paymentType)} · Tier{" "}
                   {plan.tier}
                 </p>
-                <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)] mt-1">
+                <h3 className="text-lg font-semibold text-[var(--heading)] mt-1">
                   {plan.name}
                 </h3>
               </div>
@@ -48,7 +48,7 @@ const PlanCards: React.FC<PlanCardsProps> = ({ plans }) => {
               </span>
             </div>
             <p className="text-sm text-[var(--muted)] mt-2">{plan.description}</p>
-            <p className="mt-4 text-2xl font-semibold text-[var(--ires-navy-blue)]">
+            <p className="mt-4 text-2xl font-semibold text-[var(--heading)]">
               {formatPlanPrice(plan.amount, plan.currency)}
               {isSubscription && (
                 <span className="text-sm font-medium text-[var(--muted)]">
@@ -71,7 +71,7 @@ const PlanCards: React.FC<PlanCardsProps> = ({ plans }) => {
                 plan.features.map((feature) => (
                   <span
                     key={feature}
-                    className="inline-flex items-center rounded-full bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)] px-2.5 py-1 text-xs"
+                    className="inline-flex items-center rounded-full bg-[var(--cool-blue-tint)] text-[var(--heading)] px-2.5 py-1 text-xs"
                   >
                     {feature}
                   </span>

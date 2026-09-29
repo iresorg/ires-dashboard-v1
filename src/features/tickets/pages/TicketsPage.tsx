@@ -50,7 +50,7 @@ const TicketsPage: React.FC = () => {
     <div className="w-full flex flex-col gap-5">
       <div className="ui-toolbar">
         <div>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">Tickets</h2>
+          <h2 className="text-xl font-semibold text-[var(--heading)]">Tickets</h2>
           <p className="text-sm text-[var(--muted)]">
             Staff inbox for incidents filed on behalf of customers.
           </p>

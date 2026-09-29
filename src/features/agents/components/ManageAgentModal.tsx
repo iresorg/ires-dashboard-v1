@@ -6,6 +6,7 @@ import RevokeFalse from "@/shared/assets/icons/revoke_false.svg";
 import EyeHide from "@/shared/assets/icons/eyetoggle.svg";
 import EyeShow from "@/shared/assets/icons/eye_show.svg";
 import { format } from 'date-fns';
+import Tooltip from "@/shared/components/ui/Tooltip";
 
 interface TokenData {
   id: string; // The Masked token
@@ -78,17 +79,20 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
             <p className="w-[100px] font-mono leading-none">
               {showToken ? token.actualToken.slice(0, 10) : "**********"}
             </p>
-            <button
-              className="ml-3"
-              onClick={() => setShowToken((prev) => !prev)}
-              aria-label={showToken ? "Hide token" : "Show token"}
-            >
-              {showToken ? (
-                <img src={EyeHide} alt="Hide Token" className="h-4 w-4" />
-              ) : (
-                <img src={EyeShow} alt="Show Token" className="h-4 w-4" />
-              )}
-            </button>
+            <Tooltip content={showToken ? "Hide token" : "Show token"} side="top">
+              <button
+                type="button"
+                className="ml-3"
+                onClick={() => setShowToken((prev) => !prev)}
+                aria-label={showToken ? "Hide token" : "Show token"}
+              >
+                {showToken ? (
+                  <img src={EyeHide} alt="" className="h-4 w-4" />
+                ) : (
+                  <img src={EyeShow} alt="" className="h-4 w-4" />
+                )}
+              </button>
+            </Tooltip>
           </div>
 
 <div className="flex items-center space-x-1 ml-8 text-base">

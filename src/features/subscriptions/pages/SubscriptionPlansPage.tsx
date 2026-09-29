@@ -101,7 +101,7 @@ const SubscriptionPlansPage: React.FC = () => {
     <div className="flex flex-col gap-5 w-full">
       <div className="ui-toolbar">
         <div>
-          <h2 className="text-xl font-semibold text-[var(--ires-navy-blue)]">Subscription plans</h2>
+          <h2 className="text-xl font-semibold text-[var(--heading)]">Subscription plans</h2>
           <p className="text-sm text-[var(--muted)]">
             Manage catalog pricing, visibility, and feature lists.
           </p>
@@ -141,14 +141,14 @@ const SubscriptionPlansPage: React.FC = () => {
         <div className="inline-flex rounded-lg border border-[var(--border)] overflow-hidden">
           <button
             type="button"
-            className={`px-3 h-10 text-sm ${view === "table" ? "bg-[var(--ires-navy-blue)] text-white" : "bg-white text-[var(--ires-navy-blue)]"}`}
+            className={`px-3 h-10 text-sm rounded-lg ${view === "table" ? "bg-[var(--ires-navy-blue)] text-white" : "bg-[var(--surface)] text-[var(--heading)] border border-[var(--border)]"}`}
             onClick={() => setView("table")}
           >
             Table
           </button>
           <button
             type="button"
-            className={`px-3 h-10 text-sm ${view === "cards" ? "bg-[var(--ires-navy-blue)] text-white" : "bg-white text-[var(--ires-navy-blue)]"}`}
+            className={`px-3 h-10 text-sm rounded-lg ${view === "cards" ? "bg-[var(--ires-navy-blue)] text-white" : "bg-[var(--surface)] text-[var(--heading)] border border-[var(--border)]"}`}
             onClick={() => setView("cards")}
           >
             Public cards

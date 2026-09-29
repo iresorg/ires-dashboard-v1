@@ -89,7 +89,7 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
       <div className="relative z-10 bg-white rounded-lg p-6 w-full max-w-xl">
         <div className="flex justify-center items-center space-x-2 mb-6">
           <h2 className="text-lg font-semibold">Edit Responder</h2>
-          <img src={PencilIcon} alt="" className="h-5" />
+          <img src={PencilIcon} alt="" className="ui-icon-adaptive h-5" />
         </div>
         <img
           src={CloseIcon}
@@ -207,7 +207,7 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
                 <img
                   src={Trash}
                   alt="Remove Avatar"
-                  className="w-3 h-3 mr-1"
+                  className="ui-icon-adaptive w-3 h-3 mr-1"
                 />
                 Remove Avatar
               </button>

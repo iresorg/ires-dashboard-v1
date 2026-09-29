@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({
 
     const variants = {
         primary: 'bg-[var(--ires-navy-blue)] text-white hover:bg-[var(--ires-dark-blue)] focus-visible:ring-[var(--ires-navy-blue)]',
-        secondary: 'bg-[var(--cool-blue-tint)] text-[var(--ires-navy-blue)] hover:bg-[#d7dced] focus-visible:ring-[var(--ires-navy-blue)]',
+        secondary: 'bg-[var(--cool-blue-tint)] text-[var(--heading)] hover:bg-[#d7dced] focus-visible:ring-[var(--ires-navy-blue)]',
         danger: 'bg-[var(--ires-red)] text-white hover:bg-[#b10d1e] focus-visible:ring-[var(--ires-red)]',
     };
 

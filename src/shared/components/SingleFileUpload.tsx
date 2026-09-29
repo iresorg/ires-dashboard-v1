@@ -181,7 +181,7 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
                             className="ml-2 p-1 hover:bg-gray-200 rounded cursor-pointer"
                             disabled={disabled}
                         >
-                            <img src={Trash} alt="Remove" className="h-4 w-4" />
+                            <img src={Trash} alt="Remove" className="ui-icon-adaptive h-4 w-4" />
                         </button>
                     )}
                 </div>

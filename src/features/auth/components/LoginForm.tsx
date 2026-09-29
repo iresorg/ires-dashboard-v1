@@ -35,7 +35,7 @@ const LoginForm: React.FC = () => {
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--ires-red)] mb-2">
         Administrator access
       </p>
-      <h2 className="text-3xl font-semibold text-[var(--ires-navy-blue)] mb-2">
+      <h2 className="text-3xl font-semibold text-[var(--foreground)] mb-2">
         Welcome back
       </h2>
       <p className="text-sm text-[var(--muted)] mb-6">
@@ -82,7 +82,7 @@ const LoginForm: React.FC = () => {
         </button>
 
         <p className="text-sm text-center">
-          <a href="#" className="text-[var(--muted)] hover:text-[var(--ires-navy-blue)]">
+          <a href="#" className="text-[var(--muted)] hover:text-[var(--foreground)]">
             Forgot password?
           </a>
         </p>

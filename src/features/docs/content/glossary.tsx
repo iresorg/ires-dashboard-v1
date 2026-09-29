@@ -12,43 +12,43 @@ const headings = [
 const GlossaryContent: React.FC = () => (
   <>
     <section id="statuses" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Ticket statuses
       </h3>
       <dl className="text-sm space-y-3 leading-relaxed">
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">CREATED / PENDING</dt>
+          <dt className="font-semibold text-[var(--heading)]">CREATED / PENDING</dt>
           <dd className="text-[var(--muted)]">Newly filed; not yet fully in analysis or assignment.</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">ANALYSING</dt>
+          <dt className="font-semibold text-[var(--heading)]">ANALYSING</dt>
           <dd className="text-[var(--muted)]">Under review; severity/tier may be set here.</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">ASSIGNED / REASSIGNED</dt>
+          <dt className="font-semibold text-[var(--heading)]">ASSIGNED / REASSIGNED</dt>
           <dd className="text-[var(--muted)]">A responder owns the ticket (or ownership changed).</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">IN_PROGRESS</dt>
+          <dt className="font-semibold text-[var(--heading)]">IN_PROGRESS</dt>
           <dd className="text-[var(--muted)]">Active response work.</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">ESCALATED</dt>
+          <dt className="font-semibold text-[var(--heading)]">ESCALATED</dt>
           <dd className="text-[var(--muted)]">Raised for higher attention.</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">RESOLVED</dt>
+          <dt className="font-semibold text-[var(--heading)]">RESOLVED</dt>
           <dd className="text-[var(--muted)]">Work completed; may still need formal close.</dd>
         </div>
         <div>
-          <dt className="font-semibold text-[var(--ires-navy-blue)]">CLOSED</dt>
+          <dt className="font-semibold text-[var(--heading)]">CLOSED</dt>
           <dd className="text-[var(--muted)]">Ticket finished and closed.</dd>
         </div>
       </dl>
     </section>
 
     <section id="severity" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Severity
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -65,7 +65,7 @@ const GlossaryContent: React.FC = () => (
     </section>
 
     <section id="tiers" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Tiers
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -79,7 +79,7 @@ const GlossaryContent: React.FC = () => (
     </section>
 
     <section id="entitlement" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Entitlement sources
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -94,7 +94,7 @@ const GlossaryContent: React.FC = () => (
     </section>
 
     <section id="money" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Money units
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">

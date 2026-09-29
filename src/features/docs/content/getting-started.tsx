@@ -12,7 +12,7 @@ const headings = [
 const GettingStartedContent: React.FC = () => (
   <>
     <section id="login" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Sign in
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm text-[var(--text)] leading-relaxed">
@@ -26,7 +26,7 @@ const GettingStartedContent: React.FC = () => (
     </section>
 
     <section id="roles" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Roles at a glance
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -46,7 +46,7 @@ const GettingStartedContent: React.FC = () => (
     </section>
 
     <section id="navigation" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Finding your way
       </h3>
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
@@ -75,7 +75,7 @@ const GettingStartedContent: React.FC = () => (
     </section>
 
     <section id="where-next" className="scroll-mt-6 space-y-3">
-      <h3 className="text-lg font-semibold text-[var(--ires-navy-blue)]">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">
         Where to go next
       </h3>
       <p className="text-sm leading-relaxed">

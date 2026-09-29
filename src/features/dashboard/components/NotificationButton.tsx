@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import NotificationBell from "@/shared/components/ui/Bell";
 import NotificationDrawer from "./NotificationDrawer";
+import Tooltip from "@/shared/components/ui/Tooltip";
 
 const NotificationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,16 +34,18 @@ const NotificationButton = () => {
 
   return (
     <>
-      <button
-        ref={buttonRef}
-        type="button"
-        className={`ui-icon-btn ${isOpen ? "bg-[var(--cool-blue-tint)]" : ""}`}
-        aria-label="Notifications"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        <NotificationBell />
-      </button>
+      <Tooltip content="Notifications">
+        <button
+          ref={buttonRef}
+          type="button"
+          className={`ui-icon-btn ${isOpen ? "bg-[var(--cool-blue-tint)]" : ""}`}
+          aria-label="Notifications"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          <NotificationBell />
+        </button>
+      </Tooltip>
 
       {isOpen &&
         createPortal(

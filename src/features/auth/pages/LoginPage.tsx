@@ -8,10 +8,11 @@ import Logo from "../components/Logo";
 const LoginPage: React.FC = () => {
   return (
     <ThemeProvider>
-      <div className="h-screen flex overflow-hidden bg-[#F4F6FB] text-[var(--ires-dark-blue)]">
-        <div className="flex-1 flex flex-col min-w-0 bg-[#F4F6FB]">
+      <div className="h-screen flex overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
+        {/* Form panel — quieter canvas so the navy showcase reads as the brand plane */}
+        <div className="flex-1 flex flex-col min-w-0 bg-[var(--background)]">
           <div className="flex items-center justify-between px-8 py-5">
-            <Logo variant="dark" />
+            <Logo variant="auto" />
             <ThemeToggle />
           </div>
 
@@ -20,6 +21,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Brand / visual panel — richer navy; intentional contrast with the form side */}
         <div className="hidden md:flex w-[46%] relative bg-[var(--ires-navy-blue)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(209,15,36,0.22),transparent_42%),radial-gradient(circle_at_80%_80%,rgba(25,91,255,0.18),transparent_40%)]" />
           <div className="relative z-10 max-w-md px-10 text-center">

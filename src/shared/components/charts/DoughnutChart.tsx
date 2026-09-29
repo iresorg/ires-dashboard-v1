@@ -53,7 +53,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
 
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] p-5 rounded-xl shadow-[var(--shadow-card)] h-full flex flex-col overflow-hidden">
-      <h2 className="text-sm font-semibold text-[var(--ires-navy-blue)] mb-2">User roles</h2>
+      <h2 className="text-sm font-semibold text-[var(--heading)] mb-2">User roles</h2>
       <div className="relative flex-1 min-h-[140px]">
         {isLoading ? (
           <div className="h-full rounded-lg bg-[var(--cool-blue-tint)]/50 animate-pulse" />
@@ -78,7 +78,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
                 />
                 <span className="text-sm text-[var(--muted)] truncate">{point.label}</span>
               </div>
-              <span className="text-sm font-medium text-[var(--ires-navy-blue)]">
+              <span className="text-sm font-medium text-[var(--heading)]">
                 {point.count}
               </span>
             </div>

@@ -61,7 +61,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
                 {userInitials}
               </div>
             )}
-            <p className="mt-3 text-sm font-semibold text-[var(--ires-navy-blue)]">
+            <p className="mt-3 text-sm font-semibold text-[var(--heading)]">
               {profile ? `${profile.firstName} ${profile.lastName}` : "Loading..."}
             </p>
             <p className="text-xs text-[var(--muted)]">{profile?.role}</p>

@@ -10,7 +10,7 @@ const ResetIcon: React.FC<ResetIconProps> = ({ className }) => {
     <img
       src={ResetImg}
       alt=""
-      className={`w-5 h-5 object-contain ${className ?? ""}`}
+      className={`w-5 h-5 object-contain dark:invert dark:opacity-90 ${className ?? ""}`}
     />
   );
 };

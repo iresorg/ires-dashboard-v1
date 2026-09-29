@@ -52,12 +52,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       >
         <div className="flex items-center gap-2">
           {icon && <span className="flex-shrink-0">{icon}</span>}
-          <span className={selectedOption ? "text-gray-900" : "text-gray-500"}>
+          <span className={selectedOption ? "text-[var(--foreground)]" : "text-[var(--muted)]"}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
         </div>
         <svg
-          className={`w-4 h-4 text-gray-500 transition-transform ${
+          className={`w-4 h-4 text-[var(--muted)] transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -74,7 +74,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-[100] w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-card)] max-h-60 overflow-auto">
+        <div className="absolute z-[100] w-full mt-1 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-card)] max-h-60 overflow-auto">
           {options.map((option) => (
             <button
               key={option.value}
@@ -85,7 +85,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               }}
               className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${
                 value === option.value
-                  ? "bg-[var(--ires-navy-blue)] text-white"
+                  ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
                   : "text-[var(--foreground)] hover:bg-[var(--cool-blue-tint)]"
               }`}
             >
