@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
+import { ROUTES } from "@/shared/constants/routes";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -93,6 +95,13 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose }) => {
             >
               Log out
             </button>
+            <Link
+              to={ROUTES.PROFILE}
+              onClick={onClose}
+              className="block text-center text-sm font-medium text-[var(--heading)] hover:underline"
+            >
+              Open profile
+            </Link>
           </div>
         </div>
       </div>

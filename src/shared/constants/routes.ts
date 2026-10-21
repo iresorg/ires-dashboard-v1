@@ -15,6 +15,7 @@ export const ROUTES = {
   TICKET_ESCALATIONS: "/dashboard/tickets/escalations",
   DOCS: "/dashboard/docs",
   DOCS_SECTION: "/dashboard/docs/:sectionId",
+  PROFILE: "/dashboard/profile",
 
   //  External CTA Routes
   CTA_USERS: "/dashboard/external-cta/users",
@@ -34,6 +35,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.TICKET_CATEGORIES,
   ROUTES.TICKET_ESCALATIONS,
   ROUTES.DOCS,
+  ROUTES.PROFILE,
 
   ROUTES.CTA_USERS,
   ROUTES.CTA_SUBSCRIBERS,

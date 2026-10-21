@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/authStore";
 import PasswordInput from "./PasswordInput";
 import { ROUTES } from "@/shared/constants/routes";
 
@@ -23,7 +24,8 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: LoginInputs) => {
     try {
       await login(data.email, data.password);
-      navigate(ROUTES.DASHBOARD);
+      const mustChange = useAuthStore.getState().user?.mustChangePassword;
+      navigate(mustChange ? ROUTES.PROFILE : ROUTES.DASHBOARD);
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || "Login failed. Please try again.";
       alert(message);

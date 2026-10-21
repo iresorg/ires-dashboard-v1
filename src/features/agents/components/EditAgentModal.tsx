@@ -3,6 +3,7 @@ import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
 import type { AgentProfile } from "@/features/agents/services/agentService";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 export interface Agent extends Omit<AgentProfile, 'avatar'> {
   avatar?: string; // Override to use string for form handling
@@ -51,7 +52,10 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    }));
   };
 
   const handleAvatarSelect = (file: File) => {
@@ -80,8 +84,8 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
     const e: { [k: string]: string } = {};
     if (!form.firstName.trim()) e.firstName = "First name required";
     if (!form.lastName.trim()) e.lastName = "Last name required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
-      e.email = "Valid email required";
+    const emailError = getStaffEmailError(form.email);
+    if (emailError) e.email = emailError;
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -195,7 +199,9 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
                   className={`ui-input ${
                     errors.email ? "border border-red-500" : ""
                   }`}
-                  placeholder="Email"
+                  placeholder="name@company.com"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   value={form.email}
                   onChange={handleChange}
                 />

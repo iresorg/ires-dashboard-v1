@@ -4,6 +4,7 @@ import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
 import Trash from "@/shared/assets/icons/delete.svg"; // this is used in img `src`
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface CreateResponderModalProps {
   onClose: () => void;
@@ -42,7 +43,10 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,11 +73,8 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     const e: { [k: string]: string } = {};
     if (!formData.firstName.trim()) e.firstName = "First name required";
     if (!formData.lastName.trim()) e.lastName = "Last name required";
-    if (!formData.email.trim()) {
-      e.email = "Email required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      e.email = "Valid email required";
-    }
+    const emailError = getStaffEmailError(formData.email);
+    if (emailError) e.email = emailError;
     if (!formData.role.trim()) e.role = "Role required";
     if (avatarFile) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -90,7 +91,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onCreateResponder({ ...formData });
+      onCreateResponder({ ...formData, email: formData.email.trim().toLowerCase() });
       setFormData({
         firstName: "",
         lastName: "",
@@ -175,7 +176,9 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 className={`ui-input ${
                   errors.email ? "border border-red-500" : ""
                 }`}
-                placeholder="Email"
+                placeholder="name@company.com"
+                autoCapitalize="none"
+                spellCheck={false}
                 value={formData.email}
                 onChange={handleInputChange}
               />

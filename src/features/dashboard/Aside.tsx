@@ -149,12 +149,17 @@ const Aside: React.FC = () => {
     if (isCtaRoute) setCtaOpen(true);
   }, [isCtaRoute]);
 
+  const isPlatformAdmin =
+    user?.role === Role.SUPER_ADMIN || user?.role === Role.ADMIN;
+
   const canSeeCTA = useMemo(() => {
     if (!user || !user.role) return false;
+    if (isPlatformAdmin) return true;
     return externalCTA.roles.some((role) => role === user.role);
-  }, [user]);
+  }, [user, isPlatformAdmin]);
 
   const filteredNavItems = navItems.filter((item) => {
+    if (isPlatformAdmin) return true;
     if (!item.roles) return true;
     if (!user) return false;
     return item.roles.includes(user.role);
@@ -261,7 +266,34 @@ const Aside: React.FC = () => {
         )}
       </nav>
 
-      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-2">
+      <div className="shrink-0 border-t border-[var(--sidebar-border)] p-2 space-y-0.5">
+        <Link
+          to={ROUTES.PROFILE}
+          className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${
+            location.pathname === ROUTES.PROFILE
+              ? "bg-[var(--sidebar-active)] text-[var(--sidebar-text-active)] font-semibold shadow-[inset_3px_0_0_var(--accent)]"
+              : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-text-active)]"
+          }`}
+        >
+          <span
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+              location.pathname === ROUTES.PROFILE
+                ? "bg-[var(--ires-red)] text-white"
+                : "bg-white/8 text-white/80 dark:bg-white/6"
+            }`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.5" />
+              <path
+                d="M5.5 19.25c1.2-2.4 3.5-3.75 6.5-3.75s5.3 1.35 6.5 3.75"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <span className="truncate">Profile</span>
+        </Link>
         <Link
           to={ROUTES.DOCS}
           className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors ${

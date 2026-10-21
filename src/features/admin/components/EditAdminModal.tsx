@@ -3,8 +3,10 @@ import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
-import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
+import { CREATABLE_USER_ROLES, getRoleDisplayName, Role } from "@/shared/types/roles";
 import type { CreatableUserRole } from "@/shared/types/roles";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 export interface User {
   id: string; // Changed from number to string to support UUIDs
@@ -24,10 +26,16 @@ interface Props {
 }
 
 const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
+  const { user: currentUser } = useAuth();
+  const canAssignAdmin = currentUser?.role === Role.SUPER_ADMIN;
   const [form, setForm] = useState<User>({
     ...user,
     avatar: user.avatar || undefined,
     avatarFile: null,
+  });
+  const roleOptions = CREATABLE_USER_ROLES.filter((roleOption) => {
+    if (roleOption !== Role.ADMIN) return true;
+    return canAssignAdmin || form.role === Role.ADMIN;
   });
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +60,10 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    }));
   };
 
   const handleAvatarSelect = (file: File) => {
@@ -81,8 +92,8 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     const e: { [k: string]: string } = {};
     if (!form.firstName.trim()) e.firstName = "First name required";
     if (!form.lastName.trim()) e.lastName = "Last name required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
-      e.email = "Valid email required";
+    const emailError = getStaffEmailError(form.email);
+    if (emailError) e.email = emailError;
     if (!form.role.trim()) e.role = "Role required";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -200,7 +211,9 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                   className={`ui-input ${
                     errors.email ? "border border-red-500" : ""
                   }`}
-                  placeholder="Email"
+                  placeholder="name@company.com"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   value={form.email}
                   onChange={handleChange}
                 />
@@ -235,11 +248,12 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                   }`}
                   value={form.role}
                   onChange={handleChange}
+                  disabled={!canAssignAdmin && form.role === Role.ADMIN}
                 >
                   <option value="" disabled className="hidden">
                     -Role-
                   </option>
-                  {CREATABLE_USER_ROLES.map((roleOption) => (
+                  {roleOptions.map((roleOption) => (
                     <option key={roleOption} value={roleOption} className="bg-white">
                       {getRoleDisplayName(roleOption)}
                     </option>

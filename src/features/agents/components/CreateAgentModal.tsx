@@ -3,6 +3,7 @@ import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface CreateAgentModalProps {
   onClose: () => void;
@@ -71,11 +72,9 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
       newErrors.lastName = "Last Name is required";
       isValid = false;
     }
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Valid email is required";
+    const emailError = getStaffEmailError(email);
+    if (emailError) {
+      newErrors.email = emailError;
       isValid = false;
     }
     if (avatarFile) {
@@ -99,7 +98,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
       onSubmit({
         firstName,
         lastName,
-        email,
+        email: email.trim().toLowerCase(),
         avatarFile: avatarFile ?? null,
       });
       setFirstName("");
@@ -177,9 +176,11 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({
                 className={`ui-input ${
                   errors.email ? "border border-red-500" : ""
                 }`}
-                placeholder="Email"
+                placeholder="name@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoCapitalize="none"
+                spellCheck={false}
+                onChange={(e) => setEmail(toLowerEmail(e.target.value))}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>

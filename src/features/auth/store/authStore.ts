@@ -16,6 +16,7 @@ interface AuthState {
   logout: () => void;
   fetchProfile: () => Promise<void>;
   initializeAuth: () => Promise<void>;
+  clearPasswordChange: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => {
@@ -80,7 +81,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
         lastName: profile.lastName,
         role: profile.role,
         status: profile.status,
-        avatar: typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url || null
+        avatar: typeof profile.avatar === 'string' ? profile.avatar : profile.avatar?.url || null,
+        mustChangePassword: Boolean(profile.mustChangePassword),
       };
         set({ profile, user, isAuthenticated: true, isInitialized: true, isLoading: false, isFetchingProfile: false });
     } catch (error: unknown) {
@@ -90,6 +92,15 @@ export const useAuthStore = create<AuthState>((set, get) => {
         set({ user: null, profile: null, isAuthenticated: false, isInitialized: true, isLoading: false, isFetchingProfile: false });
       throw error;
     }
+  },
+  clearPasswordChange: () => {
+    const current = get();
+    set({
+      user: current.user ? { ...current.user, mustChangePassword: false } : null,
+      profile: current.profile
+        ? { ...current.profile, mustChangePassword: false }
+        : null,
+    });
   },
   initializeAuth: async () => {
     // Prevent multiple initializations

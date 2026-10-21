@@ -16,6 +16,7 @@ export interface UserProfile {
   createdAt: string;
   updatedAt: string;
   lastLogin?: string | null;
+  mustChangePassword?: boolean;
 }
 
 export interface UserProfileResponse {

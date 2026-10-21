@@ -5,6 +5,7 @@ import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import type { ResponderProfile } from "@/features/responders/services/respondersService";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface EditResponderData extends Omit<ResponderProfile, 'avatar'> {
   avatarFile?: File | null;
@@ -35,7 +36,10 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,8 +64,8 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
     const e: { [k: string]: string } = {};
     if (!form.firstName.trim()) e.firstName = "First name required";
     if (!form.lastName.trim()) e.lastName = "Last name required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
-      e.email = "Valid email required";
+    const emailError = getStaffEmailError(form.email);
+    if (emailError) e.email = emailError;
     if (!form.role) e.role = "Role required";
     if (form.avatarFile) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -129,6 +133,9 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
               name="email"
               value={form.email}
               onChange={handleChange}
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="name@company.com"
               className="mt-1 w-full rounded bg-gray-100 p-2"
             />
             {errors.email && (
