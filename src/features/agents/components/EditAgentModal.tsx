@@ -124,11 +124,11 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Edit Agent</h2>
+          <h2 className="text-xl font-semibold text-center text-[var(--heading)]">Edit Agent</h2>
           <img src={PencilIcon} alt="Edit Agent" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
@@ -136,7 +136,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -144,19 +144,19 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
             // Loading state with skeletons
             <div className="flex flex-col items-center space-y-5">
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-20 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-20 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-20">
-                <div className="h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-full animate-pulse"></div>
               </div>
             </div>
           ) : (
@@ -231,7 +231,7 @@ const EditAgentModal: React.FC<Props> = ({ agent, onClose, onSave }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[var(--ires-dark-blue)] text-white rounded-full px-8 py-2 hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="ui-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Saving..." : "Save"}
               </button>

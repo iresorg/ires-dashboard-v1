@@ -128,7 +128,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -199,13 +199,13 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
                   -Role-
                 </option>
                 {CREATABLE_USER_ROLES.map((roleOption) => (
-                  <option key={roleOption} value={roleOption} className="bg-white">
+                  <option key={roleOption} value={roleOption}>
                     {getRoleDisplayName(roleOption)}
                   </option>
                 ))}
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+                <img src={DropdownIcon} alt="" className="ui-icon-adaptive h-3 w-3" />
               </div>
               {errors.role && (
                 <p className="text-red-500 text-sm mt-1">{errors.role}</p>

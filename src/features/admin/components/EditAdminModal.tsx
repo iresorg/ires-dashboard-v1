@@ -133,11 +133,11 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Edit Admin</h2>
+          <h2 className="text-xl font-semibold text-center text-[var(--heading)]">Edit Admin</h2>
           <img src={PencilIcon} alt="Edit Admin" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
@@ -145,7 +145,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -153,22 +153,22 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
             // Loading state with skeletons
             <div className="flex flex-col items-center space-y-5">
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-20 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-20 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-20">
-                <div className="h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-full animate-pulse"></div>
               </div>
             </div>
           ) : (
@@ -254,13 +254,13 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                     -Role-
                   </option>
                   {roleOptions.map((roleOption) => (
-                    <option key={roleOption} value={roleOption} className="bg-white">
+                    <option key={roleOption} value={roleOption}>
                       {getRoleDisplayName(roleOption)}
                     </option>
                   ))}
                 </select>
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+                  <img src={DropdownIcon} alt="" className="ui-icon-adaptive h-3 w-3" />
                 </div>
                 {errors.role && (
                   <p className="text-red-500 text-sm mt-1">{errors.role}</p>
@@ -271,7 +271,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="ui-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>

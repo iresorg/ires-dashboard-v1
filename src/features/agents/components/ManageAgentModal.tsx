@@ -46,7 +46,7 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
 
       {/* Modal Box */}
       <div
-        className="relative z-10 bg-white rounded-xl shadow-lg px-8 py-10 w-[550px]"
+        className="relative z-10 ui-card text-[var(--foreground)] px-8 py-10 w-full max-w-[550px]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Icon */}
@@ -55,13 +55,13 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
             src={CloseIcon}
             alt="Close"
             onClick={onClose}
-            className="h-4 w-4"
+            className="ui-icon-adaptive h-4 w-4"
           />
         </div>
 
         {/* Modal Title */}
         <div className="flex items-center justify-center mb-4 -ml-4">
-          <h2 className="text-2xl font-bold text-center">
+          <h2 className="text-2xl font-bold text-center text-[var(--heading)]">
             Manage Token for <span>{agentId}</span>
           </h2>
         </div>
@@ -87,9 +87,9 @@ const ManageAgentModal: React.FC<ManageAgentModalProps> = ({ onClose, agentId, t
                 aria-label={showToken ? "Hide token" : "Show token"}
               >
                 {showToken ? (
-                  <img src={EyeHide} alt="" className="h-4 w-4" />
+                  <img src={EyeHide} alt="" className="ui-icon-adaptive h-4 w-4" />
                 ) : (
-                  <img src={EyeShow} alt="" className="h-4 w-4" />
+                  <img src={EyeShow} alt="" className="ui-icon-adaptive h-4 w-4" />
                 )}
               </button>
             </Tooltip>

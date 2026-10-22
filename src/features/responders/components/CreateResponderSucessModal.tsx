@@ -25,7 +25,7 @@ const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-md"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -33,30 +33,30 @@ const CreateResponderSucessModal: React.FC<CreateResponderSucessModalProps> = ({
           onClick={onClose}
           aria-label="Close modal"
         >
-          <img src={close} alt="Close" className="h-6 w-6 hover:opacity-50" />
+          <img src={close} alt="" className="ui-icon-adaptive h-4 w-4" />
         </button>
         <div className="flex flex-col items-center">
           <div className="flex">
-            <p className="text-[#0C0E5D] font-bold">
+            <p className="text-[var(--heading)] font-bold">
               Responder Created Successfully
             </p>
             <img src={CheckBox} alt="Success Icon" className="-mt-3 -ml-2" />
           </div>
           <div className="flex">
             <div className="flex flex-col mr-2">
-              <img src={Hear} alt="Admin Icon" className="h-5 w-5 mb-4 mt-0" />
+              <img src={Hear} alt="" className="ui-icon-adaptive h-5 w-5 mb-4 mt-0" />
             </div>
             <div className="flex flex-col">
-              <p className="text-[#0C0E5D] font-bold mb-2">
+              <p className="text-[var(--heading)] font-bold mb-2">
                 Responder ID:{" "}
-                <span className="text-[#000000] font-normal">{id}</span>
+                <span className="text-[var(--foreground)] font-normal">{id}</span>
               </p>
             </div>
           </div>
           <div>
-            <p className="text-[#0C0E5D] font-bold">
+            <p className="text-[var(--heading)] font-bold">
               Role:{" "}
-              <span className="text-[#000000] font-extralight">
+              <span className="text-[var(--foreground)] font-extralight">
                 {role === "RESPONDER_TIER_1" ? "Tier 1" : "Tier 2"}
               </span>
             </p>

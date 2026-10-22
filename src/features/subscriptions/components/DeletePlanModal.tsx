@@ -33,7 +33,7 @@ const DeletePlanModal: React.FC<DeletePlanModalProps> = ({
             </p>
           </div>
           <button type="button" onClick={onClose} aria-label="Close">
-            <img src={CloseIcon} alt="" className="w-3.5 h-3.5" />
+            <img src={CloseIcon} alt="" className="ui-icon-adaptive w-3.5 h-3.5" />
           </button>
         </div>
         <div className="flex justify-end gap-2 mt-6">

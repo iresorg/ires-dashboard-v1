@@ -249,7 +249,7 @@ const PlanFormModal: React.FC<PlanFormModalProps> = ({
           )}
           </div>
 
-          <div className="shrink-0 flex justify-end gap-2 px-5 py-4 border-t border-[var(--border)] bg-white">
+          <div className="shrink-0 flex justify-end gap-2 px-5 py-4 border-t border-[var(--border)] bg-[var(--surface)]">
             <button type="button" className="ui-action-btn h-10 px-4" onClick={onClose}>
               Cancel
             </button>

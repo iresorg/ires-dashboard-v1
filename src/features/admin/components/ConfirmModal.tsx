@@ -48,19 +48,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     }
   };
 
-  const getButtonStyle = () => {
-    switch (type) {
-      case "delete":
-        return "bg-red-600 hover:bg-red-700";
-      case "deactivate":
-        return "bg-yellow-600 hover:bg-yellow-700";
-      case "activate":
-        return "bg-green-600 hover:bg-green-700";
-      default:
-        return "bg-[#0C0E5D] hover:bg-yellow-600";
-    }
-  };
-
   const getLoadingText = () => {
     switch (type) {
       case "delete":
@@ -75,7 +62,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   };
 
   const message = getMessage();
-  const buttonStyle = getButtonStyle();
   const isDelete = type === "delete";
 
   return (
@@ -90,7 +76,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-lg px-6 py-8 w-full max-w-md"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-8 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -99,36 +85,36 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           disabled={isLoading}
           aria-label="Close modal"
         >
-          <img src={close} alt="Close" className={`h-6 w-6 ${isLoading ? 'opacity-50' : 'hover:opacity-50'}`} />
+          <img src={close} alt="" className={`ui-icon-adaptive h-4 w-4 ${isLoading ? 'opacity-50' : ''}`} />
         </button>
-        <div className="text-center mx-5">
+        <div className="text-center px-4">
           <h3
             id="confirm-modal-title"
-            className="text-xl font-semibold mb-2 ml-5 mr-5"
+            className="text-lg font-semibold text-[var(--heading)] mb-2"
           >
             {message}
           </h3>
           {isDelete && (
-            <p className="text-sm text-[#000000] font-bold opacity-50 mb-4">
+            <p className="text-sm text-[var(--muted)] mb-2">
               This action is irreversible
             </p>
           )}
         </div>
-        <div className="flex justify-center space-x-4 mt-6">
+        <div className="flex justify-center gap-3 mt-6">
           <button
             onClick={handleConfirm}
             disabled={isLoading}
-            className={`px-6 py-2 rounded-tr-lg text-white mr-5 ${buttonStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer`}
+            className={`${isDelete ? "ui-btn-danger" : "ui-btn-primary"} disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {isLoading && (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
             )}
-            {isLoading ? getLoadingText() : 'Confirm'}
+            {isLoading ? getLoadingText() : "Confirm"}
           </button>
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="px-6 py-2 rounded-tl-lg bg-[#D9C5C7] text-gray-700 hover:bg-gray-100 ml-5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="ui-action-btn h-10 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>

@@ -79,7 +79,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
         onClick={onClose}
       />
       <div
-        className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0"
+        className="fixed right-0 top-0 h-full w-full max-w-xl bg-[var(--surface)] text-[var(--foreground)] border-l border-[var(--border)] shadow-[var(--shadow-card)] transform transition-transform duration-300 ease-in-out translate-x-0"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col h-full">
@@ -92,41 +92,41 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
                 src={CloseIcon}
                 alt="Close"
                 onClick={onClose}
-                className="w-5 h-5 cursor-pointer"
+                className="ui-icon-adaptive w-5 h-5 cursor-pointer"
               />
             </div>
           </div>
           <div className="shrink-0 -mx-0 px-0">
-            <hr className="border-0 h-2 bg-[#D4CDCD]/30 w-full mt-3" />
+            <hr className="border-0 h-px bg-[var(--border)] w-full mt-3" />
           </div>
 
           <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
           <div className="space-y-4 flex justify-between mt-3">
             <div className="flex">
-              <p className="block text-sm font-medium text-[#0C0E5D]">
+              <p className="block text-sm font-medium text-[var(--heading)]">
                 Ticket Title :
               </p>
-              <p className="block text-sm font-medium text-[#000000] ml-1">
+              <p className="block text-sm font-medium text-[var(--foreground)] ml-1">
                 {ticket.title || "N/A"}
               </p>
             </div>
             <div className="flex">
-              <label className="block text-sm font-medium text-[#0C0E5D]">
+              <label className="block text-sm font-medium text-[var(--heading)]">
                 Date & Time Created :
               </label>
-              <p className="block text-sm font-medium text-[#000000] ml-1">
+              <p className="block text-sm font-medium text-[var(--foreground)] ml-1">
                 {ticket.createdAt || "2025-07-24 11:00 AM"}
               </p>
             </div>
           </div>
           <div>
             <div
-              className="flex justify-between bg-[#EBEBEB] p-2 mb-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
+              className="flex justify-between bg-[var(--secondary)] p-2 mb-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
               onClick={toggleDescription}
               role="button"
               aria-expanded={isDescriptionOpen}
             >
-              <p className="block text-sm font-medium text-[#0C0E5D]">
+              <p className="block text-sm font-medium text-[var(--heading)]">
                 Ticket Description
               </p>
               <img
@@ -136,9 +136,9 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
               />
             </div>
             {isDescriptionOpen && (
-              <div className="space-y-2 border !border-[#D4CDCD] rounded-xl px-2 pt-1 pb-3">
+              <div className="space-y-2 border border-[var(--border)] rounded-xl px-2 pt-1 pb-3">
                 <div>
-                  <p className="text-sm text-[#0C0E5D]">
+                  <p className="text-sm text-[var(--heading)]">
                     🧾 Incident Summary (Agent's Notes):
                   </p>
                   <p className="text-xs">
@@ -147,7 +147,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#0C0E5D]">
+                  <p className="text-sm text-[var(--heading)]">
                     🧾 Customer’s Statement:
                   </p>
                   <p className="text-xs">
@@ -160,12 +160,12 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
           </div>
           <div>
             <div
-              className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
+              className="flex justify-between bg-[var(--secondary)] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
               onClick={toggleMaterials}
               role="button"
               aria-expanded={isMaterialsOpen}
             >
-              <p className="block text-sm font-medium text-[#0C0E5D]">
+              <p className="block text-sm font-medium text-[var(--heading)]">
                 🧩 Materials / Artifacts Logged:
               </p>
               <img
@@ -175,7 +175,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
               />
             </div>
             {isMaterialsOpen && (
-              <div className="space-y-1 border !border-[#D4CDCD] rounded-xl px-2 pt-3 pb-3">
+              <div className="space-y-1 border border-[var(--border)] rounded-xl px-2 pt-3 pb-3">
                 <div className="flex-col mb-2">
                   <p className="text-xs">📎 Files Uploaded:</p>
                   <p className="">
@@ -183,39 +183,39 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
                   </p>
                 </div>
                 <div className="flex mb-2">
-                  <p className="text-xs text-[#0C0E5D] mr-1">🔗 Phishing Link:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">🔗 Phishing Link:</p>
                   <p className="text-xs text-[#16C066]">
                     {ticket.description?.materials?.phishingLink ||
                       "http://zenith-secureauth.verify-banking.com"}
                   </p>
                 </div>
                 <div className="flex mb-2">
-                  <p className="text-xs text-[#0C0E5D] mr-1">📅 Date Email Received:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">📅 Date Email Received:</p>
                   <p className="text-xs">
                     {ticket.description?.materials?.dateEmailReceived || "July 24, 2025"}
                   </p>
                 </div>
                 <div className="flex mb-2">
-                  <p className="text-xs text-[#0C0E5D] mr-1">🕐 Time Email Received:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">🕐 Time Email Received:</p>
                   <p className="text-xs">
                     {ticket.description?.materials?.timeEmailReceived || "08:15 AM"}
                   </p>
                 </div>
                 <div className="flex mb-2">
-                  <p className="text-xs text-[#0C0E5D] mr-1">✉️ Sender Email:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">✉️ Sender Email:</p>
                   <p className="text-xs text-[#16C066]">
                     {ticket.description?.materials?.senderEmail || "zenithbank@secure-notify.com"}
                   </p>
                 </div>
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">📍 IP Address from Headers:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">📍 IP Address from Headers:</p>
                   <p className="text-xs">
                     {ticket.description?.materials?.ipAddress || "198.51.100.17 (Nigeria-based)"}
                   </p>
                 </div>
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">🔐 Sensitive Info Exposed:</p>
-                  <p className="text-xs text-[#0C0E5D]">
+                  <p className="text-xs text-[var(--heading)] mr-1">🔐 Sensitive Info Exposed:</p>
+                  <p className="text-xs text-[var(--heading)]">
                     {ticket.description?.materials?.sensitiveInfoExposed ||
                       "Full name, Last digits of account number and Email address"}
                   </p>
@@ -225,12 +225,12 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
           </div>
           <div>
             <div
-              className="flex justify-between bg-[#EBEBEB] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
+              className="flex justify-between bg-[var(--secondary)] p-2 mb-3 mt-3 px-5 cursor-pointer rounded-bl-lg rounded-br-lg"
               onClick={toggleReportedBy}
               role="button"
               aria-expanded={isReportedByOpen}
             >
-              <p className="block text-sm font-medium text-[#0C0E5D]">
+              <p className="block text-sm font-medium text-[var(--heading)]">
                 👤 Reported By (Agent):
               </p>
               <img
@@ -240,27 +240,27 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ ticket, onClose }) => {
               />
             </div>
             {isReportedByOpen && (
-              <div className="space-y-1 border !border-[#D4CDCD] rounded-xl px-2 pt-3 pb-3">
+              <div className="space-y-1 border border-[var(--border)] rounded-xl px-2 pt-3 pb-3">
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">Name:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">Name:</p>
                   <p className="text-xs">
                     {ticket.reportedBy?.name || "Cynthia Adewale"}
                   </p>
                 </div>
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">Role:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">Role:</p>
                   <p className="text-xs">
                     {ticket.reportedBy?.role || "Agent"}
                   </p>
                 </div>
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">Date Logged:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">Date Logged:</p>
                   <p className="text-xs">
                     {ticket.reportedBy?.dateLogged || "July 24, 2025"}
                   </p>
                 </div>
                 <div className="flex">
-                  <p className="text-xs text-[#0C0E5D] mr-1">Time Logged:</p>
+                  <p className="text-xs text-[var(--heading)] mr-1">Time Logged:</p>
                   <p className="text-xs">
                     {ticket.reportedBy?.timeLogged || "10:42 AM"}
                   </p>

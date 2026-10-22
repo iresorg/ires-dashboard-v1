@@ -142,13 +142,13 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
 
             {/* Label */}
             {label && (
-                <label className="block text-sm font-medium mb-1 text-[#000000]/70 cursor-pointer">
+                <label className="block text-sm font-medium mb-1 text-[var(--muted)] cursor-pointer">
                     {label}
                 </label>
             )}
 
             {/* Upload Area */}
-            <div className="relative bg-[#f7f8fc] border border-[var(--border)] p-2 rounded-lg">
+            <div className="ui-file-field relative">
                 <div className="relative flex items-center">
                     <input
                         type="file"
@@ -159,17 +159,16 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
                     />
                     <button
                         type="button"
-                        className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-4 text-left text-gray-700 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                            }`}
+                        className={`ui-file-field-btn ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={handleClick}
                         disabled={disabled}
                     >
-                        <img src={ImageClicker} alt="Upload Icon" className="h-4 w-4 mr-3" />
-                        <p className="text-xs">Upload File</p>
+                        <img src={ImageClicker} alt="" className="ui-icon-adaptive h-4 w-4 mr-2" />
+                        Upload File
                     </button>
 
                     <div className="flex-1 min-w-0">
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-[var(--muted)] truncate">
                             {currentFile ? currentFile.name : placeholder}
                         </p>
                     </div>
@@ -178,10 +177,11 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
                         <button
                             type="button"
                             onClick={removeFile}
-                            className="ml-2 p-1 hover:bg-gray-200 rounded cursor-pointer"
+                            className="ml-2 p-1 rounded cursor-pointer hover:bg-[var(--cool-blue-tint)]"
                             disabled={disabled}
+                            aria-label="Remove file"
                         >
-                            <img src={Trash} alt="Remove" className="ui-icon-adaptive h-4 w-4" />
+                            <img src={Trash} alt="" className="ui-icon-adaptive h-4 w-4" />
                         </button>
                     )}
                 </div>
@@ -201,7 +201,7 @@ export const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
                         <img
                             src={displayPreview}
                             alt={currentFile?.name || 'Preview'}
-                            className="w-20 h-20 object-cover rounded-lg border border-gray-200"
+                            className="w-20 h-20 object-cover rounded-lg border border-[var(--border)]"
                         />
                     </div>
                 </div>
