@@ -11,6 +11,7 @@ import type {
   GetTicketsParams,
   LifecycleResponse,
   NotesPayload,
+  TicketDashboardResponse,
   TicketDetail,
   TicketDetailResponse,
   TicketEligibility,
@@ -47,6 +48,33 @@ export const getTickets = async (
     message: response.data?.message,
     data: response.data?.data ?? [],
     pagination: response.data?.pagination ?? emptyPagination,
+  };
+};
+
+const emptySummary = {
+  ticketsSubmitted: 0,
+  ticketsResolved: 0,
+  inProgress: 0,
+  escalated: 0,
+};
+
+export const getTicketDashboard = async (
+  page = 1,
+  limit = 10
+): Promise<TicketDashboardResponse> => {
+  const response = await api.get<TicketDashboardResponse>("/tickets/dashboard", {
+    ...skipAuthRedirect,
+    params: {
+      page: String(page),
+      limit: String(Math.max(5, limit)),
+    },
+  });
+
+  return {
+    message: response.data?.message,
+    summary: response.data?.summary ?? emptySummary,
+    data: response.data?.data ?? [],
+    pagination: response.data?.pagination ?? { ...emptyPagination, currentPage: page },
   };
 };
 

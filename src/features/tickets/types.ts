@@ -129,6 +129,27 @@ export interface TicketsListResponse {
   pagination: TicketPagination;
 }
 
+export interface TicketDashboardSummary {
+  ticketsSubmitted: number;
+  ticketsResolved: number;
+  inProgress: number;
+  escalated: number;
+}
+
+export interface TicketDashboardActivity {
+  ticketId: string;
+  title: string;
+  status: string;
+  updatedAt: string;
+}
+
+export interface TicketDashboardResponse {
+  message?: string;
+  summary: TicketDashboardSummary;
+  data: TicketDashboardActivity[];
+  pagination: TicketPagination;
+}
+
 export interface TicketDetailResponse {
   message?: string;
   data: TicketDetail;
