@@ -23,7 +23,7 @@ const AddAdminSuccessModal: React.FC<AddAdminSuccessModalProps> = ({ onClose, fi
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-md"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -31,21 +31,21 @@ const AddAdminSuccessModal: React.FC<AddAdminSuccessModalProps> = ({ onClose, fi
           onClick={onClose}
           aria-label="Close modal"
         >
-          <img src={close} alt="Close" className="h-6 w-6 hover:opacity-50" />
+          <img src={close} alt="" className="ui-icon-adaptive h-4 w-4" />
         </button>
         <div className="flex flex-col ml-20">
             <div className="flex">
-                <p className="text-[#0C0E5D] font-bold">Admin Created Successfully</p>
+                <p className="text-[var(--heading)] font-bold">Admin Created Successfully</p>
                 <img src={CheckBox} alt="Success Icon" className="-mt-3 -ml-2" />
             </div>
             <div className="flex">
                 <div className="flex flex-col mr-2">
-                    <img src={Admin} alt="Admin Icon" className="h-5 w-5 mb-5" />
-                    <img src={Shield} alt="Shield Icon" className="h-4 w-4"/>
+                    <img src={Admin} alt="" className="ui-icon-adaptive h-5 w-5 mb-5" />
+                    <img src={Shield} alt="" className="ui-icon-adaptive h-4 w-4"/>
                 </div>
                 <div className="flex flex-col">
-                    <p className="text-[#0C0E5D] font-bold mb-3">Full name: <span className="text-[#000000] font-extralight">{firstName} {lastName}</span></p>
-                    <p className="text-[#0C0E5D] font-bold">Role: <span className="text-[#000000] font-extralight">{role}</span></p>
+                    <p className="text-[var(--heading)] font-bold mb-3">Full name: <span className="text-[var(--foreground)] font-extralight">{firstName} {lastName}</span></p>
+                    <p className="text-[var(--heading)] font-bold">Role: <span className="text-[var(--foreground)] font-extralight">{role}</span></p>
                 </div>
             </div>
         </div>

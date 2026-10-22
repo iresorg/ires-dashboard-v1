@@ -41,7 +41,7 @@ const ConfirmAgentModal: React.FC<Props> = ({
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-lg px-6 py-8 w-full max-w-md"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-8 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -50,37 +50,33 @@ const ConfirmAgentModal: React.FC<Props> = ({
           onClick={onClose}
           aria-label="Close modal"
         >
-          <img src={CloseIcon} alt="Close" className="h-6 w-6 hover:opacity-50" />
+          <img src={CloseIcon} alt="" className="ui-icon-adaptive h-4 w-4" />
         </button>
-        <div className="text-center mx-5">
+        <div className="text-center px-4">
           <h3
             id="confirm-modal-title"
-            className="text-xl font-semibold mb-2 ml-5 mr-5"
+            className="text-lg font-semibold text-[var(--heading)] mb-2"
           >
             {message}
           </h3>
           {isDelete && (
-            <p className="text-sm text-[#000000] font-bold opacity-50 mb-4">
+            <p className="text-sm text-[var(--muted)] mb-2">
               This action is irreversible
             </p>
           )}
         </div>
-        <div className="flex justify-center space-x-4 mt-6">
+        <div className="flex justify-center gap-3 mt-6">
           <button
             type="button"
             onClick={onConfirm}
-            className={`px-6 py-2 rounded-tr-lg text-white mr-5 ${
-              isDelete
-                ? "bg-red-600 hover:bg-red-700"
-                : "bg-[#0C0E5D] hover:bg-[#06083a]"
-            }`}
+            className={isDelete ? "ui-btn-danger" : "ui-btn-primary"}
           >
             Confirm
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-2 rounded-tl-lg bg-[#D9C5C7] text-gray-700 hover:bg-gray-100 ml-5"
+            className="ui-action-btn h-10 px-4"
           >
             Cancel
           </button>

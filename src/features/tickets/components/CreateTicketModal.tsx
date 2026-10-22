@@ -321,7 +321,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
             />
 
             {pickerOpen && (
-              <div className="absolute left-0 right-0 top-full mt-1 z-20 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-white shadow-lg">
+              <div className="absolute left-0 right-0 top-full mt-1 z-20 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--surface)] shadow-lg">
                 {isLoadingAccounts ? (
                   <p className="px-3 py-4 text-sm text-[var(--muted)]">Searching...</p>
                 ) : accounts.length === 0 ? (
@@ -336,7 +336,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                       className={`w-full text-left px-3 py-2.5 text-sm border-b border-[var(--border)] last:border-0 ${
                         selectedAccount?.accountId === account.accountId
                           ? "bg-[var(--cool-blue-tint)]"
-                          : "hover:bg-gray-50"
+                          : "hover:bg-[var(--cool-blue-tint)]"
                       }`}
                       onClick={() => handleSelectAccount(account)}
                     >
@@ -609,7 +609,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
             />
             <button
               type="button"
-              className="w-full rounded-lg border border-dashed border-[var(--border)] bg-[#f7f8fc] px-4 py-6 text-center hover:border-[var(--ires-navy-blue)] transition-colors"
+              className="w-full rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-6 text-center hover:border-[var(--primary)] transition-colors"
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -619,7 +619,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                 handleFilesSelected(e.dataTransfer.files);
               }}
             >
-              <img src={UploadIcon} alt="" className="mx-auto h-6 w-6 opacity-70" />
+              <img src={UploadIcon} alt="" className="ui-icon-adaptive mx-auto h-6 w-6 opacity-70" />
               <p className="mt-2 text-sm font-medium text-[var(--heading)]">
                 Choose files or drag them here
               </p>
@@ -635,7 +635,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                 {attachments.map((file, index) => (
                   <li
                     key={`${file.name}-${file.size}-${index}`}
-                    className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm"
+                    className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3 py-2 text-sm"
                   >
                     <div className="min-w-0">
                       <p className="truncate font-medium text-[var(--heading)]">
@@ -662,7 +662,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           {error && <p className="text-sm text-[var(--ires-red)]">{error}</p>}
           </div>
 
-          <div className="shrink-0 flex justify-end gap-2 px-5 py-4 border-t border-[var(--border)] bg-white">
+          <div className="shrink-0 flex justify-end gap-2 px-5 py-4 border-t border-[var(--border)] bg-[var(--surface)]">
             <button type="button" className="ui-action-btn h-10 px-4" onClick={onClose}>
               Cancel
             </button>

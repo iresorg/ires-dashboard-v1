@@ -3,8 +3,10 @@ import PencilIcon from "@/shared/assets/icons/pencil.svg";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
-import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
+import { CREATABLE_USER_ROLES, getRoleDisplayName, Role } from "@/shared/types/roles";
 import type { CreatableUserRole } from "@/shared/types/roles";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 export interface User {
   id: string; // Changed from number to string to support UUIDs
@@ -24,10 +26,16 @@ interface Props {
 }
 
 const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
+  const { user: currentUser } = useAuth();
+  const canAssignAdmin = currentUser?.role === Role.SUPER_ADMIN;
   const [form, setForm] = useState<User>({
     ...user,
     avatar: user.avatar || undefined,
     avatarFile: null,
+  });
+  const roleOptions = CREATABLE_USER_ROLES.filter((roleOption) => {
+    if (roleOption !== Role.ADMIN) return true;
+    return canAssignAdmin || form.role === Role.ADMIN;
   });
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +60,10 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    }));
   };
 
   const handleAvatarSelect = (file: File) => {
@@ -81,8 +92,8 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
     const e: { [k: string]: string } = {};
     if (!form.firstName.trim()) e.firstName = "First name required";
     if (!form.lastName.trim()) e.lastName = "Last name required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
-      e.email = "Valid email required";
+    const emailError = getStaffEmailError(form.email);
+    if (emailError) e.email = emailError;
     if (!form.role.trim()) e.role = "Role required";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -122,11 +133,11 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">Edit Admin</h2>
+          <h2 className="text-xl font-semibold text-center text-[var(--heading)]">Edit Admin</h2>
           <img src={PencilIcon} alt="Edit Admin" className="ui-icon-adaptive w-5 h-6" />
         </div>
         <div className="absolute top-2 right-2 cursor-pointer">
@@ -134,7 +145,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -142,22 +153,22 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
             // Loading state with skeletons
             <div className="flex flex-col items-center space-y-5">
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-20 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-20 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-[70%]">
-                <div className="h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-xl animate-pulse"></div>
               </div>
               <div className="w-20">
-                <div className="h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="h-10 bg-[var(--secondary)] rounded-full animate-pulse"></div>
               </div>
             </div>
           ) : (
@@ -200,7 +211,9 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                   className={`ui-input ${
                     errors.email ? "border border-red-500" : ""
                   }`}
-                  placeholder="Email"
+                  placeholder="name@company.com"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   value={form.email}
                   onChange={handleChange}
                 />
@@ -235,18 +248,19 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                   }`}
                   value={form.role}
                   onChange={handleChange}
+                  disabled={!canAssignAdmin && form.role === Role.ADMIN}
                 >
                   <option value="" disabled className="hidden">
                     -Role-
                   </option>
-                  {CREATABLE_USER_ROLES.map((roleOption) => (
-                    <option key={roleOption} value={roleOption} className="bg-white">
+                  {roleOptions.map((roleOption) => (
+                    <option key={roleOption} value={roleOption}>
                       {getRoleDisplayName(roleOption)}
                     </option>
                   ))}
                 </select>
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+                  <img src={DropdownIcon} alt="" className="ui-icon-adaptive h-3 w-3" />
                 </div>
                 {errors.role && (
                   <p className="text-red-500 text-sm mt-1">{errors.role}</p>
@@ -257,7 +271,7 @@ const EditAdminModal: React.FC<Props> = ({ user, onClose, onSave }) => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="ui-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>

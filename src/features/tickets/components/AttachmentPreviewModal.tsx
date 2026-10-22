@@ -119,7 +119,7 @@ const AttachmentPreviewModal: React.FC<AttachmentPreviewModalProps> = ({
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-auto bg-[#f4f5f9] p-4 flex items-center justify-center">
+        <div className="flex-1 min-h-0 overflow-auto bg-[var(--background)] p-4 flex items-center justify-center">
           {kind === "image" && (
             <img
               src={attachment.url}

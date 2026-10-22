@@ -6,10 +6,11 @@ import { SingleFileUpload } from "@/shared/components/SingleFileUpload";
 import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
 import type { CreatableUserRole } from "@/shared/types/roles";
 import type { CreateUserPayload } from "@/features/users/services/userService";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface AddAdminModalProps {
   onClose: () => void;
-  onAddAdmin: (newAdmin: CreateUserPayload) => void;
+  onAddAdmin: (newAdmin: CreateUserPayload) => Promise<void>;
 }
 
 const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) => {
@@ -20,6 +21,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -37,10 +39,9 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
     if (!lastName.trim()) {
       newErrors.lastName = "Last name is required";
     }
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Please enter a valid email";
+    const emailError = getStaffEmailError(email);
+    if (emailError) {
+      newErrors.email = emailError;
     }
     if (!role) {
       newErrors.role = "Please select a role";
@@ -77,23 +78,20 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
 
     if (validateForm()) {
       setIsSubmitting(true);
+      setSubmitError("");
       try {
-        onAddAdmin({
+        await onAddAdmin({
           firstName,
           lastName,
-          email,
+          email: email.trim().toLowerCase(),
           role: role as CreatableUserRole,
           avatarFile: selectedAvatarFile ?? undefined,
         });
-
-        // Reset form
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setRole("");
-        setSelectedAvatarFile(null);
-        setErrors({});
-      } finally {
+      } catch (error: unknown) {
+        const message =
+          (error as { response?: { data?: { message?: string } } })?.response?.data
+            ?.message || "Could not create this user. Try again.";
+        setSubmitError(message);
         setIsSubmitting(false);
       }
     }
@@ -107,12 +105,20 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
     >
       <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={isSubmitting ? undefined : onClose}
       />
       <div
         className="relative z-10 bg-[var(--surface)] rounded-xl border border-[var(--border)] shadow-[var(--shadow-card)] px-6 py-10 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {isSubmitting ? (
+          <div className="flex flex-col items-center justify-center py-10 gap-4" role="status">
+            <div className="h-10 w-10 rounded-full border-2 border-[var(--border)] border-t-[var(--ires-navy-blue)] animate-spin" />
+            <p className="text-base font-semibold text-[var(--heading)]">Creating user</p>
+            <p className="text-sm text-[var(--muted)]">Please wait while the account is set up.</p>
+          </div>
+        ) : (
+        <>
         <div className="flex flex-row justify-center mb-6 space-x-1">
           <h2 className="text-xl font-semibold text-center text-[var(--heading)]">Add Admin</h2>
           <img src={PencilIcon} alt="Add Admin" className="ui-icon-adaptive w-5 h-6" />
@@ -122,7 +128,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -155,9 +161,11 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
               <input
                 type="email"
                 className={`ui-input ${errors.email ? "border-[var(--ires-red)]" : ""}`}
-                placeholder="Email"
+                placeholder="name@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoCapitalize="none"
+                spellCheck={false}
+                onChange={(e) => setEmail(toLowerEmail(e.target.value))}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -191,29 +199,33 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ onClose, onAddAdmin }) =>
                   -Role-
                 </option>
                 {CREATABLE_USER_ROLES.map((roleOption) => (
-                  <option key={roleOption} value={roleOption} className="bg-white">
+                  <option key={roleOption} value={roleOption}>
                     {getRoleDisplayName(roleOption)}
                   </option>
                 ))}
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+                <img src={DropdownIcon} alt="" className="ui-icon-adaptive h-3 w-3" />
               </div>
               {errors.role && (
                 <p className="text-red-500 text-sm mt-1">{errors.role}</p>
               )}
             </div>
+            {submitError && (
+              <p className="text-sm text-[var(--ires-red)] text-center w-[70%]">{submitError}</p>
+            )}
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                disabled={isSubmitting}
                 className="ui-btn-primary"
               >
-                {isSubmitting ? 'Adding...' : 'Add Admin'}
+                Add Admin
               </button>
             </div>
           </div>
         </form>
+        </>
+        )}
       </div>
     </div>
   );

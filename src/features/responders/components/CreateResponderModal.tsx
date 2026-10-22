@@ -4,6 +4,7 @@ import CloseIcon from "@/shared/assets/icons/close.svg";
 import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
 import Trash from "@/shared/assets/icons/delete.svg"; // this is used in img `src`
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface CreateResponderModalProps {
   onClose: () => void;
@@ -42,7 +43,10 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,11 +73,8 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
     const e: { [k: string]: string } = {};
     if (!formData.firstName.trim()) e.firstName = "First name required";
     if (!formData.lastName.trim()) e.lastName = "Last name required";
-    if (!formData.email.trim()) {
-      e.email = "Email required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      e.email = "Valid email required";
-    }
+    const emailError = getStaffEmailError(formData.email);
+    if (emailError) e.email = emailError;
     if (!formData.role.trim()) e.role = "Role required";
     if (avatarFile) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -90,7 +91,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onCreateResponder({ ...formData });
+      onCreateResponder({ ...formData, email: formData.email.trim().toLowerCase() });
       setFormData({
         firstName: "",
         lastName: "",
@@ -116,11 +117,11 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
         onClick={onClose}
       />
       <div
-        className="relative z-10 bg-white rounded-lg shadow-md px-6 py-12 w-full max-w-xl"
+        className="relative z-10 ui-card text-[var(--foreground)] px-6 py-12 w-full max-w-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-center mb-6 space-x-1">
-          <h2 className="text-xl font-semibold text-center">
+          <h2 className="text-xl font-semibold text-center text-[var(--heading)]">
             Create Responder
           </h2>
           <img src={EditIcon} alt="Create Responder" className="ui-icon-adaptive w-5 h-6" />
@@ -130,7 +131,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
             src={CloseIcon}
             alt="Close/Cancel"
             onClick={onClose}
-            className="w-4 h-4"
+            className="ui-icon-adaptive w-4 h-4"
           />
         </div>
 
@@ -175,7 +176,9 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 className={`ui-input ${
                   errors.email ? "border border-red-500" : ""
                 }`}
-                placeholder="Email"
+                placeholder="name@company.com"
+                autoCapitalize="none"
+                spellCheck={false}
                 value={formData.email}
                 onChange={handleInputChange}
               />
@@ -188,11 +191,11 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
             <div className="w-[70%]">
               <label
                 htmlFor="avatar"
-                className="block text-sm font-medium mb-1 text-[#000000]/70"
+                className="block text-sm font-medium mb-1 text-[var(--muted)]"
               >
                 Upload avatar
               </label>
-              <div className="relative bg-[#f7f8fc] border border-[var(--border)] p-2 rounded-lg">
+              <div className="ui-file-field relative">
                 <div className="relative flex items-center">
                   <input
                     type="file"
@@ -203,18 +206,18 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                   />
                   <button
                     type="button"
-                    className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                      errors.avatar ? "border border-red-500" : ""
+                    className={`ui-file-field-btn ${
+                      errors.avatar ? "border-[var(--ires-red)]" : ""
                     }`}
                   >
                     <img
                       src={ImageClicker}
-                      alt="Upload Icon"
-                      className="h-4 w-4 mr-3"
+                      alt=""
+                      className="ui-icon-adaptive h-4 w-4 mr-2"
                     />
-                    <p className="text-xs">Upload File</p>
+                    Upload File
                   </button>
-                  <p className="text-xs ml-3">
+                  <p className="text-xs text-[var(--muted)] truncate">
                     {avatarFile ? avatarFile.name : "No file chosen"}
                   </p>
                 </div>
@@ -260,11 +263,11 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
                 <option value="" disabled className="hidden">
                   -Role-
                 </option>
-                <option value="RESPONDER_TIER_1" className="bg-white">Tier 1</option>
-                <option value="RESPONDER_TIER_2" className="bg-white">Tier 2</option>
+                <option value="RESPONDER_TIER_1">Tier 1</option>
+                <option value="RESPONDER_TIER_2">Tier 2</option>
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <img src={DropdownIcon} alt="dropdown" className="h-3 w-3" />
+                <img src={DropdownIcon} alt="" className="ui-icon-adaptive h-3 w-3" />
               </div>
               {errors.role && (
                 <p className="text-red-500 text-sm mt-1">{errors.role}</p>
@@ -274,7 +277,7 @@ const CreateResponderModal: React.FC<CreateResponderModalProps> = ({
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="rounded-full px-8 py-2 bg-[var(--ires-dark-blue)] text-white hover:bg-[var(--ires-navy-blue)]"
+                className="ui-btn-primary"
               >
                 Create Responder
               </button>

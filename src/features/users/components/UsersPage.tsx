@@ -7,7 +7,8 @@ import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
 import { useUsers } from "../hooks";
 import Pagination from "@/shared/components/ui/Pagination";
 import type { PaginationRef } from "@/shared/components/ui/Pagination";
-import { CREATABLE_USER_ROLES, getRoleDisplayName } from "@/shared/types/roles";
+import { CREATABLE_USER_ROLES, getRoleDisplayName, Role } from "@/shared/types/roles";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 import AddIcon from "@/shared/assets/icons/add.svg";
 import SearchIcon from "@/shared/assets/icons/lineicons_search-2.svg";
@@ -38,6 +39,8 @@ const UsersPage: React.FC = () => {
     deleteUser,
     filteredUsers,
   } = useUsers();
+  const { user } = useAuth();
+  const canCreateAdmin = user?.role === Role.SUPER_ADMIN;
 
   const tableRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<PaginationRef>(null);
@@ -61,10 +64,16 @@ const UsersPage: React.FC = () => {
   return (
     <div className="w-full flex flex-col gap-4" ref={tableRef}>
       <div className="ui-toolbar">
-        <button onClick={() => setShowAdd(true)} className="ui-btn-primary">
-          <img src={AddIcon} className="h-4" />
-          Add admin
-        </button>
+        {canCreateAdmin ? (
+          <button onClick={() => setShowAdd(true)} className="ui-btn-primary">
+            <img src={AddIcon} className="h-4" />
+            Add admin
+          </button>
+        ) : (
+          <p className="text-sm text-[var(--muted)]">
+            Only a Super Admin can create admin accounts.
+          </p>
+        )}
 
         <div className="flex gap-3 flex-wrap">
           <div className="ui-search">
@@ -117,7 +126,7 @@ const UsersPage: React.FC = () => {
         />
       )}
 
-      {showAdd && (
+      {showAdd && canCreateAdmin && (
         <AddAdminModal onClose={() => setShowAdd(false)} onAddAdmin={createUser} />
       )}
       {showAddSuccess && submitted && (

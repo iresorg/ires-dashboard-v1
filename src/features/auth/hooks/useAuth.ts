@@ -9,5 +9,6 @@ export const useAuth = () => {
   const logout = useAuthStore((state) => state.logout);
   const fetchProfile = useAuthStore((state) => state.fetchProfile);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
-  return { user, profile, isAuthenticated, isInitialized, login, logout, fetchProfile, initializeAuth };
+  const clearPasswordChange = useAuthStore((state) => state.clearPasswordChange);
+  return { user, profile, isAuthenticated, isInitialized, login, logout, fetchProfile, initializeAuth, clearPasswordChange };
 };

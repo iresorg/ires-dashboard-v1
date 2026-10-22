@@ -1,14 +1,15 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Aside from "@/features/dashboard/Aside";
 import Navbar from "@/features/dashboard/components/Navbar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/shared/types/roles";
+import { ROUTES } from "@/shared/constants/routes";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const pathToTitleMap: Record<string, string> = {
     "/dashboard": "Admin Dashboard",
@@ -27,6 +28,7 @@ const DashboardLayout: React.FC = () => {
     "/dashboard/external-cta/subscribers": "Subscribers",
     "/dashboard/docs": "Documentation",
     "/dashboard/docs/:sectionId": "Documentation",
+    "/dashboard/profile": "Profile",
   };
 
   const resolveTitle = (pathname: string): string => {
@@ -111,6 +113,14 @@ const DashboardLayout: React.FC = () => {
 
   const pageName =
     pathname === "/dashboard" ? getRoleBasedTitle() : resolveTitle(pathname);
+
+  const mustChangePassword = Boolean(
+    user?.mustChangePassword || profile?.mustChangePassword
+  );
+
+  if (mustChangePassword && pathname !== ROUTES.PROFILE) {
+    return <Navigate to={ROUTES.PROFILE} replace />;
+  }
 
   return (
     <div className="h-screen w-screen flex bg-[var(--background)] overflow-hidden">

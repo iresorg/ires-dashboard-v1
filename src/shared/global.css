@@ -292,6 +292,39 @@ input::-webkit-clear-button {
     box-shadow: var(--shadow-card);
   }
 
+  .ui-file-field {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem;
+  }
+
+  .dark .ui-file-field {
+    background: var(--secondary);
+  }
+
+  .ui-file-field-btn {
+    display: inline-flex;
+    align-items: center;
+    width: 40%;
+    height: 1.75rem;
+    padding-left: 0.75rem;
+    margin-right: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--heading);
+    font-size: 0.75rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  select.ui-input option,
+  .ui-modal-select option {
+    background-color: var(--surface);
+    color: var(--foreground);
+  }
+
   .ui-toolbar {
     display: flex;
     flex-wrap: wrap;

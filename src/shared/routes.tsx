@@ -16,6 +16,7 @@ import TicketCategoriesPage from "@/features/tickets/pages/TicketCategoriesPage"
 import EscalationHistoryPage from "@/features/tickets/pages/EscalationHistoryPage";
 import DocsIndexPage from "@/features/docs/pages/DocsIndexPage";
 import DocsSectionPage from "@/features/docs/pages/DocsSectionPage";
+import ProfilePage from "@/features/auth/pages/ProfilePage";
 
 // External CTA Pages
 import CTAUsersPage from "@/features/dashboard/external-cta/users/UsersPage";
@@ -52,6 +53,7 @@ export const router = createBrowserRouter([
       { path: "ticket-categories", element: <TicketCategoriesPage /> },
       { path: "docs", element: <DocsIndexPage /> },
       { path: "docs/:sectionId", element: <DocsSectionPage /> },
+      { path: "profile", element: <ProfilePage /> },
 
       { path: "external-cta/users", element: <CTAUsersPage /> },
       { path: "external-cta/subscribers", element: <CTASubscribersPage /> },

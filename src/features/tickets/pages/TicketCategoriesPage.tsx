@@ -287,7 +287,7 @@ const TicketCategoriesPage: React.FC = () => {
                         </tr>
                         {isOpen && (
                           <tr>
-                            <td colSpan={4} className="bg-[#f8f9fd]">
+                            <td colSpan={4} className="bg-[var(--surface-elevated)]">
                               {category.subCategories.length === 0 ? (
                                 <p className="text-sm text-[var(--muted)] py-1">
                                   No sub-categories yet.
@@ -297,7 +297,7 @@ const TicketCategoriesPage: React.FC = () => {
                                   {category.subCategories.map((sub) => (
                                     <div
                                       key={sub.id}
-                                      className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white px-3 py-2"
+                                      className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
                                     >
                                       <span className="text-sm font-medium text-[var(--heading)]">
                                         {sub.name}

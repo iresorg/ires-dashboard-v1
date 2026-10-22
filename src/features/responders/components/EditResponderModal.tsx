@@ -5,6 +5,7 @@ import DropdownIcon from "@/shared/assets/icons/dropdown.svg";
 import ImageClicker from "@/shared/assets/icons/Upload.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
 import type { ResponderProfile } from "@/features/responders/services/respondersService";
+import { getStaffEmailError, toLowerEmail } from "@/shared/utils/email";
 
 interface EditResponderData extends Omit<ResponderProfile, 'avatar'> {
   avatarFile?: File | null;
@@ -35,7 +36,10 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "email" ? toLowerEmail(value) : value,
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,8 +64,8 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
     const e: { [k: string]: string } = {};
     if (!form.firstName.trim()) e.firstName = "First name required";
     if (!form.lastName.trim()) e.lastName = "Last name required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
-      e.email = "Valid email required";
+    const emailError = getStaffEmailError(form.email);
+    if (emailError) e.email = emailError;
     if (!form.role) e.role = "Role required";
     if (form.avatarFile) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -86,62 +90,65 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 bg-white rounded-lg p-6 w-full max-w-xl">
+      <div className="relative z-10 ui-card text-[var(--foreground)] p-6 w-full max-w-xl">
         <div className="flex justify-center items-center space-x-2 mb-6">
-          <h2 className="text-lg font-semibold">Edit Responder</h2>
+          <h2 className="text-lg font-semibold text-[var(--heading)]">Edit Responder</h2>
           <img src={PencilIcon} alt="" className="ui-icon-adaptive h-5" />
         </div>
         <img
           src={CloseIcon}
           alt="close"
           onClick={onClose}
-          className="absolute right-3 top-3 h-4 w-4 cursor-pointer"
+          className="ui-icon-adaptive absolute right-3 top-3 h-4 w-4 cursor-pointer"
         />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium">First Name</label>
+            <label className="block text-sm font-medium text-[var(--muted)]">First Name</label>
             <input
               name="firstName"
               value={form.firstName}
               onChange={handleChange}
-              className="mt-1 w-full rounded bg-gray-100 p-2"
+              className="ui-input mt-1"
             />
             {errors.firstName && (
               <p className="text-red-500 text-xs">{errors.firstName}</p>
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium">Last Name</label>
+            <label className="block text-sm font-medium text-[var(--muted)]">Last Name</label>
             <input
               name="lastName"
               value={form.lastName}
               onChange={handleChange}
-              className="mt-1 w-full rounded bg-gray-100 p-2"
+              className="ui-input mt-1"
             />
             {errors.lastName && (
               <p className="text-red-500 text-xs">{errors.lastName}</p>
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label className="block text-sm font-medium text-[var(--muted)]">Email</label>
             <input
               type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="mt-1 w-full rounded bg-gray-100 p-2"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="name@company.com"
+              className="ui-input mt-1"
             />
             {errors.email && (
               <p className="text-red-500 text-xs">{errors.email}</p>
             )}
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium">Role</label>
+            <label className="block text-sm font-medium text-[var(--muted)]">Role</label>
             <select
               name="role"
               value={form.role}
               onChange={handleChange}
-              className="mt-1 w-full rounded bg-gray-100 p-2 pr-8 appearance-none"
+              className="ui-input mt-1 appearance-none"
             >
               <option value="">Select…</option>
               <option value="RESPONDER_TIER_1">Tier 1</option>
@@ -149,7 +156,8 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
             </select>
             <img
               src={DropdownIcon}
-              className="h-3 absolute right-3 top-9 pointer-events-none"
+              alt=""
+              className="ui-icon-adaptive h-3 absolute right-3 top-9 pointer-events-none"
             />
             {errors.role && (
               <p className="text-red-500 text-xs">{errors.role}</p>
@@ -158,8 +166,8 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
 
           {/* Avatar Upload */}
           <div>
-            <label className="block text-sm font-medium mb-1">Avatar</label>
-            <div className="relative bg-gray-100 p-2 rounded">
+            <label className="block text-sm font-medium mb-1 text-[var(--muted)]">Avatar</label>
+            <div className="ui-file-field relative">
               <div className="relative flex items-center">
                 <input
                   type="file"
@@ -170,18 +178,18 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
                 />
                 <button
                   type="button"
-                  className={`w-[40%] rounded-lg flex flex-row items-center bg-white pl-3 py-1 h-7 mr-15 text-left text-gray-700 ${
-                    errors.avatar ? "border border-red-500" : ""
+                  className={`ui-file-field-btn ${
+                    errors.avatar ? "border-[var(--ires-red)]" : ""
                   }`}
                 >
                   <img
                     src={ImageClicker}
-                    alt="Upload Icon"
-                    className="h-4 w-4 mr-3"
+                    alt=""
+                    className="ui-icon-adaptive h-4 w-4 mr-2"
                   />
-                  <p className="text-xs">Upload File</p>
+                  Upload File
                 </button>
-                <p className="text-xs ml-3">
+                <p className="text-xs text-[var(--muted)] truncate">
                   {form.avatarFile ? form.avatarFile.name : "No file chosen"}
                 </p>
               </div>
@@ -215,7 +223,7 @@ const EditResponderModal: React.FC<Props> = ({ responder, onClose, onSave }) => 
           )}
           <button
             type="submit"
-            className="block mx-auto bg-[var(--ires-dark-blue)] text-white rounded-full px-6 py-2"
+            className="ui-btn-primary mx-auto"
           >
             Save
           </button>

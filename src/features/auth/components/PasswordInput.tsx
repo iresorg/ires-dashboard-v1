@@ -3,6 +3,7 @@ import Tooltip from "@/shared/components/ui/Tooltip";
 
 interface PasswordInputProps {
   id: string;
+  label?: string;
   placeholder?: string;
   error?: string;
   register: {
@@ -40,6 +41,7 @@ const EyeIconSvg: React.FC<{ className?: string }> = ({ className }) => (
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
   id,
+  label = "Password",
   placeholder,
   error,
   register,
@@ -49,7 +51,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   return (
     <div className="relative w-full">
       <label htmlFor={id} className="block text-xs font-medium text-[var(--muted)] mb-1.5">
-        Password
+        {label}
       </label>
       <input
         id={id}

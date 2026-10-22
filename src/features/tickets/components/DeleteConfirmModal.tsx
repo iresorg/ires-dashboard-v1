@@ -42,7 +42,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
             <div className="text-sm text-[var(--muted)] mt-2">{description}</div>
           </div>
           <button type="button" onClick={onClose} aria-label="Close">
-            <img src={CloseIcon} alt="" className="w-3.5 h-3.5" />
+            <img src={CloseIcon} alt="" className="ui-icon-adaptive w-3.5 h-3.5" />
           </button>
         </div>
         <div className="flex justify-end gap-2 mt-6">
