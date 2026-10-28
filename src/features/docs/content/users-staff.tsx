@@ -86,6 +86,7 @@ const UsersStaffContent: React.FC = () => (
       <p className="text-sm leading-relaxed">
         Deactivated staff should not continue operating as active assignees. Use the activate /
         deactivate control on the row or edit form. Confirm the status badge updates after save.
+        The key icon emails that person a new password. They must change it on the next sign-in.
       </p>
       <DocsCallout tone="warning" title="Before deactivating">
         Check open tickets assigned to that person and reassign if needed.

@@ -14,6 +14,7 @@ import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Scissors from "@/shared/assets/icons/scissors.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
+import ResetStaffPasswordButton from "./ResetStaffPasswordButton";
 
 interface UserTableProps {
   users: UserProfile[];
@@ -200,6 +201,11 @@ const UserTable: React.FC<UserTableProps> = ({
                           />
                         </button>
                       </Tooltip>
+                      <ResetStaffPasswordButton
+                        userId={user.id}
+                        userName={`${user.firstName} ${user.lastName}`}
+                        targetRole={user.role}
+                      />
                     </div>
                   </td>
                 </tr>

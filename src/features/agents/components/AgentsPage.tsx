@@ -18,6 +18,7 @@ import EditAgentModal, { type Agent } from "@/features/agents/components/EditAge
 import { UserTableSkeletonRow } from "@/shared/components/ui";
 import { getAvatarUrl } from "@/features/users/services/userService";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
+import ResetStaffPasswordButton from "@/features/users/components/ResetStaffPasswordButton";
 
 const AgentsPage: React.FC = () => {
   const {
@@ -252,6 +253,11 @@ const AgentsPage: React.FC = () => {
                             <img src={Trash} className="ui-icon-adaptive h-3.5" alt="" />
                           </button>
                         </Tooltip>
+                        <ResetStaffPasswordButton
+                          userId={agent.id}
+                          userName={`${agent.firstName || ""} ${agent.lastName || ""}`.trim()}
+                          targetRole={agent.role || "AGENT"}
+                        />
 
                       </div>
                     </td>

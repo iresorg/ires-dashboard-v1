@@ -17,6 +17,9 @@ const GettingStartedContent: React.FC = () => (
       </h3>
       <ol className="list-decimal pl-5 space-y-2 text-sm text-[var(--text)] leading-relaxed">
         <li>Open the dashboard login page and enter your staff email and password.</li>
+        <li>
+          Forgot it? Use Forgot password. The email link opens this dashboard and lasts 1 hour. A deactivated account cannot reset a password — contact an admin.
+        </li>
         <li>After a successful sign-in you land on Overview.</li>
         <li>Use the sidebar to move between Tickets, Users, Agents, Responders, Subscriptions, and Financials (what you see depends on your role).</li>
       </ol>

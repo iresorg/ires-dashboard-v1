@@ -1,6 +1,8 @@
 export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
 
   // Dashboard
   DASHBOARD: "/dashboard",
@@ -42,4 +44,9 @@ export const PROTECTED_ROUTES = [
 ] as const;
 
 // Public routes that don't require authentication
-export const PUBLIC_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const;
+export const PUBLIC_ROUTES = [
+  ROUTES.LOGIN,
+  ROUTES.REGISTER,
+  ROUTES.FORGOT_PASSWORD,
+  ROUTES.RESET_PASSWORD,
+] as const;

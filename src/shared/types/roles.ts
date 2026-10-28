@@ -23,6 +23,21 @@ export const CREATABLE_USER_ROLES = [
 
 export type CreatableUserRole = typeof CREATABLE_USER_ROLES[number];
 
+/** Who may email a temporary password to a staff account. */
+export const canResetStaffPassword = (
+  actorRole: string | undefined,
+  targetRole: string | undefined
+): boolean => {
+  if (!actorRole || !targetRole) return false;
+  if (actorRole === Role.SUPER_ADMIN) return true;
+  if (actorRole === Role.ADMIN) return targetRole !== Role.SUPER_ADMIN;
+  if (actorRole === Role.AGENT_ADMIN) return targetRole === Role.AGENT;
+  if (actorRole === Role.RESPONDER_ADMIN) {
+    return targetRole === Role.RESPONDER_TIER_1 || targetRole === Role.RESPONDER_TIER_2;
+  }
+  return false;
+};
+
 // Roles that Agent Admin can create (for agent page)
 export const AGENT_CREATABLE_ROLES = [
   Role.AGENT,

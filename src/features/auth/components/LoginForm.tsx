@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useAuthStore } from "../store/authStore";
 import PasswordInput from "./PasswordInput";
@@ -14,6 +14,8 @@ interface LoginInputs {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const notice = (location.state as { notice?: string } | null)?.notice;
   const { login } = useAuth();
   const {
     register,
@@ -43,6 +45,11 @@ const LoginForm: React.FC = () => {
       <p className="text-sm text-[var(--muted)] mb-6">
         Sign in with your iRES credentials to continue.
       </p>
+      {notice && (
+        <p className="text-sm text-[var(--heading)] rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 mb-4">
+          {notice}
+        </p>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-4 flex flex-col"
@@ -84,9 +91,12 @@ const LoginForm: React.FC = () => {
         </button>
 
         <p className="text-sm text-center">
-          <a href="#" className="text-[var(--muted)] hover:text-[var(--foreground)]">
+          <Link
+            to={ROUTES.FORGOT_PASSWORD}
+            className="text-[var(--muted)] hover:text-[var(--foreground)]"
+          >
             Forgot password?
-          </a>
+          </Link>
         </p>
       </form>
     </div>

@@ -17,6 +17,7 @@ import EditResponderModal from "@/features/responders/components/EditResponderMo
 import ConfirmResponderModal from "@/features/responders/components/ConfirmResponderModal";
 import { UserTableSkeletonRow } from "@/shared/components/ui";
 import { getUserInitials, getUserInitialsColor } from "@/shared/utils/userUtils";
+import ResetStaffPasswordButton from "@/features/users/components/ResetStaffPasswordButton";
 
 const RespondersPage: React.FC = () => {
   const {
@@ -253,6 +254,11 @@ const RespondersPage: React.FC = () => {
                           <img src={Trash} className="ui-icon-adaptive h-3.5" alt="" />
                         </button>
                       </Tooltip>
+                      <ResetStaffPasswordButton
+                        userId={responder.id}
+                        userName={`${responder.firstName || ""} ${responder.lastName || ""}`.trim()}
+                        targetRole={responder.role}
+                      />
                     </div>
                   </td>
                 </tr>
