@@ -14,6 +14,7 @@ interface AuthState {
   isFetchingProfile: boolean; // Flag to prevent duplicate profile fetches
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  clearSession: () => void;
   fetchProfile: () => Promise<void>;
   initializeAuth: () => Promise<void>;
   clearPasswordChange: () => void;
@@ -51,6 +52,18 @@ export const useAuthStore = create<AuthState>((set, get) => {
       hasFetchedProfile = false; // Reset flag on logout
       set({ user: null, profile: null, isAuthenticated: false, isInitialized: false, isLoading: false, isFetchingProfile: false });
     authService.logout();
+  },
+  clearSession: () => {
+    hasFetchedProfile = false;
+    Cookies.remove("token");
+    set({
+      user: null,
+      profile: null,
+      isAuthenticated: false,
+      isInitialized: true,
+      isLoading: false,
+      isFetchingProfile: false,
+    });
   },
   fetchProfile: async () => {
       // Prevent duplicate fetches if already initialized and have profile

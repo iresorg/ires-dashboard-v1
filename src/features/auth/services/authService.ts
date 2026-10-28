@@ -82,3 +82,38 @@ export const logout = () => {
   Cookies.remove("token");
   window.location.href = "/login";
 };
+
+export const getAuthErrorMessage = (error: unknown, fallback: string): string => {
+  if (typeof error === "object" && error && "response" in error) {
+    const message = (error as { response?: { data?: { message?: string } } }).response?.data
+      ?.message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+};
+
+export const forgotPassword = async (email: string): Promise<string> => {
+  const response = await api.post<{ message?: string }>(
+    "/auth/forgot-password",
+    { email },
+    { skipAuthRedirect: true }
+  );
+  return (
+    response.data?.message ||
+    "If the email exists, a password reset link has been sent."
+  );
+};
+
+export const resetPassword = async (payload: {
+  email: string;
+  token: string;
+  newPassword: string;
+}): Promise<string> => {
+  const response = await api.post<{ message?: string }>(
+    "/auth/reset-password",
+    payload,
+    { skipAuthRedirect: true }
+  );
+  Cookies.remove("token");
+  return response.data?.message || "Password updated. Sign in with your new password.";
+};

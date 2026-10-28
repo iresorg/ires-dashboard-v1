@@ -26,11 +26,21 @@ import ProtectedRoute from "@/shared/components/layout/ProtectedRoute";
 
 // Auth pages
 import LoginPage from "@/features/auth/pages/LoginPage";
+import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.LOGIN,
     element: <LoginPage />,
+  },
+  {
+    path: ROUTES.FORGOT_PASSWORD,
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: ROUTES.RESET_PASSWORD,
+    element: <ResetPasswordPage />,
   },
   {
     path: ROUTES.DASHBOARD,

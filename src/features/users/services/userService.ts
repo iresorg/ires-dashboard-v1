@@ -171,3 +171,12 @@ export const deleteUser = async (id: string): Promise<DeleteUserResponse> => {
   const response = await api.delete<DeleteUserResponse>(`/users/${id}`);
   return response.data;
 };
+
+export const resetUserPassword = async (userId: string): Promise<string> => {
+  const response = await api.request<{ message?: string }>({
+    method: "POST",
+    url: `/users/${userId}/reset-password`,
+    skipAuthRedirect: true,
+  });
+  return response.data?.message || "A new password has been sent to the user's email.";
+};
