@@ -14,6 +14,7 @@ import Filter from "@/shared/assets/icons/uiw_filter.svg";
 
 import Pagination from "@/shared/components/ui/Pagination";
 import Dropdown from "@/shared/components/ui/Dropdown";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 
 const formatDate = (dateString: string | null | undefined): string => {
   if (!dateString) return "—";
@@ -152,13 +153,20 @@ export default function CTASubscribersPage() {
 
   return (
     <div className="w-full space-y-5">
-      <div>
-        <h2 className="text-xl font-semibold text-[var(--heading)]">
-          Subscribers
-        </h2>
-        <p className="text-sm text-[var(--muted)]">
-          Recurring subscribers and pay-as-you-go customers
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+        <div>
+          <h2 className="text-xl font-semibold text-[var(--heading)]">
+            Subscribers
+          </h2>
+          <p className="text-sm text-[var(--muted)]">
+            Recurring subscribers and pay-as-you-go customers
+          </p>
+        </div>
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh subscribers"
+          onClick={() => void fetchSubscribers(pagination.page, pagination.limit)}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">

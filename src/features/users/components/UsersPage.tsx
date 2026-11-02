@@ -7,6 +7,7 @@ import EditAdminSuccessModal from "@/features/admin/EditAdminSucessModal";
 import { useUsers } from "../hooks";
 import Pagination from "@/shared/components/ui/Pagination";
 import type { PaginationRef } from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { CREATABLE_USER_ROLES, getRoleDisplayName, Role } from "@/shared/types/roles";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -64,16 +65,23 @@ const UsersPage: React.FC = () => {
   return (
     <div className="w-full flex flex-col gap-4" ref={tableRef}>
       <div className="ui-toolbar">
-        {canCreateAdmin ? (
-          <button onClick={() => setShowAdd(true)} className="ui-btn-primary">
-            <img src={AddIcon} className="h-4" />
-            Add admin
-          </button>
-        ) : (
-          <p className="text-sm text-[var(--muted)]">
-            Only a Super Admin can create admin accounts.
-          </p>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh users"
+            onClick={() => fetchUsers(pagination.page, pagination.limit)}
+          />
+          {canCreateAdmin ? (
+            <button onClick={() => setShowAdd(true)} className="ui-btn-primary">
+              <img src={AddIcon} className="h-4" />
+              Add admin
+            </button>
+          ) : (
+            <p className="text-sm text-[var(--muted)]">
+              Only a Super Admin can create admin accounts.
+            </p>
+          )}
+        </div>
 
         <div className="flex gap-3 flex-wrap">
           <div className="ui-search">

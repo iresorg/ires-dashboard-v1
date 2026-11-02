@@ -4,6 +4,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getApiErrorMessage, formatDateTime } from "@/features/tickets/types";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { Role } from "@/shared/types/roles";
@@ -27,6 +28,7 @@ const IncidentsPage: React.FC = () => {
     role === Role.SUPER_ADMIN || role === Role.ADMIN || role === Role.AGENT_ADMIN;
   const canView = canManage || role === Role.AGENT;
 
+  /** Unassigned queue is the default for admins; agents only see their assigned list. */
   const [view, setView] = useState<IncidentView>("queue");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
@@ -94,11 +96,18 @@ const IncidentsPage: React.FC = () => {
               : "Incidents assigned to you."}
           </p>
         </div>
-        {canManage && (
-          <button type="button" className="ui-btn-primary" onClick={() => setShowCreate(true)}>
-            Report incident
-          </button>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh incidents"
+            onClick={() => setRefreshKey((value) => value + 1)}
+          />
+          {canManage && (
+            <button type="button" className="ui-btn-primary" onClick={() => setShowCreate(true)}>
+              Report incident
+            </button>
+          )}
+        </div>
       </div>
 
       {canManage && (

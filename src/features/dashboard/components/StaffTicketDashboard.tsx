@@ -1,5 +1,6 @@
 import { format, formatDistanceToNowStrict } from "date-fns";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import ColoredTicket from "@/shared/assets/images/coloredTicket.png";
 import { formatTicketStatus } from "@/features/tickets/types";
 import { useTicketDashboard } from "../hooks/useTicketDashboard";
@@ -22,7 +23,7 @@ const formatCount = (value: number): string =>
   Number.isFinite(value) ? value.toLocaleString("en-US") : "0";
 
 const StaffTicketDashboard = () => {
-  const { summary, activities, pagination, isLoading, error, setPage } =
+  const { summary, activities, pagination, isLoading, error, setPage, refetch } =
     useTicketDashboard();
 
   const cards = [
@@ -34,6 +35,13 @@ const StaffTicketDashboard = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full">
+      <div className="flex justify-end">
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh dashboard"
+          onClick={() => void refetch()}
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {cards.map((stat) => (
           <div key={stat.label} className="ui-card flex items-center gap-4 px-5 py-4">

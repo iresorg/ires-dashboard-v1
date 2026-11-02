@@ -6,6 +6,7 @@ import TicketStatusBadge from "../components/TicketStatusBadge";
 import CreateTicketModal from "../components/CreateTicketModal";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -29,13 +30,14 @@ const TicketsPage: React.FC = () => {
   const { categories } = useTicketCategories();
   const { showSuccess } = useToast();
   const [showCreate, setShowCreate] = useState(false);
-  const [view, setView] = useState<"all" | "queue">("all");
+  const [view, setView] = useState<"all" | "queue">("queue");
   const [queue, setQueue] = useState<TicketQueueItem[]>([]);
   const [queuePage, setQueuePage] = useState(1);
   const [queueTotalPages, setQueueTotalPages] = useState(0);
   const [queueTotal, setQueueTotal] = useState(0);
   const [queueLoading, setQueueLoading] = useState(false);
   const [queueError, setQueueError] = useState("");
+  const [queueRefreshKey, setQueueRefreshKey] = useState(0);
 
   const canManageCategories =
     user?.role === Role.SUPER_ADMIN || user?.role === Role.ADMIN;
@@ -48,6 +50,12 @@ const TicketsPage: React.FC = () => {
     user?.role === Role.ADMIN ||
     user?.role === Role.AGENT_ADMIN ||
     user?.role === Role.RESPONDER_ADMIN;
+
+  useEffect(() => {
+    if (user && !canViewQueue && view === "queue") {
+      setView("all");
+    }
+  }, [canViewQueue, user, view]);
 
   useEffect(() => {
     if (view !== "queue" || !canViewQueue) return;
@@ -75,7 +83,7 @@ const TicketsPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [canViewQueue, queuePage, view]);
+  }, [canViewQueue, queuePage, queueRefreshKey, view]);
 
   const statusOptions = [
     { value: "", label: "All statuses" },
@@ -100,7 +108,18 @@ const TicketsPage: React.FC = () => {
               : "Staff inbox for tickets filed on behalf of customers."}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
+          <RefreshIconButton
+            loading={view === "queue" ? queueLoading : isLoading}
+            label="Refresh tickets"
+            onClick={() => {
+              if (view === "queue") {
+                setQueueRefreshKey((value) => value + 1);
+              } else {
+                void fetchTickets(pagination.currentPage || 1, 10);
+              }
+            }}
+          />
           {canManageCategories && (
             <Link to={ROUTES.TICKET_CATEGORIES} className="ui-action-btn h-10 px-4 inline-flex items-center">
               Categories
@@ -124,13 +143,6 @@ const TicketsPage: React.FC = () => {
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className={view === "all" ? "ui-btn-primary" : "ui-action-btn h-10 px-4"}
-            onClick={() => setView("all")}
-          >
-            All tickets
-          </button>
-          <button
-            type="button"
             className={view === "queue" ? "ui-btn-primary" : "ui-action-btn h-10 px-4"}
             onClick={() => {
               setView("queue");
@@ -138,6 +150,13 @@ const TicketsPage: React.FC = () => {
             }}
           >
             Unassigned queue
+          </button>
+          <button
+            type="button"
+            className={view === "all" ? "ui-btn-primary" : "ui-action-btn h-10 px-4"}
+            onClick={() => setView("all")}
+          >
+            All tickets
           </button>
         </div>
       )}

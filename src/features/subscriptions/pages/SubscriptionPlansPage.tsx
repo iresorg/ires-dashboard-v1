@@ -6,6 +6,7 @@ import PlanCardsSkeleton from "../components/PlanCardsSkeleton";
 import PlanTableSkeleton from "../components/PlanTableSkeleton";
 import DeletePlanModal from "../components/DeletePlanModal";
 import Dropdown from "@/shared/components/ui/Dropdown";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import type {
   AccountType,
@@ -106,9 +107,16 @@ const SubscriptionPlansPage: React.FC = () => {
             Manage catalog pricing, visibility, and feature lists.
           </p>
         </div>
-        <button type="button" className="ui-btn-primary" onClick={openCreate}>
-          Create plan
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh plans"
+            onClick={() => void fetchPlans()}
+          />
+          <button type="button" className="ui-btn-primary" onClick={openCreate}>
+            Create plan
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">

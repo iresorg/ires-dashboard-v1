@@ -4,6 +4,7 @@ import { useEscalationHistory } from "../hooks/useEscalationHistory";
 import TicketStatusBadge from "../components/TicketStatusBadge";
 import TicketTableSkeleton from "../components/TicketTableSkeleton";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { ROUTES } from "@/shared/constants/routes";
 import { formatDateTime, formatStaffName } from "../types";
 
@@ -24,6 +25,11 @@ const EscalationHistoryPage: React.FC = () => {
             Admin view of escalated incidents.
           </p>
         </div>
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh escalations"
+          onClick={() => void fetchHistory(pagination.currentPage || 1, 10)}
+        />
       </div>
 
       {error && (

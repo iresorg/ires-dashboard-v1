@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CloudDownload, RefreshCw } from "lucide-react";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useDebounce } from "@/shared/hooks";
 import Dropdown from "@/shared/components/ui/Dropdown";
 import DatePicker from "@/shared/components/ui/DatePicker";
@@ -283,6 +284,11 @@ const FinancialsPage: React.FC = () => {
         <div className="ml-auto flex flex-wrap items-end justify-end gap-2">
           <DatePicker label="From" value={from} onChange={setFrom} />
           <DatePicker label="To" value={to} onChange={setTo} />
+          <RefreshIconButton
+            loading={overviewLoading}
+            label="Refresh financials"
+            onClick={() => void loadOverview()}
+          />
           <button
             type="button"
             className="ui-action-btn h-10 px-3 inline-flex items-center gap-1.5"

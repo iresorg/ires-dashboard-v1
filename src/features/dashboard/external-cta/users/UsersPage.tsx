@@ -10,6 +10,7 @@ import Filter from "@/shared/assets/icons/uiw_filter.svg";
 
 import Pagination from "@/shared/components/ui/Pagination";
 import Dropdown from "@/shared/components/ui/Dropdown";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 
 // Format date helper
 const formatDate = (dateString: string): string => {
@@ -96,6 +97,11 @@ export default function CTAUsersPage() {
             View and manage all external user accounts
           </p>
         </div>
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh external users"
+          onClick={() => void fetchUsers(pagination.page, pagination.limit)}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
