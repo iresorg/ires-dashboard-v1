@@ -28,8 +28,16 @@ type FieldKey =
 
 type FieldErrors = Partial<Record<FieldKey, string>>;
 
-/** Same red asterisk as the public report form. */
-const RequiredMark = () => <span className="text-[#ef4444]"> *</span>;
+/** Same red asterisk as the public report form. Inline color so it cannot be theme-purged. */
+const RequiredMark = () => (
+  <span
+    aria-hidden="true"
+    className="ml-0.5 font-bold"
+    style={{ color: "#ef4444" }}
+  >
+    *
+  </span>
+);
 
 const inputBase =
   "ui-input mt-1 w-full";
@@ -127,11 +135,11 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ onClose, onCr
 
         <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit} noValidate>
           <div className="flex-1 overflow-y-auto p-5 space-y-5">
-            <fieldset>
-              <legend className="text-sm font-medium text-[var(--heading)]">
+            <div>
+              <p className="text-sm font-medium text-[var(--heading)]">
                 Severity
                 <RequiredMark />
-              </legend>
+              </p>
               <div className="mt-2 grid grid-cols-2 lg:grid-cols-4 gap-2">
                 {INCIDENT_SEVERITY_OPTIONS.map((option) => {
                   const selected = severity === option.value;
@@ -158,9 +166,11 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ onClose, onCr
                 })}
               </div>
               {fieldErrors.severity ? (
-                <p className="mt-1.5 text-xs text-[#ef4444]">{fieldErrors.severity}</p>
+                <p className="mt-1.5 text-xs font-medium" style={{ color: "#ef4444" }}>
+                  {fieldErrors.severity}
+                </p>
               ) : null}
-            </fieldset>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className="block">
