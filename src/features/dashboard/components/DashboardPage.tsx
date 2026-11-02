@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DashboardStats from "./DashboardStats";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useAdminOverview } from "../hooks/useAdminOverview";
 import {
   getActivityActor,
@@ -22,6 +23,14 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full">
+      <div className="flex justify-end">
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh overview"
+          onClick={() => void refetch()}
+        />
+      </div>
+
       {error && (
         <div className="ui-card px-4 py-3 text-sm text-[var(--ires-red)] flex items-center justify-between gap-3">
           <span>Could not load overview: {error}</span>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { getAgents } from "@/features/agents/services/agentService";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { formatDateTime, getApiErrorMessage } from "@/features/tickets/types";
-import { getUsers } from "@/features/users/services/userService";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { Role } from "@/shared/types/roles";
@@ -43,11 +44,14 @@ const IncidentDetailPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [agentId, setAgentId] = useState("");
-  const [agents, setAgents] = useState<{ id: string; label: string }[]>([]);
+  const [agents, setAgents] = useState<{ id: string; label: string; email: string }[]>([]);
   const [agentSearch, setAgentSearch] = useState("");
+  const [agentsLoading, setAgentsLoading] = useState(false);
+  const [agentsError, setAgentsError] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
   const [ticketId, setTicketId] = useState("");
   const [isLinking, setIsLinking] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const applyIncident = (next: Incident) => {
     setIncident(next);
@@ -79,26 +83,51 @@ const IncidentDetailPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [incidentId]);
+  }, [incidentId, refreshKey]);
 
   useEffect(() => {
     if (!canManage) return;
-    const timer = window.setTimeout(() => {
-      void getUsers({ page: 1, limit: 20, role: "AGENT", search: agentSearch })
-        .then((result) => {
-          setAgents(
-            (result.data || [])
-              .filter((item) => item.role === Role.AGENT || item.role === "AGENT")
-              .map((item) => ({
+    let cancelled = false;
+    const loadAgents = async () => {
+      setAgentsLoading(true);
+      setAgentsError("");
+      try {
+        const result = await getAgents(1, 100);
+        if (cancelled) return;
+        setAgents(
+          (result.data || [])
+            .filter((item) => item.role === Role.AGENT || item.role === "AGENT")
+            .map((item) => {
+              const name = `${item.firstName} ${item.lastName}`.trim();
+              return {
                 id: item.id,
-                label: `${item.firstName} ${item.lastName}`.trim() || item.email,
-              }))
-          );
-        })
-        .catch(() => setAgents([]));
-    }, 250);
-    return () => window.clearTimeout(timer);
-  }, [agentSearch, canManage]);
+                email: item.email,
+                label: name ? `${name} (${item.email})` : item.email,
+              };
+            })
+        );
+      } catch (err) {
+        if (cancelled) return;
+        setAgents([]);
+        setAgentsError(getApiErrorMessage(err, "Could not load agents."));
+      } finally {
+        if (!cancelled) setAgentsLoading(false);
+      }
+    };
+    void loadAgents();
+    return () => {
+      cancelled = true;
+    };
+  }, [canManage, refreshKey]);
+
+  const filteredAgents = useMemo(() => {
+    const query = agentSearch.trim().toLowerCase();
+    if (!query) return agents;
+    return agents.filter((agent) => {
+      const haystack = `${agent.label} ${agent.email}`.toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [agentSearch, agents]);
 
   const locked = incident ? incidentIsLocked(incident) : true;
 
@@ -183,6 +212,11 @@ const IncidentDetailPage: React.FC = () => {
             {incident.ticketStatus ? ` · ticket ${incident.ticketStatus}` : ""}
           </p>
         </div>
+        <RefreshIconButton
+          loading={isLoading}
+          label="Refresh incident"
+          onClick={() => setRefreshKey((value) => value + 1)}
+        />
       </div>
 
       <div className="ui-card p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
@@ -266,24 +300,50 @@ const IncidentDetailPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="ui-card p-5 space-y-3">
             <h3 className="font-semibold text-[var(--heading)]">Assign an agent</h3>
-            <input
-              className="ui-input"
-              placeholder="Search agents"
-              value={agentSearch}
-              onChange={(e) => setAgentSearch(e.target.value)}
-            />
-            <select className="ui-input" value={agentId} onChange={(e) => setAgentId(e.target.value)}>
-              <option value="">Select an agent</option>
-              {incident.assignedAgent &&
-                !agents.some((agent) => agent.id === incident.assignedAgent?.id) && (
-                  <option value={incident.assignedAgent.id}>
-                    {agentName(incident.assignedAgent)}
+            <label className="block">
+              <span className="text-xs font-medium text-[var(--muted)]">Search agents</span>
+              <input
+                className="ui-input mt-1"
+                placeholder="Name or email"
+                value={agentSearch}
+                onChange={(e) => {
+                  setAgentSearch(e.target.value);
+                  setAgentId("");
+                }}
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-medium text-[var(--muted)]">Agent</span>
+              <select
+                className="ui-input mt-1"
+                value={agentId}
+                onChange={(e) => setAgentId(e.target.value)}
+                disabled={agentsLoading}
+              >
+                <option value="">
+                  {agentsLoading
+                    ? "Loading agents…"
+                    : filteredAgents.length === 0
+                      ? "No agents match"
+                      : "Select an agent"}
+                </option>
+                {incident.assignedAgent &&
+                  !filteredAgents.some((agent) => agent.id === incident.assignedAgent?.id) && (
+                    <option value={incident.assignedAgent.id}>
+                      {agentName(incident.assignedAgent)}
+                    </option>
+                  )}
+                {filteredAgents.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.label}
                   </option>
-                )}
-              {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>{agent.label}</option>
-              ))}
-            </select>
+                ))}
+              </select>
+            </label>
+            {agentsError ? <p className="text-xs text-[#ef4444]">{agentsError}</p> : null}
+            {!agentsLoading && !agentsError && agentSearch.trim() && filteredAgents.length === 0 ? (
+              <p className="text-xs text-[var(--muted)]">No agents match “{agentSearch.trim()}”.</p>
+            ) : null}
             <button type="button" className="ui-btn-primary" disabled={!agentId || isAssigning} onClick={handleAssign}>
               {isAssigning ? "Assigning..." : "Assign"}
             </button>

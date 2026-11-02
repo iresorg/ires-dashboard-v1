@@ -8,6 +8,7 @@ import PersonIcon from "@/shared/assets/icons/Vector.svg";
 import GreenDot from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.svg";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import Tooltip from "@/shared/components/ui/Tooltip";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Trash from "@/shared/assets/icons/delete.svg";
@@ -137,14 +138,21 @@ const AgentsPage: React.FC = () => {
     <div className="page-container">
       {/* Top Bar */}
       <div className="ui-toolbar">
-        <button
-          type="button"
-          onClick={() => setShowCreateAgentModal(true)}
-          className="ui-btn-primary"
-        >
-          <img src={AddIcon} alt="" className="h-4" />
-          Create agent
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh agents"
+            onClick={() => void fetchAgents(pagination.page, pagination.limit, debouncedSearch)}
+          />
+          <button
+            type="button"
+            onClick={() => setShowCreateAgentModal(true)}
+            className="ui-btn-primary"
+          >
+            <img src={AddIcon} alt="" className="h-4" />
+            Create agent
+          </button>
+        </div>
 
         <div className="ui-search">
           <img src={Search} className="h-4 mr-2 opacity-60" alt="" />

@@ -5,6 +5,7 @@ import CategoryFormModal from "../components/CategoryFormModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import TicketCategoriesSkeleton from "../components/TicketCategoriesSkeleton";
 import { useToast } from "@/shared/components/ui/useToast";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import Tooltip from "@/shared/components/ui/Tooltip";
 import { ROUTES } from "@/shared/constants/routes";
 import { getApiErrorMessage } from "../types";
@@ -146,9 +147,16 @@ const TicketCategoriesPage: React.FC = () => {
             </Link>
           </p>
         </div>
-        <button type="button" className="ui-btn-primary" onClick={() => setShowCreate(true)}>
-          Create category
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh categories"
+            onClick={() => void fetchCategories()}
+          />
+          <button type="button" className="ui-btn-primary" onClick={() => setShowCreate(true)}>
+            Create category
+          </button>
+        </div>
       </div>
 
       {error && (

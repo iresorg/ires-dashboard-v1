@@ -7,6 +7,7 @@ import Search from "@/shared/assets/icons/lineicons_search-2.svg";
 import GreenButton from "@/shared/assets/icons/Ellipse 8.svg";
 import RedDot from "@/shared/assets/icons/Ellipse 9.png";
 import Pagination from "@/shared/components/ui/Pagination";
+import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import Tooltip from "@/shared/components/ui/Tooltip";
 import Pen from "@/shared/assets/icons/pen.svg";
 import Responder from "@/shared/assets/icons/respondericon.svg";
@@ -134,14 +135,21 @@ const RespondersPage: React.FC = () => {
     <div className="page-container">
       {/* Top Bar */}
       <div className="ui-toolbar">
-        <button
-          type="button"
-          onClick={() => setShowCreateResponderModal(true)}
-          className="ui-btn-primary"
-        >
-          <img src={AddIcon} alt="" className="h-4" />
-          Create responder
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <RefreshIconButton
+            loading={isLoading}
+            label="Refresh responders"
+            onClick={() => void fetchResponders(pagination.page, pagination.limit, debouncedSearch)}
+          />
+          <button
+            type="button"
+            onClick={() => setShowCreateResponderModal(true)}
+            className="ui-btn-primary"
+          >
+            <img src={AddIcon} alt="" className="h-4" />
+            Create responder
+          </button>
+        </div>
 
         <div className="ui-search">
           <img src={Search} className="h-4 mr-2 opacity-60" alt="" />
