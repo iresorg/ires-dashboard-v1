@@ -50,6 +50,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   const [categoryId, setCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [internalNotes, setInternalNotes] = useState("");
+  const [incidentId, setIncidentId] = useState("");
   const [includeContact, setIncludeContact] = useState(false);
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
@@ -199,6 +200,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
       categoryId,
       ...(subCategoryId ? { subCategoryId } : {}),
       ...(internalNotes.trim() ? { internalNotes: internalNotes.trim() } : {}),
+      ...(incidentId.trim() ? { incidentId: incidentId.trim() } : {}),
       ...(includeContact
         ? {
             contactInformation: {
@@ -470,6 +472,16 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               className="ui-input mt-1 min-h-[100px] resize-y"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium text-[var(--muted)]">Incident</span>
+            <input
+              className="ui-input mt-1"
+              value={incidentId}
+              onChange={(e) => setIncidentId(e.target.value)}
+              placeholder="Optional incident id. The account must match."
             />
           </label>
 

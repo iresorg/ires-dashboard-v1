@@ -6,6 +6,8 @@ const headings = [
   { id: "overview", title: "What tickets are" },
   { id: "categories", title: "Categories first" },
   { id: "create", title: "Create a ticket" },
+  { id: "incidents", title: "Incident reports" },
+  { id: "queue", title: "Unassigned ticket queue" },
   { id: "list", title: "List and filters" },
   { id: "detail", title: "Ticket detail" },
   { id: "lifecycle", title: "Lifecycle actions" },
@@ -59,7 +61,7 @@ const TicketsContent: React.FC = () => (
           Complete <strong>contact information</strong> and <strong>victim information</strong>{" "}
           where prompted (structured fields, not free-form blobs).
         </li>
-        <li>Optionally attach files (images, PDFs, etc.).</li>
+        <li>Optionally attach files, or paste an incident id when this ticket should be linked to an open incident for the same account.</li>
         <li>Submit. Success: the new ticket appears in the list and opens with status Created / Pending.</li>
       </ol>
       <DocsCallout tone="warning" title="If create fails">
@@ -67,6 +69,29 @@ const TicketsContent: React.FC = () => (
         within size/type limits. An ineligible account will not appear in (or will be rejected by)
         the eligible-accounts flow.
       </DocsCallout>
+    </section>
+
+    <section id="incidents" className="scroll-mt-6 space-y-3">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">Incident reports</h3>
+      <p className="text-sm leading-relaxed">
+        <strong>Incidents</strong> is the staff queue for reports filed on the website or by a super admin, admin, or agent admin for a caller.
+        Agents see only incidents assigned to them.
+      </p>
+      <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
+        <li>Admins open <strong>Unassigned queue</strong> by default, or switch to <strong>All incidents</strong>. Filter either list by open or closed.</li>
+        <li>Open an incident to update severity, type, phone, detection time, affected systems, and description while it is open.</li>
+        <li>Assign an agent, or link an existing ticket whose customer is the same account.</li>
+        <li>Closing that ticket closes the incident. A closed incident can no longer be edited.</li>
+        <li>A new reporter email receives an account and a temporary password by email. The password is not shown in the dashboard.</li>
+      </ul>
+    </section>
+
+    <section id="queue" className="scroll-mt-6 space-y-3">
+      <h3 className="text-lg font-semibold text-[var(--heading)]">Unassigned ticket queue</h3>
+      <p className="text-sm leading-relaxed">
+        Super admins, admins, agent admins, and responder admins can switch Tickets to <strong>Unassigned queue</strong>.
+        Those rows are created or pending tickets with no responder. Assign, escalate, resolve, and close still happen on the ticket itself.
+      </p>
     </section>
 
     <section id="list" className="scroll-mt-6 space-y-3">
@@ -113,7 +138,7 @@ const TicketsContent: React.FC = () => (
           <strong>Escalate</strong> — raise when the case needs higher attention.
         </li>
         <li>
-          <strong>Resolve</strong> then <strong>Close</strong> when work is complete.
+          <strong>Resolve</strong> then <strong>Close</strong> when work is complete. Closing the ticket also closes every incident linked to it.
         </li>
       </ol>
       <DocsCallout title="Statuses you will see">
