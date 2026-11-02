@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTickets } from "../hooks/useTickets";
 import { useTicketCategories } from "../hooks/useTicketCategories";
@@ -10,10 +10,13 @@ import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/shared/types/roles";
+import { getTicketQueue } from "../services/ticketService";
 import {
   formatDateTime,
   formatEntitlementSource,
+  getApiErrorMessage,
   TICKET_STATUSES,
+  type TicketQueueItem,
   type TicketStatus,
 } from "../types";
 import TicketTableSkeleton from "../components/TicketTableSkeleton";
@@ -26,6 +29,13 @@ const TicketsPage: React.FC = () => {
   const { categories } = useTicketCategories();
   const { showSuccess } = useToast();
   const [showCreate, setShowCreate] = useState(false);
+  const [view, setView] = useState<"all" | "queue">("all");
+  const [queue, setQueue] = useState<TicketQueueItem[]>([]);
+  const [queuePage, setQueuePage] = useState(1);
+  const [queueTotalPages, setQueueTotalPages] = useState(0);
+  const [queueTotal, setQueueTotal] = useState(0);
+  const [queueLoading, setQueueLoading] = useState(false);
+  const [queueError, setQueueError] = useState("");
 
   const canManageCategories =
     user?.role === Role.SUPER_ADMIN || user?.role === Role.ADMIN;
@@ -33,6 +43,39 @@ const TicketsPage: React.FC = () => {
     user?.role === Role.SUPER_ADMIN ||
     user?.role === Role.ADMIN ||
     user?.role === Role.RESPONDER_ADMIN;
+  const canViewQueue =
+    user?.role === Role.SUPER_ADMIN ||
+    user?.role === Role.ADMIN ||
+    user?.role === Role.AGENT_ADMIN ||
+    user?.role === Role.RESPONDER_ADMIN;
+
+  useEffect(() => {
+    if (view !== "queue" || !canViewQueue) return;
+    let cancelled = false;
+    const loadQueue = async () => {
+      setQueueLoading(true);
+      setQueueError("");
+      try {
+        const result = await getTicketQueue(queuePage, 10);
+        if (cancelled) return;
+        setQueue(result.data);
+        setQueueTotalPages(result.totalPages);
+        setQueueTotal(result.total);
+      } catch (err) {
+        if (cancelled) return;
+        setQueue([]);
+        setQueueTotalPages(0);
+        setQueueTotal(0);
+        setQueueError(getApiErrorMessage(err, "Could not load the ticket queue."));
+      } finally {
+        if (!cancelled) setQueueLoading(false);
+      }
+    };
+    void loadQueue();
+    return () => {
+      cancelled = true;
+    };
+  }, [canViewQueue, queuePage, view]);
 
   const statusOptions = [
     { value: "", label: "All statuses" },
@@ -52,7 +95,9 @@ const TicketsPage: React.FC = () => {
         <div>
           <h2 className="text-xl font-semibold text-[var(--heading)]">Tickets</h2>
           <p className="text-sm text-[var(--muted)]">
-            Staff inbox for incidents filed on behalf of customers.
+            {view === "queue"
+              ? "Created and pending tickets with no responder yet."
+              : "Staff inbox for tickets filed on behalf of customers."}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -75,6 +120,29 @@ const TicketsPage: React.FC = () => {
         </div>
       </div>
 
+      {canViewQueue && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={view === "all" ? "ui-btn-primary" : "ui-action-btn h-10 px-4"}
+            onClick={() => setView("all")}
+          >
+            All tickets
+          </button>
+          <button
+            type="button"
+            className={view === "queue" ? "ui-btn-primary" : "ui-action-btn h-10 px-4"}
+            onClick={() => {
+              setView("queue");
+              setQueuePage(1);
+            }}
+          >
+            Unassigned queue
+          </button>
+        </div>
+      )}
+
+      {view === "all" && (
       <div className="w-full sm:w-64">
         <Dropdown
           options={statusOptions}
@@ -83,8 +151,9 @@ const TicketsPage: React.FC = () => {
           placeholder="All statuses"
         />
       </div>
+      )}
 
-      {error && (
+      {view === "all" && error && (
         <div className="ui-card px-4 py-3 text-sm text-[var(--ires-red)] flex items-center justify-between gap-3">
           <span>{error}</span>
           <button
@@ -97,6 +166,90 @@ const TicketsPage: React.FC = () => {
         </div>
       )}
 
+      {view === "queue" ? (
+        <>
+          {queueError && (
+            <div className="ui-card px-4 py-3 text-sm text-[var(--ires-red)]">{queueError}</div>
+          )}
+          <div className="ui-table-wrap">
+            <table className="ui-table" style={{ minWidth: "900px" }}>
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Incident</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {queueLoading ? (
+                  <TicketTableSkeleton rows={6} columns={5} />
+                ) : queue.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="text-[var(--muted)] text-center py-10">
+                      No unassigned tickets in the queue.
+                    </td>
+                  </tr>
+                ) : (
+                  queue.map((item) => (
+                    <tr
+                      key={item.ticketId}
+                      className="cursor-pointer"
+                      onClick={() => navigate(`${ROUTES.TICKETS}/${item.ticketId}`)}
+                    >
+                      <td>
+                        <div className="font-medium">{item.ticketId}</div>
+                        <div className="text-xs text-[var(--muted)] max-w-[220px] truncate">{item.title}</div>
+                      </td>
+                      <td>
+                        {item.account ? (
+                          <>
+                            <div>{item.account.name}</div>
+                            <div className="text-xs text-[var(--muted)]">{item.account.email}</div>
+                          </>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td>
+                        <TicketStatusBadge status={item.status} />
+                      </td>
+                      <td>
+                        {item.incident ? (
+                          <Link
+                            to={`${ROUTES.INCIDENTS}/${item.incident.id}`}
+                            className="underline"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            {item.incident.reference}
+                          </Link>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td>{formatDateTime(item.createdAt)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          {!queueLoading && queueTotalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[var(--muted)]">
+                Page {queuePage} of {queueTotalPages} · {queueTotal} tickets
+              </p>
+              <Pagination
+                currentPage={queuePage}
+                totalPages={queueTotalPages}
+                onPageChange={setQueuePage}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+      <>
       <div className="ui-table-wrap">
         <table className="ui-table" style={{ minWidth: "1100px" }}>
           <thead>
@@ -159,7 +312,7 @@ const TicketsPage: React.FC = () => {
         </table>
       </div>
 
-      {!isLoading && pagination.totalPages > 1 && (
+      {!isLoading && pagination.totalPages > 1 && view === "all" && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-[var(--muted)]">
             Page {pagination.currentPage} of {pagination.totalPages} ·{" "}
@@ -171,6 +324,8 @@ const TicketsPage: React.FC = () => {
             onPageChange={(page) => fetchTickets(page, 10)}
           />
         </div>
+      )}
+      </>
       )}
 
       {showCreate && (

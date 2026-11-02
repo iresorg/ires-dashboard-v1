@@ -20,6 +20,8 @@ const DashboardLayout: React.FC = () => {
     "/dashboard/agents/:agentId/tokens": "Agent Token Management",
     "/dashboard/responders": "Responder Management",
     "/dashboard/responders/:responderId/tokens": "Responder Token Management",
+    "/dashboard/incidents": "Incidents",
+    "/dashboard/incidents/:incidentId": "Incident",
     "/dashboard/tickets": "Ticket Management",
     "/dashboard/tickets/escalations": "Escalation History",
     "/dashboard/tickets/:ticketId": "Ticket Detail",

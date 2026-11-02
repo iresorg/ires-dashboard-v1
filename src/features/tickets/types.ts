@@ -263,9 +263,40 @@ export interface CreateTicketPayload {
   categoryId: string;
   subCategoryId?: string;
   internalNotes?: string;
+  incidentId?: string;
   contactInformation?: ContactInformation;
   victimInformation?: VictimInformation;
   attachments?: File[];
+}
+
+export interface TicketQueueAccount {
+  id: string;
+  email: string;
+  name: string;
+}
+
+export interface TicketQueueIncident {
+  id: string;
+  reference: string;
+}
+
+export interface TicketQueueItem {
+  ticketId: string;
+  title: string;
+  status: string;
+  createdAt: string;
+  account: TicketQueueAccount | null;
+  incident: TicketQueueIncident | null;
+}
+
+export interface TicketQueueResponse {
+  message?: string;
+  data: TicketQueueItem[];
+  total: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  nextPage: number | null;
 }
 
 export interface CreateTicketResponse {

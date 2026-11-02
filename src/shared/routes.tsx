@@ -5,6 +5,7 @@ import { ROUTES } from "@/shared/constants/routes";
 import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
 import RoleBasedDashboard from "@/features/dashboard/components/RoleBasedDashboard";
 import IncidentsPage from "@/features/incidents/components/IncidentsPage";
+import IncidentDetailPage from "@/features/incidents/components/IncidentDetailPage";
 import RespondersPage from "@/features/responders/components/RespondersPage";
 import AgentsPage from "@/features/agents/components/AgentsPage";
 import UsersPage from "@/features/users/components/UsersPage";
@@ -52,6 +53,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <RoleBasedDashboard /> },
       { path: "incidents", element: <IncidentsPage /> },
+      { path: "incidents/:incidentId", element: <IncidentDetailPage /> },
       { path: "responders", element: <RespondersPage /> },
       { path: "agents", element: <AgentsPage /> },
       { path: "users", element: <UsersPage /> },

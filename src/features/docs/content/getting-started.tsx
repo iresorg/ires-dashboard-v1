@@ -57,7 +57,10 @@ const GettingStartedContent: React.FC = () => (
           <strong>Overview</strong> — high-level dashboard home.
         </li>
         <li>
-          <strong>Tickets</strong> — create and manage incidents for eligible customer accounts.
+          <strong>Incidents</strong> — website and caller reports. Assign an agent and link a ticket.
+        </li>
+        <li>
+          <strong>Tickets</strong> — create and manage tickets for eligible customer accounts. Use Unassigned queue for tickets with no responder.
         </li>
         <li>
           <strong>Users / Agents / Responders</strong> — staff accounts (gated by role).

@@ -13,6 +13,7 @@ import type {
   NotesPayload,
   TicketDashboardResponse,
   TicketDetail,
+  TicketQueueResponse,
   TicketDetailResponse,
   TicketEligibility,
   TicketEligibilityResponse,
@@ -48,6 +49,29 @@ export const getTickets = async (
     message: response.data?.message,
     data: response.data?.data ?? [],
     pagination: response.data?.pagination ?? emptyPagination,
+  };
+};
+
+export const getTicketQueue = async (
+  page = 1,
+  limit = 10
+): Promise<TicketQueueResponse> => {
+  const response = await api.get<TicketQueueResponse>("/tickets/queue", {
+    ...skipAuthRedirect,
+    params: {
+      page: String(page),
+      limit: String(Math.max(5, limit)),
+    },
+  });
+
+  return {
+    message: response.data?.message,
+    data: response.data?.data ?? [],
+    total: response.data?.total ?? 0,
+    limit: response.data?.limit ?? limit,
+    page: response.data?.page ?? page,
+    totalPages: response.data?.totalPages ?? 0,
+    nextPage: response.data?.nextPage ?? null,
   };
 };
 
@@ -150,6 +174,7 @@ export const createTicket = async (
 
   if (payload.subCategoryId) formData.append("subCategoryId", payload.subCategoryId);
   if (payload.internalNotes) formData.append("internalNotes", payload.internalNotes);
+  if (payload.incidentId) formData.append("incidentId", payload.incidentId);
   if (payload.contactInformation) {
     formData.append(
       "contactInformation",
