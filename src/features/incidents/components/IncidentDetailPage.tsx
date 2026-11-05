@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getAgents } from "@/features/agents/services/agentService";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { formatDateTime, getApiErrorMessage } from "@/features/tickets/types";
 import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
@@ -10,6 +9,7 @@ import { Role } from "@/shared/types/roles";
 import {
   assignIncident,
   getIncident,
+  getIncidentAssignees,
   linkIncidentTicket,
   updateIncident,
 } from "../services/incidentService";
@@ -20,9 +20,22 @@ import {
   incidentIsLocked,
   toDatetimeLocalValue,
   type Incident,
+  type IncidentAssignee,
   type IncidentOngoing,
   type IncidentSeverity,
 } from "../types";
+
+const formatAssigneeRole = (role: string): string => {
+  if (role === Role.AGENT_ADMIN || role === "AGENT_ADMIN") return "Agent admin";
+  if (role === Role.AGENT || role === "AGENT") return "Agent";
+  return role;
+};
+
+const assigneeLabel = (person: IncidentAssignee): string => {
+  const name = `${person.firstName} ${person.lastName}`.trim();
+  const who = name || person.email;
+  return `${who} · ${formatAssigneeRole(person.role)}`;
+};
 
 const IncidentDetailPage: React.FC = () => {
   const { incidentId = "" } = useParams();
@@ -44,10 +57,10 @@ const IncidentDetailPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [agentId, setAgentId] = useState("");
-  const [agents, setAgents] = useState<{ id: string; label: string; email: string }[]>([]);
-  const [agentSearch, setAgentSearch] = useState("");
-  const [agentsLoading, setAgentsLoading] = useState(false);
-  const [agentsError, setAgentsError] = useState("");
+  const [assignees, setAssignees] = useState<IncidentAssignee[]>([]);
+  const [assigneeSearch, setAssigneeSearch] = useState("");
+  const [assigneesLoading, setAssigneesLoading] = useState(false);
+  const [assigneesError, setAssigneesError] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
   const [ticketId, setTicketId] = useState("");
   const [isLinking, setIsLinking] = useState(false);
@@ -88,52 +101,59 @@ const IncidentDetailPage: React.FC = () => {
   useEffect(() => {
     if (!canManage) return;
     let cancelled = false;
-    const loadAgents = async () => {
-      setAgentsLoading(true);
-      setAgentsError("");
-      try {
-        const result = await getAgents(1, 100);
-        if (cancelled) return;
-        setAgents(
-          (result.data || [])
-            .filter((item) => item.role === Role.AGENT || item.role === "AGENT")
-            .map((item) => {
-              const name = `${item.firstName} ${item.lastName}`.trim();
-              return {
-                id: item.id,
-                email: item.email,
-                label: name ? `${name} (${item.email})` : item.email,
-              };
-            })
-        );
-      } catch (err) {
-        if (cancelled) return;
-        setAgents([]);
-        setAgentsError(getApiErrorMessage(err, "Could not load agents."));
-      } finally {
-        if (!cancelled) setAgentsLoading(false);
-      }
-    };
-    void loadAgents();
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        setAssigneesLoading(true);
+        setAssigneesError("");
+        try {
+          const rows = await getIncidentAssignees(assigneeSearch);
+          if (cancelled) return;
+          setAssignees(rows);
+        } catch (err) {
+          if (cancelled) return;
+          setAssignees([]);
+          setAssigneesError(getApiErrorMessage(err, "Could not load assignees."));
+        } finally {
+          if (!cancelled) setAssigneesLoading(false);
+        }
+      })();
+    }, 250);
     return () => {
       cancelled = true;
+      window.clearTimeout(timer);
     };
-  }, [canManage, refreshKey]);
-
-  const filteredAgents = useMemo(() => {
-    const query = agentSearch.trim().toLowerCase();
-    if (!query) return agents;
-    return agents.filter((agent) => {
-      const haystack = `${agent.label} ${agent.email}`.toLowerCase();
-      return haystack.includes(query);
-    });
-  }, [agentSearch, agents]);
+  }, [assigneeSearch, canManage, refreshKey]);
 
   const locked = incident ? incidentIsLocked(incident) : true;
+  const canAssignToSelf = role === Role.AGENT_ADMIN && Boolean(user?.id);
+
+  const isDirty = useMemo(() => {
+    if (!incident) return false;
+    const sameText = (a: string, b: string | null | undefined) =>
+      a.trim() === (b ?? "").trim();
+    return !(
+      severity === incident.severity &&
+      ongoing === incident.ongoing &&
+      sameText(incidentType, incident.incidentType) &&
+      sameText(phone, incident.phone) &&
+      detectedAt === toDatetimeLocalValue(incident.detectedAt) &&
+      sameText(affectedSystems, incident.affectedSystems) &&
+      sameText(description, incident.description)
+    );
+  }, [
+    affectedSystems,
+    description,
+    detectedAt,
+    incident,
+    incidentType,
+    ongoing,
+    phone,
+    severity,
+  ]);
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!incident || locked) return;
+    if (!incident || locked || !isDirty) return;
     setIsSaving(true);
     try {
       const next = await updateIncident(incident.id, {
@@ -154,11 +174,11 @@ const IncidentDetailPage: React.FC = () => {
     }
   };
 
-  const handleAssign = async () => {
-    if (!incident || !agentId) return;
+  const handleAssign = async (assigneeId = agentId) => {
+    if (!incident || !assigneeId) return;
     setIsAssigning(true);
     try {
-      const next = await assignIncident(incident.id, agentId);
+      const next = await assignIncident(incident.id, assigneeId);
       applyIncident(next);
       showSuccess("Incident assigned");
     } catch (err) {
@@ -289,7 +309,11 @@ const IncidentDetailPage: React.FC = () => {
             <textarea className="ui-input mt-1 min-h-[120px]" maxLength={8000} value={description} onChange={(e) => setDescription(e.target.value)} />
           </label>
           <div className="sm:col-span-2 flex justify-end">
-            <button type="submit" className="ui-btn-primary" disabled={isSaving}>
+            <button
+              type="submit"
+              className="ui-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSaving || !isDirty}
+            >
               {isSaving ? "Saving..." : "Save changes"}
             </button>
           </div>
@@ -299,54 +323,76 @@ const IncidentDetailPage: React.FC = () => {
       {canManage && !locked && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="ui-card p-5 space-y-3">
-            <h3 className="font-semibold text-[var(--heading)]">Assign an agent</h3>
+            <h3 className="font-semibold text-[var(--heading)]">Assign</h3>
+            <p className="text-sm text-[var(--muted)]">
+              Active agents and agent admins. An agent admin can take the incident themselves.
+            </p>
             <label className="block">
-              <span className="text-xs font-medium text-[var(--muted)]">Search agents</span>
+              <span className="text-xs font-medium text-[var(--muted)]">Search</span>
               <input
                 className="ui-input mt-1"
                 placeholder="Name or email"
-                value={agentSearch}
+                value={assigneeSearch}
                 onChange={(e) => {
-                  setAgentSearch(e.target.value);
+                  setAssigneeSearch(e.target.value);
                   setAgentId("");
                 }}
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-[var(--muted)]">Agent</span>
+              <span className="text-xs font-medium text-[var(--muted)]">Assignee</span>
               <select
                 className="ui-input mt-1"
                 value={agentId}
                 onChange={(e) => setAgentId(e.target.value)}
-                disabled={agentsLoading}
+                disabled={assigneesLoading}
               >
                 <option value="">
-                  {agentsLoading
-                    ? "Loading agents…"
-                    : filteredAgents.length === 0
-                      ? "No agents match"
-                      : "Select an agent"}
+                  {assigneesLoading
+                    ? "Loading assignees…"
+                    : assignees.length === 0
+                      ? "No assignees match"
+                      : "Select an assignee"}
                 </option>
                 {incident.assignedAgent &&
-                  !filteredAgents.some((agent) => agent.id === incident.assignedAgent?.id) && (
+                  !assignees.some((person) => person.id === incident.assignedAgent?.id) && (
                     <option value={incident.assignedAgent.id}>
                       {agentName(incident.assignedAgent)}
                     </option>
                   )}
-                {filteredAgents.map((agent) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.label}
+                {assignees.map((person) => (
+                  <option key={person.id} value={person.id}>
+                    {assigneeLabel(person)}
                   </option>
                 ))}
               </select>
             </label>
-            {agentsError ? <p className="text-xs text-[#ef4444]">{agentsError}</p> : null}
-            {!agentsLoading && !agentsError && agentSearch.trim() && filteredAgents.length === 0 ? (
-              <p className="text-xs text-[var(--muted)]">No agents match “{agentSearch.trim()}”.</p>
+            {assigneesError ? <p className="text-xs text-[#ef4444]">{assigneesError}</p> : null}
+            {!assigneesLoading && !assigneesError && assigneeSearch.trim() && assignees.length === 0 ? (
+              <p className="text-xs text-[var(--muted)]">
+                No assignees match “{assigneeSearch.trim()}”.
+              </p>
             ) : null}
-            <button type="button" className="ui-btn-primary" disabled={!agentId || isAssigning} onClick={handleAssign}>
-              {isAssigning ? "Assigning..." : "Assign"}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              {canAssignToSelf && user?.id && (
+                <button
+                  type="button"
+                  className="ui-action-btn h-10 px-4"
+                  disabled={isAssigning || incident.assignedAgent?.id === user.id}
+                  onClick={() => void handleAssign(user.id)}
+                >
+                  {incident.assignedAgent?.id === user.id ? "Assigned to you" : "Assign to me"}
+                </button>
+              )}
+              <button
+                type="button"
+                className="ui-btn-primary"
+                disabled={!agentId || isAssigning}
+                onClick={() => void handleAssign()}
+              >
+                {isAssigning ? "Assigning..." : "Assign"}
+              </button>
+            </div>
           </div>
 
           {!incident.ticketId && (
