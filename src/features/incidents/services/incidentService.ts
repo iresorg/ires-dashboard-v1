@@ -39,8 +39,12 @@ export const getIncidentQueue = async (params: {
   };
 };
 
-export const getIncident = async (id: string): Promise<Incident> => {
-  const response = await api.get<IncidentResponse>(`/incident-reports/${id}`, skipAuthRedirect);
+export const getIncident = async (idOrReference: string): Promise<Incident> => {
+  const key = encodeURIComponent(idOrReference.trim());
+  const response = await api.get<IncidentResponse>(
+    `/incident-reports/${key}`,
+    skipAuthRedirect
+  );
   return response.data.incident;
 };
 
