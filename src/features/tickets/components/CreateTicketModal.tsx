@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Check } from "lucide-react";
 import CloseIcon from "@/shared/assets/icons/close.svg";
 import {
   createTicket,
@@ -607,13 +608,14 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                 ) : filteredAccountIncidents.length === 0 ? (
                   <p className="text-sm text-[var(--muted)]">No incidents match that search.</p>
                 ) : (
-                  <div className="max-h-44 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                  <div className="max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--surface)]">
                     {filteredAccountIncidents.map((incident) => {
                       const selected = linkedIncident?.id === incident.id;
                       return (
                         <button
                           key={incident.id}
                           type="button"
+                          aria-pressed={selected}
                           className={`w-full text-left px-3 py-2.5 text-sm border-b border-[var(--border)] last:border-0 ${
                             selected
                               ? "bg-[var(--cool-blue-tint)]"
@@ -621,12 +623,22 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                           }`}
                           onClick={() => applyIncidentToForm(incident)}
                         >
-                          <div className="font-medium text-[var(--heading)]">
-                            {incident.reference}
-                          </div>
-                          <div className="text-xs text-[var(--muted)] mt-0.5">
-                            {incident.severity} · {incident.incidentType}
-                            {incident.name ? ` · ${incident.name}` : ""}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="font-medium text-[var(--heading)]">
+                                {incident.reference}
+                              </div>
+                              <div className="text-xs text-[var(--muted)] mt-0.5">
+                                {incident.severity} · {incident.incidentType}
+                                {incident.name ? ` · ${incident.name}` : ""}
+                              </div>
+                            </div>
+                            {selected && (
+                              <Check
+                                className="mt-0.5 h-4 w-4 shrink-0 text-[var(--heading)]"
+                                aria-label="Selected"
+                              />
+                            )}
                           </div>
                         </button>
                       );
@@ -679,12 +691,6 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               </>
             )}
 
-            {linkedIncident && (
-              <p className="text-xs text-[var(--heading)]">
-                Linked {linkedIncident.reference} · {linkedIncident.severity} ·{" "}
-                {linkedIncident.incidentType}
-              </p>
-            )}
             {incidentLookupError && (
               <p className="text-xs text-[var(--ires-red)]">{incidentLookupError}</p>
             )}
