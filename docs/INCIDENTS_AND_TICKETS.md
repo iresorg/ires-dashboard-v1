@@ -247,11 +247,15 @@ GET /api/v1/incident-reports/:id
 PATCH /api/v1/incident-reports/:id
 ```
 
+`:id` accepts the incident UUID or the public reference (`IR-YYYYMMDD-XXXXXX`).
+
 Staff may also send `severity` and `incidentType` on the patch. Same `409` when the incident or its ticket is closed.
 
 Detail `200`: `{ "message": "Incident fetched", "incident": {} }`
 
 Update `200`: `{ "message": "Incident updated", "incident": {} }`
+
+On **Create ticket**, staff can look up an incident by that number. The modal fills **Type**, **Location**, and **Description** from the incident, selects the customer account, and links `incidentId`. Staff still enter **Title**, **Reporter name**, and **Category**.
 
 ### Assignees list
 

@@ -13,6 +13,8 @@ import type {
   TicketEligibility,
 } from "../types";
 import { formatEntitlementSource, getApiErrorMessage } from "../types";
+import { getIncident } from "@/features/incidents/services/incidentService";
+import type { Incident } from "@/features/incidents/types";
 import { ROUTES } from "@/shared/constants/routes";
 import { useDebounce } from "@/shared/hooks";
 import UploadIcon from "@/shared/assets/icons/Upload.svg";
@@ -50,7 +52,11 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   const [categoryId, setCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [internalNotes, setInternalNotes] = useState("");
+  const [incidentLookup, setIncidentLookup] = useState("");
   const [incidentId, setIncidentId] = useState("");
+  const [linkedIncident, setLinkedIncident] = useState<Incident | null>(null);
+  const [lookingUpIncident, setLookingUpIncident] = useState(false);
+  const [incidentLookupError, setIncidentLookupError] = useState<string | null>(null);
   const [includeContact, setIncludeContact] = useState(false);
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
@@ -65,6 +71,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   const [attachments, setAttachments] = useState<File[]>([]);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fromIncident = Boolean(linkedIncident);
 
   const selectedCategory = useMemo(
     () => categories.find((category) => category.id === categoryId) ?? null,
@@ -163,6 +170,93 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
     setSelectedAccount(account);
     setAccountSearch(account.name || account.email);
     setPickerOpen(false);
+  };
+
+  const clearLinkedIncident = () => {
+    setLinkedIncident(null);
+    setIncidentId("");
+    setIncidentLookup("");
+    setIncidentLookupError(null);
+    setType("");
+    setLocation("");
+    setDescription("");
+    setSubCategoryId("");
+  };
+
+  const applyIncidentToForm = async (incident: Incident) => {
+    if (incident.ticketId) {
+      setIncidentLookupError(
+        `Incident ${incident.reference} is already linked to ticket ${incident.ticketId}`
+      );
+      return;
+    }
+    if (incident.status === "CLOSED") {
+      setIncidentLookupError(`Incident ${incident.reference} is closed`);
+      return;
+    }
+
+    setLinkedIncident(incident);
+    setIncidentId(incident.id);
+    setIncidentLookup(incident.reference);
+    setIncidentLookupError(null);
+
+    setType(incident.incidentType || "");
+    setLocation(
+      [incident.organization, incident.affectedSystems].filter(Boolean).join(" · ") ||
+        "Not specified"
+    );
+    setDescription(incident.description || "");
+    setSubCategoryId("");
+
+    if (incident.email?.trim() || incident.phone?.trim()) {
+      setIncludeContact(true);
+      setContactEmail(incident.email || "");
+      setContactPhone(incident.phone || "");
+    }
+
+    try {
+      const eligibilityResult = await getTicketEligibility(incident.accountId);
+      const account: EligibleAccount = {
+        accountId: eligibilityResult.accountId,
+        email: eligibilityResult.email || incident.email,
+        name: incident.name || eligibilityResult.email || incident.email,
+        source: eligibilityResult.source,
+        subscription: eligibilityResult.subscription,
+        paygCreditsAvailable: eligibilityResult.paygCreditsAvailable ?? 0,
+      };
+      setSelectedAccount(account);
+      setAccountSearch(account.name || account.email);
+      setEligibility(eligibilityResult);
+      setPickerOpen(false);
+    } catch (err) {
+      setIncidentLookupError(
+        getApiErrorMessage(err, "Incident found, but the customer account is not eligible")
+      );
+      setSelectedAccount(null);
+      setEligibility(null);
+    }
+  };
+
+  const handleLookupIncident = async () => {
+    const key = incidentLookup.trim();
+    if (!key) {
+      setIncidentLookupError("Enter an incident number (e.g. IR-20261102-A1B2C3)");
+      return;
+    }
+
+    setLookingUpIncident(true);
+    setIncidentLookupError(null);
+    setError(null);
+    try {
+      const incident = await getIncident(key);
+      await applyIncidentToForm(incident);
+    } catch (err) {
+      setLinkedIncident(null);
+      setIncidentId("");
+      setIncidentLookupError(getApiErrorMessage(err, "Incident not found"));
+    } finally {
+      setLookingUpIncident(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -304,6 +398,63 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
         <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit}>
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--cool-blue-tint)]/20 p-4 space-y-2">
+            <span className="text-xs font-medium text-[var(--muted)]">
+              Incident number (optional)
+            </span>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                className="ui-input flex-1"
+                value={incidentLookup}
+                onChange={(e) => {
+                  setIncidentLookup(e.target.value);
+                  setIncidentLookupError(null);
+                  if (linkedIncident) {
+                    setLinkedIncident(null);
+                    setIncidentId("");
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void handleLookupIncident();
+                  }
+                }}
+                placeholder="e.g. IR-20261102-A1B2C3"
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                className="ui-btn-primary h-10 px-4 shrink-0"
+                onClick={() => void handleLookupIncident()}
+                disabled={lookingUpIncident || !incidentLookup.trim()}
+              >
+                {lookingUpIncident ? "Looking up..." : "Load incident"}
+              </button>
+              {fromIncident && (
+                <button
+                  type="button"
+                  className="ui-action-btn h-10 px-4 shrink-0"
+                  onClick={clearLinkedIncident}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <p className="text-xs text-[var(--muted)]">
+              Loads type, location, and description. You still fill title, reporter, and category.
+            </p>
+            {linkedIncident && (
+              <p className="text-xs text-[var(--heading)]">
+                Linked {linkedIncident.reference} · {linkedIncident.severity} ·{" "}
+                {linkedIncident.incidentType}
+              </p>
+            )}
+            {incidentLookupError && (
+              <p className="text-xs text-[var(--ires-red)]">{incidentLookupError}</p>
+            )}
+          </div>
+
           <div ref={pickerRef} className="relative">
             <span className="text-xs font-medium text-[var(--muted)]">
               Customer account (created for)
@@ -316,10 +467,17 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                 setSelectedAccount(null);
                 setEligibility(null);
                 setPickerOpen(true);
+                if (fromIncident) {
+                  setLinkedIncident(null);
+                  setIncidentId("");
+                }
               }}
-              onFocus={() => setPickerOpen(true)}
+              onFocus={() => {
+                if (!fromIncident) setPickerOpen(true);
+              }}
               placeholder="Search eligible customers by name or email"
               autoComplete="off"
+              readOnly={fromIncident}
             />
 
             {pickerOpen && (
@@ -402,12 +560,15 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               <input className="ui-input mt-1" value={title} onChange={(e) => setTitle(e.target.value)} />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-[var(--muted)]">Type</span>
+              <span className="text-xs font-medium text-[var(--muted)]">
+                Type{fromIncident ? " (from incident)" : ""}
+              </span>
               <input
                 className="ui-input mt-1"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 placeholder="e.g. phishing"
+                readOnly={fromIncident}
               />
             </label>
             <label className="block">
@@ -419,11 +580,14 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-[var(--muted)]">Location</span>
+              <span className="text-xs font-medium text-[var(--muted)]">
+                Location{fromIncident ? " (from incident)" : ""}
+              </span>
               <input
                 className="ui-input mt-1"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                readOnly={fromIncident}
               />
             </label>
             <label className="block">
@@ -467,21 +631,14 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           </div>
 
           <label className="block">
-            <span className="text-xs font-medium text-[var(--muted)]">Description</span>
+            <span className="text-xs font-medium text-[var(--muted)]">
+              Description{fromIncident ? " (from incident)" : ""}
+            </span>
             <textarea
               className="ui-input mt-1 min-h-[100px] resize-y"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-xs font-medium text-[var(--muted)]">Incident</span>
-            <input
-              className="ui-input mt-1"
-              value={incidentId}
-              onChange={(e) => setIncidentId(e.target.value)}
-              placeholder="Optional incident id. The account must match."
+              readOnly={fromIncident}
             />
           </label>
 
