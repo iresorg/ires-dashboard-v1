@@ -13,7 +13,10 @@ import type {
   TicketEligibility,
 } from "../types";
 import { formatEntitlementSource, getApiErrorMessage } from "../types";
-import { getIncident } from "@/features/incidents/services/incidentService";
+import {
+  getIncident,
+  getIncidentQueue,
+} from "@/features/incidents/services/incidentService";
 import type { Incident } from "@/features/incidents/types";
 import { ROUTES } from "@/shared/constants/routes";
 import { useDebounce } from "@/shared/hooks";
@@ -57,6 +60,10 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   const [linkedIncident, setLinkedIncident] = useState<Incident | null>(null);
   const [lookingUpIncident, setLookingUpIncident] = useState(false);
   const [incidentLookupError, setIncidentLookupError] = useState<string | null>(null);
+  const [accountIncidents, setAccountIncidents] = useState<Incident[]>([]);
+  const [loadingAccountIncidents, setLoadingAccountIncidents] = useState(false);
+  const [incidentSearch, setIncidentSearch] = useState("");
+  const [showPasteLookup, setShowPasteLookup] = useState(false);
   const [includeContact, setIncludeContact] = useState(false);
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
@@ -166,24 +173,105 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
     Boolean(categoryId) &&
     categories.length > 0;
 
+  const accountEligible =
+    Boolean(selectedAccount) && eligibility?.eligible === true && !checkingEligibility;
+
+  const filteredAccountIncidents = useMemo(() => {
+    const needle = incidentSearch.trim().toLowerCase();
+    if (!needle) return accountIncidents;
+    return accountIncidents.filter((incident) => {
+      const haystack = [
+        incident.reference,
+        incident.incidentType,
+        incident.severity,
+        incident.name,
+        incident.description,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [accountIncidents, incidentSearch]);
+
+  useEffect(() => {
+    if (!accountEligible || !selectedAccount) {
+      setAccountIncidents([]);
+      setLoadingAccountIncidents(false);
+      return;
+    }
+
+    let cancelled = false;
+    const load = async () => {
+      setLoadingAccountIncidents(true);
+      setIncidentLookupError(null);
+      try {
+        const result = await getIncidentQueue({
+          accountId: selectedAccount.accountId,
+          status: "OPEN",
+          unlinked: true,
+          page: 1,
+          limit: 50,
+        });
+        if (!cancelled) setAccountIncidents(result.data);
+      } catch (err) {
+        if (!cancelled) {
+          setAccountIncidents([]);
+          setIncidentLookupError(
+            getApiErrorMessage(err, "Could not load open incidents for this customer")
+          );
+        }
+      } finally {
+        if (!cancelled) setLoadingAccountIncidents(false);
+      }
+    };
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [accountEligible, selectedAccount]);
+
+  const clearLinkedIncidentFields = () => {
+    setLinkedIncident(null);
+    setIncidentId("");
+    setIncidentLookupError(null);
+    setType("");
+    setLocation("");
+    setDescription("");
+    setReporterName("");
+    setSubCategoryId("");
+  };
+
+  const clearLinkedIncident = () => {
+    clearLinkedIncidentFields();
+    setIncidentLookup("");
+    setIncidentSearch("");
+  };
+
   const handleSelectAccount = (account: EligibleAccount) => {
+    if (selectedAccount?.accountId !== account.accountId) {
+      clearLinkedIncidentFields();
+      setIncidentLookup("");
+      setIncidentSearch("");
+      setShowPasteLookup(false);
+      setAccountIncidents([]);
+    }
     setSelectedAccount(account);
     setAccountSearch(account.name || account.email);
     setPickerOpen(false);
   };
 
-  const clearLinkedIncident = () => {
-    setLinkedIncident(null);
-    setIncidentId("");
-    setIncidentLookup("");
-    setIncidentLookupError(null);
-    setType("");
-    setLocation("");
-    setDescription("");
-    setSubCategoryId("");
-  };
-
-  const applyIncidentToForm = async (incident: Incident) => {
+  const applyIncidentToForm = (incident: Incident) => {
+    if (!selectedAccount) {
+      setIncidentLookupError("Select an eligible customer account first");
+      return;
+    }
+    if (incident.accountId !== selectedAccount.accountId) {
+      setIncidentLookupError(
+        `Incident ${incident.reference} belongs to a different customer account`
+      );
+      return;
+    }
     if (incident.ticketId) {
       setIncidentLookupError(
         `Incident ${incident.reference} is already linked to ticket ${incident.ticketId}`
@@ -201,6 +289,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
     setIncidentLookupError(null);
 
     setType(incident.incidentType || "");
+    setReporterName(incident.name || "");
     setLocation(
       [incident.organization, incident.affectedSystems].filter(Boolean).join(" · ") ||
         "Not specified"
@@ -213,31 +302,14 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
       setContactEmail(incident.email || "");
       setContactPhone(incident.phone || "");
     }
-
-    try {
-      const eligibilityResult = await getTicketEligibility(incident.accountId);
-      const account: EligibleAccount = {
-        accountId: eligibilityResult.accountId,
-        email: eligibilityResult.email || incident.email,
-        name: incident.name || eligibilityResult.email || incident.email,
-        source: eligibilityResult.source,
-        subscription: eligibilityResult.subscription,
-        paygCreditsAvailable: eligibilityResult.paygCreditsAvailable ?? 0,
-      };
-      setSelectedAccount(account);
-      setAccountSearch(account.name || account.email);
-      setEligibility(eligibilityResult);
-      setPickerOpen(false);
-    } catch (err) {
-      setIncidentLookupError(
-        getApiErrorMessage(err, "Incident found, but the customer account is not eligible")
-      );
-      setSelectedAccount(null);
-      setEligibility(null);
-    }
   };
 
   const handleLookupIncident = async () => {
+    if (!accountEligible) {
+      setIncidentLookupError("Select an eligible customer account before loading an incident");
+      return;
+    }
+
     const key = incidentLookup.trim();
     if (!key) {
       setIncidentLookupError("Enter an incident number (e.g. IR-20261102-A1B2C3)");
@@ -249,7 +321,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
     setError(null);
     try {
       const incident = await getIncident(key);
-      await applyIncidentToForm(incident);
+      applyIncidentToForm(incident);
     } catch (err) {
       setLinkedIncident(null);
       setIncidentId("");
@@ -398,63 +470,6 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
         <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit}>
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          <div className="rounded-lg border border-[var(--border)] bg-[var(--cool-blue-tint)]/20 p-4 space-y-2">
-            <span className="text-xs font-medium text-[var(--muted)]">
-              Incident number (optional)
-            </span>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                className="ui-input flex-1"
-                value={incidentLookup}
-                onChange={(e) => {
-                  setIncidentLookup(e.target.value);
-                  setIncidentLookupError(null);
-                  if (linkedIncident) {
-                    setLinkedIncident(null);
-                    setIncidentId("");
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    void handleLookupIncident();
-                  }
-                }}
-                placeholder="e.g. IR-20261102-A1B2C3"
-                autoComplete="off"
-              />
-              <button
-                type="button"
-                className="ui-btn-primary h-10 px-4 shrink-0"
-                onClick={() => void handleLookupIncident()}
-                disabled={lookingUpIncident || !incidentLookup.trim()}
-              >
-                {lookingUpIncident ? "Looking up..." : "Load incident"}
-              </button>
-              {fromIncident && (
-                <button
-                  type="button"
-                  className="ui-action-btn h-10 px-4 shrink-0"
-                  onClick={clearLinkedIncident}
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <p className="text-xs text-[var(--muted)]">
-              Loads type, location, and description. You still fill title, reporter, and category.
-            </p>
-            {linkedIncident && (
-              <p className="text-xs text-[var(--heading)]">
-                Linked {linkedIncident.reference} · {linkedIncident.severity} ·{" "}
-                {linkedIncident.incidentType}
-              </p>
-            )}
-            {incidentLookupError && (
-              <p className="text-xs text-[var(--ires-red)]">{incidentLookupError}</p>
-            )}
-          </div>
-
           <div ref={pickerRef} className="relative">
             <span className="text-xs font-medium text-[var(--muted)]">
               Customer account (created for)
@@ -467,17 +482,15 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
                 setSelectedAccount(null);
                 setEligibility(null);
                 setPickerOpen(true);
-                if (fromIncident) {
-                  setLinkedIncident(null);
-                  setIncidentId("");
-                }
+                clearLinkedIncidentFields();
+                setIncidentLookup("");
+                setIncidentSearch("");
+                setShowPasteLookup(false);
+                setAccountIncidents([]);
               }}
-              onFocus={() => {
-                if (!fromIncident) setPickerOpen(true);
-              }}
+              onFocus={() => setPickerOpen(true)}
               placeholder="Search eligible customers by name or email"
               autoComplete="off"
-              readOnly={fromIncident}
             />
 
             {pickerOpen && (
@@ -553,6 +566,129 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               ) : null}
             </div>
           )}
+
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--cool-blue-tint)]/20 p-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs font-medium text-[var(--muted)]">
+                Open incident (optional)
+              </span>
+              {fromIncident && (
+                <button
+                  type="button"
+                  className="ui-action-btn h-8 px-3"
+                  onClick={clearLinkedIncident}
+                >
+                  Clear selection
+                </button>
+              )}
+            </div>
+
+            {!accountEligible ? (
+              <p className="text-xs text-[var(--muted)]">
+                Select an eligible customer first to see their open, unlinked incidents.
+              </p>
+            ) : loadingAccountIncidents ? (
+              <p className="text-sm text-[var(--muted)]">Loading open incidents…</p>
+            ) : (
+              <>
+                <input
+                  className="ui-input"
+                  value={incidentSearch}
+                  onChange={(e) => setIncidentSearch(e.target.value)}
+                  placeholder="Search by reference, type, or name"
+                  autoComplete="off"
+                  disabled={accountIncidents.length === 0}
+                />
+
+                {accountIncidents.length === 0 ? (
+                  <p className="text-sm text-[var(--muted)]">
+                    No open unlinked incidents for this customer.
+                  </p>
+                ) : filteredAccountIncidents.length === 0 ? (
+                  <p className="text-sm text-[var(--muted)]">No incidents match that search.</p>
+                ) : (
+                  <div className="max-h-44 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                    {filteredAccountIncidents.map((incident) => {
+                      const selected = linkedIncident?.id === incident.id;
+                      return (
+                        <button
+                          key={incident.id}
+                          type="button"
+                          className={`w-full text-left px-3 py-2.5 text-sm border-b border-[var(--border)] last:border-0 ${
+                            selected
+                              ? "bg-[var(--cool-blue-tint)]"
+                              : "hover:bg-[var(--cool-blue-tint)]"
+                          }`}
+                          onClick={() => applyIncidentToForm(incident)}
+                        >
+                          <div className="font-medium text-[var(--heading)]">
+                            {incident.reference}
+                          </div>
+                          <div className="text-xs text-[var(--muted)] mt-0.5">
+                            {incident.severity} · {incident.incidentType}
+                            {incident.name ? ` · ${incident.name}` : ""}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <p className="text-xs text-[var(--muted)]">
+                  Selecting an incident fills reporter, type, location, and description. You still
+                  fill title and category.
+                </p>
+
+                <button
+                  type="button"
+                  className="text-xs font-medium text-[var(--heading)] underline"
+                  onClick={() => setShowPasteLookup((open) => !open)}
+                >
+                  {showPasteLookup ? "Hide paste lookup" : "Or paste an incident number"}
+                </button>
+
+                {showPasteLookup && (
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      className="ui-input flex-1"
+                      value={incidentLookup}
+                      onChange={(e) => {
+                        setIncidentLookup(e.target.value);
+                        setIncidentLookupError(null);
+                        if (linkedIncident) clearLinkedIncidentFields();
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void handleLookupIncident();
+                        }
+                      }}
+                      placeholder="e.g. IR-20261102-A1B2C3"
+                      autoComplete="off"
+                    />
+                    <button
+                      type="button"
+                      className="ui-btn-primary h-10 px-4 shrink-0"
+                      onClick={() => void handleLookupIncident()}
+                      disabled={lookingUpIncident || !incidentLookup.trim()}
+                    >
+                      {lookingUpIncident ? "Looking up..." : "Load incident"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+
+            {linkedIncident && (
+              <p className="text-xs text-[var(--heading)]">
+                Linked {linkedIncident.reference} · {linkedIncident.severity} ·{" "}
+                {linkedIncident.incidentType}
+              </p>
+            )}
+            {incidentLookupError && (
+              <p className="text-xs text-[var(--ires-red)]">{incidentLookupError}</p>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="block">

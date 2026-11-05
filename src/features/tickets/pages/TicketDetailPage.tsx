@@ -9,6 +9,7 @@ import AttachmentPreviewModal, {
 } from "../components/AttachmentPreviewModal";
 import Pagination from "@/shared/components/ui/Pagination";
 import Dropdown from "@/shared/components/ui/Dropdown";
+import CopyIconButton from "@/shared/components/ui/CopyIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Role } from "@/shared/types/roles";
@@ -342,9 +343,12 @@ const TicketDetailPage: React.FC = () => {
           <Link to={ROUTES.TICKETS} className="text-xs text-[var(--muted)] hover:underline">
             ← Tickets
           </Link>
-          <h2 className="text-xl font-semibold text-[var(--heading)] mt-1">
-            {ticket.ticketId}
-          </h2>
+          <div className="mt-1 flex items-center gap-1.5">
+            <h2 className="text-xl font-semibold text-[var(--heading)]">
+              {ticket.ticketId}
+            </h2>
+            <CopyIconButton value={ticket.ticketId} label="Copy ticket number" />
+          </div>
           <p className="text-sm text-[var(--muted)]">{ticket.title}</p>
         </div>
         <TicketStatusBadge status={ticket.status} />

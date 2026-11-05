@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { formatDateTime, getApiErrorMessage } from "@/features/tickets/types";
+import CopyIconButton from "@/shared/components/ui/CopyIconButton";
 import RefreshIconButton from "@/shared/components/ui/RefreshIconButton";
 import { useToast } from "@/shared/components/ui/useToast";
 import { ROUTES } from "@/shared/constants/routes";
@@ -226,7 +227,10 @@ const IncidentDetailPage: React.FC = () => {
           <Link to={ROUTES.INCIDENTS} className="text-sm text-[var(--muted)] hover:text-[var(--heading)]">
             Incidents
           </Link>
-          <h2 className="text-lg font-semibold text-[var(--heading)]">{incident.reference}</h2>
+          <div className="mt-0.5 flex items-center gap-1.5">
+            <h2 className="text-lg font-semibold text-[var(--heading)]">{incident.reference}</h2>
+            <CopyIconButton value={incident.reference} label="Copy incident number" />
+          </div>
           <p className="text-sm text-[var(--muted)]">
             {incident.status}
             {incident.ticketStatus ? ` · ticket ${incident.ticketStatus}` : ""}
@@ -244,7 +248,17 @@ const IncidentDetailPage: React.FC = () => {
         <Field label="Organization" value={incident.organization} />
         <Field label="Email" value={incident.email} />
         <Field label="Agent" value={agentName(incident.assignedAgent)} />
-        <Field label="Ticket" value={incident.ticketId || "Not linked"} />
+        <div>
+          <div className="text-xs font-medium text-[var(--muted)]">Ticket</div>
+          {incident.ticketId ? (
+            <div className="mt-0.5 flex items-center gap-1.5">
+              <span className="text-[var(--heading)] break-all">{incident.ticketId}</span>
+              <CopyIconButton value={incident.ticketId} label="Copy ticket number" />
+            </div>
+          ) : (
+            <div className="text-[var(--heading)] mt-0.5">Not linked</div>
+          )}
+        </div>
         <Field label="Updated" value={formatDateTime(incident.updatedAt)} />
       </div>
 
@@ -421,7 +435,7 @@ const IncidentDetailPage: React.FC = () => {
 const Field: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div>
     <div className="text-xs font-medium text-[var(--muted)]">{label}</div>
-    <div className="text-[var(--heading)] mt-0.5">{value}</div>
+    <div className="text-[var(--heading)] mt-0.5 break-all">{value}</div>
   </div>
 );
 

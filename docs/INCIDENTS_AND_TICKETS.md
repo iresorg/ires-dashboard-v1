@@ -234,9 +234,12 @@ Auth: staff token.
 GET /api/v1/incident-reports/queue?page=1&limit=10
 GET /api/v1/incident-reports/queue?status=OPEN
 GET /api/v1/incident-reports/queue?assigned=false
+GET /api/v1/incident-reports/queue?accountId=<uuid>&status=OPEN&unlinked=true
 ```
 
 `assigned=false` is the unassigned queue. `assigned=true` is incidents that already have an agent. Agents always see only their own rows; `assigned` is ignored for them.
+
+`accountId` limits rows to that customer. `unlinked=true` returns incidents with no ticket (for the create-ticket picker).
 
 `200` with `message: "Incidents fetched"` and the pagination fields. Each item includes `createdByStaffId`.
 
@@ -255,7 +258,7 @@ Detail `200`: `{ "message": "Incident fetched", "incident": {} }`
 
 Update `200`: `{ "message": "Incident updated", "incident": {} }`
 
-On **Create ticket**, staff can look up an incident by that number. The modal fills **Type**, **Location**, and **Description** from the incident, selects the customer account, and links `incidentId`. Staff still enter **Title**, **Reporter name**, and **Category**.
+On **Create ticket**, staff select an eligible customer first. The modal then lists that customer's open, unlinked incidents so staff can search or pick one. Paste-by-reference still works as a fallback. The selected incident must belong to the same account. The modal fills **Reporter name**, **Type**, **Location**, and **Description** and links `incidentId`. Staff still enter **Title** and **Category**.
 
 ### Assignees list
 
