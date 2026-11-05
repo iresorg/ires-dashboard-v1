@@ -255,7 +255,7 @@ Detail `200`: `{ "message": "Incident fetched", "incident": {} }`
 
 Update `200`: `{ "message": "Incident updated", "incident": {} }`
 
-On **Create ticket**, staff can look up an incident by that number. The modal fills **Type**, **Location**, and **Description** from the incident, selects the customer account, and links `incidentId`. Staff still enter **Title**, **Reporter name**, and **Category**.
+On **Create ticket**, staff select an eligible customer first. Then they can look up an incident by that number. The incident must belong to the same account. The modal fills **Reporter name**, **Type**, **Location**, and **Description** and links `incidentId`. Staff still enter **Title** and **Category**.
 
 ### Assignees list
 
