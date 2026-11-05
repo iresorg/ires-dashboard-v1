@@ -224,7 +224,7 @@ Auth: staff token.
 |---|---|---|---|
 | Queue and detail | All incidents | All incidents | Assigned to them only |
 | Update | Yes | Yes | Assigned incident only |
-| Assign agent | Yes | Yes | No |
+| Assign agent or agent admin | Yes | Yes (including themselves) | No |
 | Link ticket | Yes | Yes | No |
 | Create for an email | Yes | Yes | No |
 
@@ -253,7 +253,36 @@ Detail `200`: `{ "message": "Incident fetched", "incident": {} }`
 
 Update `200`: `{ "message": "Incident updated", "incident": {} }`
 
-### Assign an agent
+### Assignees list
+
+```http
+GET /api/v1/incident-reports/assignees
+GET /api/v1/incident-reports/assignees?search=islam
+```
+
+Auth: staff token. Roles: `SUPER_ADMIN`, `ADMIN`, `AGENT_ADMIN`.
+
+Returns active users with role `AGENT` or `AGENT_ADMIN`. Do not use `GET /users?role=AGENT` for this dropdown — that list excludes agent admins.
+
+`200`
+
+```json
+{
+  "message": "Assignees fetched",
+  "data": [
+    {
+      "id": "staff-user-uuid",
+      "firstName": "Islam",
+      "lastName": "Adesina",
+      "email": "islam@example.com",
+      "role": "AGENT_ADMIN",
+      "status": "active"
+    }
+  ]
+}
+```
+
+### Assign an agent or agent admin
 
 ```http
 PATCH /api/v1/incident-reports/:id/assign
@@ -263,7 +292,7 @@ PATCH /api/v1/incident-reports/:id/assign
 { "agentId": "staff-user-uuid" }
 ```
 
-`agentId` must be a user with role `AGENT`. The incident stays `OPEN`.
+`agentId` must be an active user with role `AGENT` or `AGENT_ADMIN`. An agent admin can send their own user id to take the incident. The incident stays `OPEN`.
 
 `200`
 
@@ -274,9 +303,9 @@ PATCH /api/v1/incident-reports/:id/assign
 }
 ```
 
-The agent email subject is `Incident assigned to you — {reference}`. The body has reference, severity, type, organization, and the customer email.
+The assignment email subject is `Incident assigned to you — {reference}`. The body has reference, severity, type, organization, and the customer email.
 
-`400` `agentId must be an agent`
+`400` Invalid assignee (for example inactive, or not an agent / agent admin)
 
 `500` `Could not send the assignment email.`
 

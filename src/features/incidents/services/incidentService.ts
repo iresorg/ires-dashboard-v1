@@ -5,6 +5,8 @@ import {
   type CreateIncidentPayload,
   type CreateIncidentResponse,
   type Incident,
+  type IncidentAssignee,
+  type IncidentAssigneesResponse,
   type IncidentListPage,
   type IncidentListResponse,
   type IncidentResponse,
@@ -57,6 +59,19 @@ export const updateIncident = async (
     skipAuthRedirect
   );
   return response.data.incident;
+};
+
+export const getIncidentAssignees = async (
+  search?: string
+): Promise<IncidentAssignee[]> => {
+  const response = await api.get<IncidentAssigneesResponse>(
+    "/incident-reports/assignees",
+    {
+      ...skipAuthRedirect,
+      params: search?.trim() ? { search: search.trim() } : undefined,
+    }
+  );
+  return response.data?.data ?? [];
 };
 
 export const assignIncident = async (id: string, agentId: string): Promise<Incident> => {

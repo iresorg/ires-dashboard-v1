@@ -8,6 +8,20 @@ export interface IncidentAgent {
   lastName: string;
 }
 
+export interface IncidentAssignee {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
+export interface IncidentAssigneesResponse {
+  message?: string;
+  data: IncidentAssignee[];
+}
+
 export interface Incident {
   id: string;
   reference: string;

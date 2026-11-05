@@ -80,7 +80,7 @@ const TicketsContent: React.FC = () => (
       <ul className="list-disc pl-5 space-y-2 text-sm leading-relaxed">
         <li>Admins open <strong>Unassigned queue</strong> by default, or switch to <strong>All incidents</strong>. Filter either list by open or closed.</li>
         <li>Open an incident to update severity, type, phone, detection time, affected systems, and description while it is open.</li>
-        <li>Assign an agent, or link an existing ticket whose customer is the same account.</li>
+        <li>Assign an agent or agent admin (agent admins can take it themselves), or link an existing ticket whose customer is the same account.</li>
         <li>Closing that ticket closes the incident. A closed incident can no longer be edited.</li>
         <li>A new reporter email receives an account and a temporary password by email. The password is not shown in the dashboard.</li>
       </ul>
