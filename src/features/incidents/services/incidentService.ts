@@ -19,6 +19,8 @@ export const getIncidentQueue = async (params: {
   limit?: number;
   status?: string;
   assigned?: boolean;
+  accountId?: string;
+  unlinked?: boolean;
 }): Promise<{ data: Incident[]; page: IncidentListPage }> => {
   const page = params.page ?? 1;
   const query: Record<string, string> = {
@@ -27,6 +29,8 @@ export const getIncidentQueue = async (params: {
   };
   if (params.status) query.status = params.status;
   if (typeof params.assigned === "boolean") query.assigned = String(params.assigned);
+  if (params.accountId?.trim()) query.accountId = params.accountId.trim();
+  if (typeof params.unlinked === "boolean") query.unlinked = String(params.unlinked);
 
   const response = await api.get<IncidentListResponse>("/incident-reports/queue", {
     ...skipAuthRedirect,
